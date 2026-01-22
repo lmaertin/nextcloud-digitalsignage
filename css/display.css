@@ -1,0 +1,478 @@
+/* Modern Corporate Design - Digital Signage Dashboard */
+:root {
+  /* Corporate Colors */
+  --primary-blue: #0066cc;
+  --primary-blue-dark: #004499;
+  --primary-blue-light: #3399ff;
+  --primary-blue-accent: #0088ff;
+  
+  /* Moderne, helle Farbpalette */
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9ecef;
+  --bg-card: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #495057;
+  --text-light: #6c757d;
+  --border-color: rgba(0, 102, 204, 0.2);
+  
+  /* Gradients */
+  --gradient-blue: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
+  --gradient-bg: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  --gradient-card: linear-gradient(135deg, #ffffff, #f8f9fa);
+  
+  /* Shadows */
+  --shadow-card: 0 4px 20px rgba(0, 102, 204, 0.08);
+  --shadow-hover: 0 8px 30px rgba(0, 102, 204, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  height: 100vh;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.display-header {
+  background: var(--gradient-blue);
+  color: white;
+  padding: 8px 20px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.display-header h1 {
+  font-size: 1.3em;
+  font-weight: 300;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: calc(100vh - 45px);
+  padding: 1rem;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Linke Spalte - Container für Slideshow- und Wetter-Box */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Slideshow-Box - Separate Box */
+.slideshow-box {
+  flex: 1;
+  background: var(--gradient-card);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 2px solid var(--border-color);
+  position: relative;
+}
+
+/* Wetter-Box - Separate Box */
+.weather-box {
+  flex: 0 0 auto;
+  background: var(--gradient-card);
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: var(--shadow-card);
+  border: 2px solid var(--border-color);
+}
+
+/* Slideshow füllt die gesamte Slideshow-Box */
+.slideshow {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 0.6s ease-in-out;
+  border-radius: 15px;
+  position: relative;
+  min-height: 300px;
+  opacity: 1;
+}
+
+.slideshow.loading::before {
+  content: 'Loading images...';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2rem;
+  border-radius: 15px;
+  z-index: 1;
+}
+
+/* Wetterbox - In separater Box */
+.weather {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  padding: 1rem;
+  color: var(--text-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.current-weather {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.weather-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+}
+
+.temperature {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--primary-blue);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.location {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  padding: 0.6rem 0.4rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.forecast-day:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.day-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+.day-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.4rem;
+}
+
+.day-temp {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+/* Aktueller Tag - Hervorhebung */
+.current-day {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+.current-day .day-name {
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.current-day .day-icon {
+  font-size: 2.2rem;
+}
+
+.current-day .day-temp {
+  color: var(--primary-blue);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+/* Rechte Spalte - Termine */
+.right {
+  display: flex;
+  flex-direction: column;
+  background: var(--gradient-card);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card);
+  border: 2px solid var(--border-color);
+  min-height: 0;
+}
+
+/* Kalender-Bereich */
+.calendar {
+  flex: 1;
+  overflow: hidden;
+  padding-right: 0.5rem;
+  position: relative;
+}
+
+.calendar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+  pointer-events: none;
+  z-index: 2;
+}
+
+.calendar ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.calendar li {
+  background: #ffffff;
+  margin-bottom: 0;
+  padding: 0.6rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary-blue);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar li:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-left-color: var(--primary-blue-light);
+}
+
+.calendar li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent, rgba(0, 102, 204, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.calendar li:hover::before {
+  opacity: 1;
+}
+
+/* Termin-Titel */
+.event-title {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 0.3rem;
+  font-size: 1.3rem;
+}
+
+/* Termin-Zeit und Ort in einer Zeile */
+.event-details {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Termin-Zeit */
+.event-time {
+  flex-shrink: 0;
+}
+
+/* Ortsangabe mit Nadel-Icon */
+.event-location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 1.1rem;
+}
+
+.event-location::before {
+  content: '📍';
+  font-size: 1rem;
+  color: var(--primary-blue);
+}
+
+.calendar p {
+  text-align: center;
+  color: var(--text-light);
+  font-style: italic;
+  margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (orientation: portrait), (max-width: 900px) {
+  .container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .left {
+    height: auto;
+    order: 1;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .slideshow-box {
+    min-height: 40vh;
+  }
+  
+  .weather-box {
+    min-height: auto;
+    padding: 0.8rem;
+  }
+  
+  .weather {
+    padding: 0.8rem;
+  }
+  
+  .forecast-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+  
+  .forecast-day {
+    padding: 0.6rem 0.4rem;
+  }
+  
+  .day-icon, .current-day .day-icon {
+    font-size: 2rem;
+  }
+  
+  .right {
+    order: 2;
+  }
+  
+  .calendar ul {
+    flex-direction: column;
+  }
+  
+  .calendar {
+    overflow-y: auto;
+  }
+  
+  .calendar::after {
+    display: none;
+  }
+  
+  .calendar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .calendar::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 3px;
+  }
+
+  .calendar::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 3px;
+  }
+}
+
+/* Lade-Animationen */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendar li {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.calendar:empty::after,
+.weather:empty::after {
+  content: 'Laden...';
+  display: block;
+  text-align: center;
+  color: var(--primary-blue);
+  font-weight: 500;
+  animation: pulse 1.5s infinite;
+}
+
+/* Zusätzliche visuelle Verbesserungen */
+.container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-bg);
+  z-index: -1;
+}

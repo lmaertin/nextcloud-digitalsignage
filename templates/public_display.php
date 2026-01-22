@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Signage</title>
+  <?php 
+    $urlGen = \OC::$server->getURLGenerator();
+    $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
+  ?>
+  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>">
+</head>
+<body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>" 
+      data-public-token="<?php p($_['token'] ?? ''); ?>" 
+      data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>">
+  <div class="display-header">
+    <h1 id="display-title">Digital Signage</h1>
+  </div>
+  <div class="container">
+    <div class="left">
+      <div class="slideshow-box">
+        <div class="slideshow loading" id="slideshow"></div>
+      </div>
+      <div class="weather-box">
+        <div class="weather" id="weather">Wetter wird geladen...</div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="calendar" id="calendar">Kalender wird geladen...</div>
+    </div>
+  </div>
+  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
+  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>" defer></script>
+</body>
+</html>

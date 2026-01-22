@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>digitalsignage</id>
+    <name>Digital Signage</name>
+    <summary>Display digital signage with calendar events and image slideshow</summary>
+    <description><![CDATA[Digital Signage displays calendar events from your Nextcloud calendar and images from a folder in a beautiful, full-screen presentation.
+
+Features:
+- Display calendar events from your Nextcloud calendar
+- Image slideshow from a Nextcloud folder
+- Weather information (external API)
+- Configurable display settings
+- Public share for display without login
+]]></description>
+    <version>1.0.0</version>
+    <licence>agpl</licence>
+    <author mail="info@nak-lehrte.de">NAK Lehrte</author>
+    <namespace>DigitalSignage</namespace>
+    <category>multimedia</category>
+    <category>tools</category>
+    <website>https://github.com/yourusername/digitalsignage</website>
+    <bugs>https://github.com/yourusername/digitalsignage/issues</bugs>
+    <repository type="git">https://github.com/yourusername/digitalsignage.git</repository>
+    <screenshot>https://example.com/screenshot.png</screenshot>
+    <dependencies>
+        <nextcloud min-version="24" max-version="32"/>
+        <php min-version="7.4"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Digital Signage</name>
+            <route>digitalsignage.page.index</route>
+            <icon>app.svg</icon>
+        </navigation>
+    </navigations>
+</info>
