@@ -6,7 +6,12 @@ on:
       - 'v*'
 
 jobs:
+  test:
+    uses: ./.github/workflows/tests.yml
+    secrets: inherit
+
   build-and-sign:
+    needs: test
     runs-on: ubuntu-latest
     
     steps:
