@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Digital Signage App for Nextcloud",
   "license": "AGPL-3.0",
-  "author": "NAK Lehrte",
+  "author": "@lmaertin",
   "scripts": {
     "build": "echo 'No build step required'",
     "package": "tar -czf digitalsignage.tar.gz --exclude='.git' --exclude='node_modules' --exclude='*.tar.gz' ."
