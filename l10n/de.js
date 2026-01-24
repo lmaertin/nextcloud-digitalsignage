@@ -69,6 +69,17 @@ OC.L10N.register(
     "Existing tokens" : "Vorhandene Tokens",
     "Loading..." : "Laden...",
     "Loading calendars..." : "Kalender werden geladen...",
-    "Weather will be loaded..." : "Wetter wird geladen..."
+    "Weather will be loaded..." : "Wetter wird geladen...",
+    "No tokens yet" : "Noch keine Tokens",
+    "Copy URL" : "URL kopieren",
+    "Delete token" : "Token löschen",
+    "Copied!" : "Kopiert!",
+    "Error loading tokens" : "Fehler beim Laden der Tokens",
+    "Please enter a name for the token" : "Bitte einen Namen für den Token eingeben",
+    "Token created successfully! URL: %s" : "Token erfolgreich erstellt! URL: %s",
+    "Are you sure you want to delete this token?" : "Diesen Token wirklich löschen?",
+    "Select folder" : "Ordner auswählen",
+    "No exclude terms yet" : "Noch keine Begriffe zum Ausblenden",
+    "Error loading folders" : "Fehler beim Laden der Ordner"
 },
 "nplurals=2; plural=(n != 1);");

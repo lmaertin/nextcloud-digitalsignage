@@ -1,8 +1,9 @@
-// Debug: Check if OC is available
-console.log('OC object:', typeof OC !== 'undefined' ? 'available' : 'NOT available');
-if (typeof OC !== 'undefined') {
-  console.log('OC.requestToken:', OC.requestToken);
-}
+const translate = (text, params = []) => {
+  if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
+    return OC.L10N.translate('digitalsignage', text, params);
+  }
+  return Array.isArray(params) && params.length > 0 ? text.replace('%s', params[0]) : text;
+};
 
 // Helper function to escape HTML
 function escapeHtml(text) {
@@ -48,7 +49,7 @@ async function loadTokens() {
     const container = document.getElementById('tokens-container');
     
     if (!tokens || tokens.length === 0) {
-      container.innerHTML = '<p>Noch keine Tokens erstellt.</p>';
+      container.innerHTML = `<p>${translate('No tokens yet')}</p>`;
       return;
     }
     
@@ -59,8 +60,8 @@ async function loadTokens() {
           <div class="token-url">${escapeHtml(token.url)}</div>
         </div>
         <div class="token-actions">
-          <button class="primary" data-copy-url="${escapeHtml(token.url)}" title="URL kopieren">📋 Kopieren</button>
-          <button class="error" data-token-id="${token.id}" title="Token löschen">🗑️ Löschen</button>
+          <button class="primary" data-copy-url="${escapeHtml(token.url)}" title="${translate('Copy URL')}">${translate('Copy')}</button>
+          <button class="error" data-token-id="${token.id}" title="${translate('Delete token')}">${translate('Delete')}</button>
         </div>
       </div>
     `).join('');
@@ -70,8 +71,8 @@ async function loadTokens() {
       btn.addEventListener('click', function() {
         const url = this.getAttribute('data-copy-url');
         navigator.clipboard.writeText(url).then(() => {
-          this.textContent = '✓ Kopiert!';
-          setTimeout(() => { this.textContent = '📋 Kopieren'; }, 2000);
+          this.textContent = translate('Copied!');
+          setTimeout(() => { this.textContent = translate('Copy'); }, 2000);
         });
       });
     });
@@ -84,14 +85,14 @@ async function loadTokens() {
     });
   } catch (error) {
     console.error('Error loading tokens:', error);
-    document.getElementById('tokens-container').innerHTML = '<p>Error loading tokens: ' + error.message + '</p>';
+    document.getElementById('tokens-container').innerHTML = `<p>${translate('Error loading tokens')}: ${escapeHtml(error.message)}</p>`;
   }
 }
 
 async function createToken() {
   const name = document.getElementById('token-name').value;
   if (!name) {
-    alert('Please enter a name for the token');
+    alert(translate('Please enter a name for the token'));
     return;
   }
   
@@ -113,20 +114,20 @@ async function createToken() {
     console.log('Create result:', result);
     
     if (result.error) {
-      alert('Error: ' + result.error);
+      alert(`${translate('Error creating token')}: ${result.error}`);
     } else {
-      alert('Token created successfully!\n\nURL: ' + result.url);
+      alert(translate('Token created successfully! URL: %s', [result.url]));
       document.getElementById('token-name').value = '';
       loadTokens();
     }
   } catch (error) {
     console.error('Error creating token:', error);
-    alert('Error creating token: ' + error.message);
+    alert(`${translate('Error creating token')}: ${error.message}`);
   }
 }
 
 async function deleteToken(id) {
-  if (!confirm('Are you sure you want to delete this token?')) {
+  if (!confirm(translate('Are you sure you want to delete this token?'))) {
     return;
   }
   
@@ -146,14 +147,12 @@ async function deleteToken(id) {
     loadTokens();
   } catch (error) {
     console.error('Error deleting token:', error);
-    alert('Error deleting token: ' + error.message);
+    alert(`${translate('Error deleting token')}: ${error.message}`);
   }
 }
 
 // Setup event listeners when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, setting up event listeners');
-  
   // Create token button
   const createBtn = document.getElementById('create-token-btn');
   if (createBtn) {
@@ -217,7 +216,7 @@ async function loadCalendars() {
       ).join('');
   } catch (error) {
     console.error('Error loading calendars:', error);
-    document.getElementById('calendar_name').innerHTML = '<option value="">Error loading calendars</option>';
+    document.getElementById('calendar_name').innerHTML = `<option value="">${translate('Calendar loading error')}</option>`;
   }
 }
 
@@ -239,13 +238,13 @@ async function loadFolders() {
     // Get current value from PHP
     const currentValue = select.dataset.currentValue || '';
     
-    select.innerHTML = '<option value="">-- Select Folder --</option>' +
+    select.innerHTML = `<option value="">${translate('Select folder')}</option>` +
       folders.sort().map(folder => 
         `<option value="${folder}" ${folder === currentValue ? 'selected' : ''}>${folder}</option>`
       ).join('');
   } catch (error) {
     console.error('Error loading folders:', error);
-    document.getElementById('image_folder').innerHTML = '<option value="">Error loading folders</option>';
+    document.getElementById('image_folder').innerHTML = `<option value="">${translate('Error loading folders')}</option>`;
   }
 }
 
@@ -282,15 +281,15 @@ async function saveSettings() {
     const result = await response.json();
     
     if (result.status === 'success') {
-      msgSpan.textContent = '✓ Einstellungen gespeichert';
+      msgSpan.textContent = translate('Settings saved successfully');
       msgSpan.style.color = 'green';
       setTimeout(() => { msgSpan.textContent = ''; }, 3000);
     } else {
-      throw new Error('Fehler beim Speichern');
+      throw new Error(translate('Error saving settings'));
     }
   } catch (error) {
     console.error('Error saving settings:', error);
-    msgSpan.textContent = '✗ Fehler beim Speichern';
+    msgSpan.textContent = translate('Error saving settings');
     msgSpan.style.color = 'red';
   }
 }
@@ -362,7 +361,7 @@ function renderExcludeTags() {
   if (!container) return;
   
   if (excludeTags.length === 0) {
-    container.innerHTML = '<span style="color: #999; font-style: italic;">Keine Begriffe zum Ausblenden</span>';
+    container.innerHTML = `<span style="color: #999; font-style: italic;">${translate('No exclude terms yet')}</span>`;
     return;
   }
   

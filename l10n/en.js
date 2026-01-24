@@ -69,6 +69,17 @@ OC.L10N.register(
     "Existing tokens" : "Existing tokens",
     "Loading..." : "Loading...",
     "Loading calendars..." : "Loading calendars...",
-    "Weather will be loaded..." : "Weather will be loaded..."
+    "Weather will be loaded..." : "Weather will be loaded...",
+    "No tokens yet" : "No tokens yet",
+    "Copy URL" : "Copy URL",
+    "Delete token" : "Delete token",
+    "Copied!" : "Copied!",
+    "Error loading tokens" : "Error loading tokens",
+    "Please enter a name for the token" : "Please enter a name for the token",
+    "Token created successfully! URL: %s" : "Token created successfully! URL: %s",
+    "Are you sure you want to delete this token?" : "Are you sure you want to delete this token?",
+    "Select folder" : "Select folder",
+    "No exclude terms yet" : "No exclude terms yet",
+    "Error loading folders" : "Error loading folders"
 },
 "nplurals=2; plural=(n != 1);");
