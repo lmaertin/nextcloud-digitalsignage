@@ -69,12 +69,31 @@ The token URL opens a full-screen view without login. This can be opened on a Ra
 git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
 cd digitalsignage
 
+# Configure Git hooks (required for pre-commit checks)
+git config core.hooksPath .githooks
+
 # Create symlink in Nextcloud
 ln -s $(pwd) /path/to/nextcloud/apps/digitalsignage
 
 # Enable in Nextcloud
 cd /path/to/nextcloud
 php occ app:enable digitalsignage
+```
+
+### Pre-Commit Hooks
+
+Before committing, the following checks are automatically executed:
+
+1. **PHP Syntax Check** - validates all PHP files for syntax errors
+2. **PHPUnit Tests** (optional) - runs unit tests if Docker container is available
+
+The pre-commit hook requires:
+- PHP CLI (always required)
+- Docker and Nextcloud container (optional, tests will be skipped if unavailable)
+
+To skip the hooks (not recommended):
+```bash
+git commit --no-verify
 ```
 
 ### Database Schema
