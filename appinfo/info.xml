@@ -17,7 +17,7 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>1.0.1</version>
+    <version>0.0.1</version>
     <licence>agpl</licence>
     <author mail="github@lukas-maertin.de">Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

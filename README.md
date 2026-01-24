@@ -2,19 +2,19 @@
 
 A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.
 
-## Features
+## Features (initial release 0.0.1)
 
-- **Calendar Integration**: Display upcoming events from Nextcloud calendars
-- **Image Slideshow**: Automatic slideshow from a Nextcloud folder
-- **Weather**: Current weather information (Open-Meteo API)
-- **Public Tokens**: Create tokens for displays without login
-- **Configurable**: Settings for all parameters via UI
+- Calendar integration: display upcoming events from Nextcloud calendars
+- Image slideshow from a Nextcloud folder
+- Weather (Open-Meteo API)
+- Public tokens for displays without login
+- Configurable settings via UI
 
 ## Installation
 
 ### Requirements
 
-- Nextcloud 24 or higher
+- Nextcloud 24–32
 - PHP 7.4 or higher
 
 ### Installing in Nextcloud
@@ -25,7 +25,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
    git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
    ```
 
-2. Or download the app from the Nextcloud App Store
+2. Or download the app from the Nextcloud App Store (once published)
 
 3. Enable the app in Nextcloud settings or via CLI:
    - UI: **Settings** > **Apps** > "Digital Signage" > **Enable**
@@ -81,33 +81,33 @@ php occ app:enable digitalsignage
 - No manual database setup required.
 - When enabling the app, Nextcloud automatically runs migrations and creates the `oc_digitalsignage_token` table for token management.
 
-## Architecture
+## Architecture (overview)
 
 ### Backend (PHP)
 
-- **PageController**: Main app page with token management
-- **ApiController**: API endpoints for authenticated users
-- **PublicController**: Public display page (token-based)
-- **PublicApiController**: API for public displays
-- **TokenController**: Token management
-- **SettingsController**: Settings management
+- PageController: main app page with token management
+- ApiController: API endpoints for authenticated users
+- PublicController: public display page (token-based)
+- PublicApiController: API for public displays
+- TokenController: token management
+- SettingsController: settings management
 
 ### Frontend (JavaScript)
 
-- **display.js**: Main display view logic
-  - Slideshow management
-  - Weather API integration
-  - Calendar rendering
-  
-### Data Flow
+- display.js: main display view logic
+   - Slideshow management
+   - Weather API integration
+   - Calendar rendering
+
+### Data flow
 
 1. Admin configures settings in the app
 2. User creates a display token in the app
 3. Display opens public URL with token
 4. PublicApiController validates token and returns data:
-   - Config (locale, intervals, etc.)
-   - Calendar entries from Nextcloud Calendar API
-   - Image list from Nextcloud Files API
+    - Config (locale, intervals, etc.)
+    - Calendar entries from Nextcloud Calendar API
+    - Image list from Nextcloud Files API
 5. JavaScript loads and displays the data
 
 ## APIs
