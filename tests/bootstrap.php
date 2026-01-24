@@ -9,10 +9,13 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Check if we're running inside Nextcloud container
-if (file_exists(__DIR__ . '/../../../lib/base.php') && getenv('NC_CONTAINER') !== false) {
-    // Running in container - load Nextcloud
-    require_once __DIR__ . '/../../../lib/base.php';
+// Try to load the Nextcloud server when available (e.g., in CI container)
+if (file_exists(__DIR__ . '/../../../lib/base.php')) {
+    try {
+        require_once __DIR__ . '/../../../lib/base.php';
+    } catch (\Throwable $e) {
+        // If server is not installed locally, fall back to pure composer autoload
+    }
 }
 
 // Define test constants
