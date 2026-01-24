@@ -10,7 +10,7 @@ $l = \OC::$server->getL10N('digitalsignage');
         <h3 class="ds-section-title">📺 <?php p($l->t('Digital Signage')); ?></h3>
         <p class="ds-section-subtitle"><?php p($l->t('Configure your digital display')); ?></p>
 
-        <!-- Allgemeine Einstellungen -->
+        <!-- General Settings -->
         <div class="ds-subsection">
           <h4 class="ds-subsection-title">⚙️ <?php p($l->t('General')); ?></h4>
           <div class="ds-form-grid">
@@ -22,7 +22,7 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
         </div>
 
-        <!-- Kalender -->
+        <!-- Calendar -->
         <div class="ds-subsection">
           <h4 class="ds-subsection-title">📅 <?php p($l->t('Calendar')); ?></h4>
           <div class="ds-form-grid">
@@ -37,7 +37,7 @@ $l = \OC::$server->getL10N('digitalsignage');
             <div class="ds-form-group ds-form-group-full">
               <label for="calendar_exclude" class="ds-label">🚫 <?php p($l->t('Hide events')); ?></label>
               <div id="calendar-exclude-tags" class="ds-tag-container">
-                <!-- Tags werden hier eingefügt -->
+                <!-- Tags will be inserted here -->
               </div>
               <div class="ds-tag-input-group">
                 <input type="text" id="calendar-exclude-input" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
@@ -49,7 +49,7 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
         </div>
 
-        <!-- Bilder/Slideshow -->
+        <!-- Images / Slideshow -->
         <div class="ds-subsection">
           <h4 class="ds-subsection-title">🖼️ <?php p($l->t('Images / Slideshow')); ?></h4>
           <div class="ds-form-grid">
@@ -69,7 +69,7 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
         </div>
 
-        <!-- Wetter -->
+        <!-- Weather -->
         <div class="ds-subsection">
           <h4 class="ds-subsection-title">🌦️ <?php p($l->t('Weather')); ?></h4>
           <div class="ds-form-grid">
@@ -112,7 +112,7 @@ $l = \OC::$server->getL10N('digitalsignage');
           <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
         </div>
 
-        <!-- Save Bar am Ende -->
+        <!-- Save bar at the end -->
         <div class="ds-save-bar">
           <button class="button primary" id="save-settings-btn"><?php p($l->t('Save')); ?></button>
           <span id="settings-msg" class="ds-message"></span>
