@@ -19,14 +19,14 @@ Supported languages:
 ]]></description>
     <version>1.0.1</version>
     <licence>agpl</licence>
-    <author mail="info@nak-lehrte.de">NAK Lehrte</author>
+    <author mail="github@lukas-maertin.de">Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
     <category>multimedia</category>
     <category>tools</category>
-    <website>https://github.com/nak-lehrte/digitalsignage</website>
-    <bugs>https://github.com/nak-lehrte/digitalsignage/issues</bugs>
-    <repository type="git">https://github.com/nak-lehrte/digitalsignage.git</repository>
-    <screenshot>https://raw.githubusercontent.com/nak-lehrte/digitalsignage/main/img/screenshot.png</screenshot>
+    <website>https://github.com/lmaertin/nextcloud-digitalsignage</website>
+    <bugs>https://github.com/lmaertin/nextcloud-digitalsignage/issues</bugs>
+    <repository type="git">https://github.com/lmaertin/nextcloud-digitalsignage.git</repository>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot.png</screenshot>
     <dependencies>
         <nextcloud min-version="24" max-version="32"/>
         <php min-version="7.4"/>
