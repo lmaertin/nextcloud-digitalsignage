@@ -126,6 +126,57 @@ php occ app:enable digitalsignage
 - `GET /apps/digitalsignage/api/public/{token}/images`
 - `GET /apps/digitalsignage/api/public/{token}/image?id=<file_id>`
 
+## Security
+
+### Token Security
+
+- Tokens are generated using cryptographically secure random bytes
+- Each token is unique and hashed in the database
+- Tokens are user-specific and cannot be used by other users
+- Expired or revoked tokens can be deleted via the UI
+
+### API Security
+
+- All authenticated endpoints require Nextcloud user login
+- Public APIs require valid token validation
+- CSRF tokens are validated on all state-changing operations
+- Content Security Policy restricts external API access to whitelisted domains
+- External weather API (Open-Meteo) is HTTPS-only
+
+### Best Practices
+
+- Do not share display tokens in unsecured channels
+- Rotate tokens regularly if compromised
+- Use HTTPS in production for all display URLs
+- Consider network isolation for production displays
+
+## Troubleshooting
+
+### Display shows blank
+
+- Check calendar configuration is saved
+- Verify calendar has events
+- Check image folder is selected and contains images
+- Open browser console (F12) for API errors
+
+### Weather not loading
+
+- Verify latitude/longitude are set correctly
+- Check internet connection for Open-Meteo API access
+- Weather API requires HTTPS connection
+
+### Images not loading
+
+- Ensure folder path is correct (`/path/to/folder`)
+- Verify user has read permissions to folder
+- Check images are in supported format (JPG, PNG, GIF, WebP)
+
+### Token issues
+
+- Verify token is correct (copy from UI)
+- Ensure token hasn't expired or been deleted
+- Check public display URL includes correct token parameter
+
 ## Publishing to App Store
 
 See [CODE_SIGNING.md](CODE_SIGNING.md) for instructions on code signing and publishing to the Nextcloud App Store.
@@ -150,6 +201,7 @@ If you have questions or encounter issues:
 - Open an issue: https://github.com/lmaertin/nextcloud-digitalsignage/issues
 - Check documentation in this README
 - Review the [CHANGELOG](CHANGELOG.md) for recent changes
+- See Troubleshooting section above
 
 ## Contributing
 

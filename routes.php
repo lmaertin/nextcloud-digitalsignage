@@ -1,4 +1,10 @@
 <?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 Lukas Märtin <github@lukas-maertin.de>
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 return [
     'routes' => [
         // Admin/User page routes

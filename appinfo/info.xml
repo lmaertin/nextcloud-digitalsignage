@@ -38,4 +38,11 @@ Supported languages:
             <icon>app.svg</icon>
         </navigation>
     </navigations>
+    <repair>
+        <steps>
+            <post-migration>
+                <migration>OCA\DigitalSignage\Migration\Version1000Date20260120000000</migration>
+            </post-migration>
+        </steps>
+    </repair>
 </info>
