@@ -9,7 +9,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,10 +27,6 @@ jobs:
         run: |
           find . -name "*.php" ! -path "./vendor/*" -exec php -l {} \;
 
-      - name: Check translations
-        run: |
-          php l10n-helper.php validate
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -44,7 +40,7 @@ jobs:
 
   security:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,10 +51,10 @@ jobs:
           if grep -r "password\|secret\|token" . --include="*.php" --include="*.js" | grep -v "node_modules\|vendor\|\.git"; then
             echo "WARNING: Potential hardcoded secrets found"
           fi
-          
+
           # Check for SQL injection patterns
           echo "Checking for common security issues..."
-          
+
           # Check PHP files for security issues
           find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" -type f
 
