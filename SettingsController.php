@@ -67,3 +67,4 @@ class SettingsController extends Controller {
 
         return new JSONResponse(['status' => 'success']);
     }
+}

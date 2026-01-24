@@ -2,52 +2,52 @@
 
 ## PHPUnit Tests
 
-Tests sind im `tests/` Verzeichnis organisiert:
+Tests are organized under the `tests/` directory:
 
 ```
 tests/
 ├── bootstrap.php           # Test bootstrap
-├── Unit/                   # Unit Tests
-│   ├── Db/                # Database Tests
-│   ├── Controller/        # Controller Tests
-│   └── Util/             # Utility Tests
-└── Integration/          # Integration Tests (optional)
+├── Unit/                   # Unit tests
+│   ├── Db/                 # Database tests
+│   ├── Controller/         # Controller tests
+│   └── Util/               # Utility tests
+└── Integration/            # Integration tests (optional)
 ```
 
-## Lokal testen
+## Running locally
 
 ```bash
-# Alle Tests
+# All tests (via npm scripts)
 npm run test
 
-# Mit Coverage-Report
+# With coverage report (HTML)
 npm run test:coverage
 
-# Nur spezifische Test-Suite
+# Specific test suite
 vendor/bin/phpunit tests/Unit/Db/
 
-# Mit verbosem Output
+# Verbose output
 vendor/bin/phpunit --testdox
 ```
 
-## Erforderliche Dependencies
+## Required dependencies
 
-Automatisch in GitHub Actions installiert via `composer install`.
+Installed automatically in GitHub Actions via `composer install`.
 
-Lokal kannst du hinzufügen:
+Install locally:
 ```bash
 composer require --dev phpunit/phpunit ^9.5
 composer require --dev phpunit/php-code-coverage
 ```
 
-## Test-Abdeckung
+## Coverage
 
-Coverage Reports werden generiert und hochgeladen zu Codecov:
+Coverage reports are generated and uploaded to Codecov:
 https://codecov.io/gh/lmaertin/nextcloud-digitalsignage
 
-## Neue Tests schreiben
+## Writing new tests
 
-Struktur:
+Structure:
 ```php
 namespace OCA\DigitalSignage\Tests\Unit\...;
 
@@ -59,4 +59,4 @@ class MyTest extends TestCase {
 ```
 
 Namespacing: `OCA\DigitalSignage\Tests\Unit\[Namespace]`
-Dateiname: `[Class]Test.php`
+Filename: `[Class]Test.php`
