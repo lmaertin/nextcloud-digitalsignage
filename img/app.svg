@@ -1,11 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <!-- Monitor frame -->
-  <path d="M4 6h24c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2z" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 6h26c1.1 0 2 .9 2 2v14c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2z" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  
   <!-- Monitor stand -->
-  <path d="M11 24h10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M14.5 24v2.5h3v-2.5" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Content lines (representing signage) -->
-  <path d="M8 12h16" stroke="white" stroke-width="2" stroke-linecap="round"/>
-  <path d="M8 16h16" stroke="white" stroke-width="2" stroke-linecap="round"/>
-  <path d="M8 20h12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 22h8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14.5 22v2h3v-2" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Vertical divider (center line) -->
+  <path d="M16 9v10" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+  
+  <!-- Left side: Image/Photo (frame with diagonal) -->
+  <rect x="5" y="9" width="10" height="8" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M5 17l10-8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Image circle indicator -->
+  <circle cx="10" cy="11.5" r="1.2" fill="white"/>
+  
+  <!-- Right side: Text/Calendar lines -->
+  <path d="M19 10h7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M19 12.5h7" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M19 15h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
