@@ -205,26 +205,6 @@
        data-csrf-token="<?php p(\OC::$server->getCSRFTokenManager()->getToken()->getEncryptedValue()); ?>">
   </div>
 
-    <div id="ds-i18n" style="display:none;"
-      data-copy="<?php p($l->t('Copy')); ?>"
-      data-copy-url="<?php p($l->t('Copy URL')); ?>"
-      data-delete="<?php p($l->t('Delete')); ?>"
-      data-delete-token="<?php p($l->t('Delete token')); ?>"
-      data-copied="<?php p($l->t('Copied!')); ?>"
-      data-no-tokens="<?php p($l->t('No tokens yet')); ?>"
-      data-error-loading-tokens="<?php p($l->t('Error loading tokens')); ?>"
-      data-please-enter-name="<?php p($l->t('Please enter a name for the token')); ?>"
-      data-token-created="<?php p($l->t('Token created successfully! URL: %s', [ '{url}' ])); ?>"
-      data-error-creating-token="<?php p($l->t('Error creating token')); ?>"
-      data-error-deleting-token="<?php p($l->t('Error deleting token')); ?>"
-      data-confirm-delete="<?php p($l->t('Are you sure you want to delete this token?')); ?>"
-      data-select-folder="<?php p($l->t('Select folder')); ?>"
-      data-no-exclude-terms="<?php p($l->t('No exclude terms yet')); ?>"
-      data-error-loading-folders="<?php p($l->t('Error loading folders')); ?>"
-      data-settings-saved="<?php p($l->t('Settings saved successfully')); ?>"
-      data-settings-error="<?php p($l->t('Error saving settings')); ?>">
-    </div>
-
   <?php script('digitalsignage', 'token-management'); ?>
   </div>
 </div>
