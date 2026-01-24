@@ -27,7 +27,6 @@ return [
         ['name' => 'token#delete', 'url' => '/api/token/delete/{id}', 'verb' => 'DELETE'],
         
         // Settings
-        ['name' => 'settings#saveAdmin', 'url' => '/settings/admin', 'verb' => 'POST'],
         ['name' => 'settings#saveUser', 'url' => '/settings/user', 'verb' => 'POST'],
     ]
 ];
