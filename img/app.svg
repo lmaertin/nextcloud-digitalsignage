@@ -1,11 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0066cc;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3399ff;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="4" fill="url(#gradient)"/>
-  <path d="M8 10h16v2H8zm0 5h16v2H8zm0 5h10v2H8z" fill="white"/>
-  <circle cx="22" cy="22" r="4" fill="white"/>
+  <!-- Monitor/Display with lines representing digital signage content -->
+  <path d="M4 6h24c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V8c0-1.1.9-2 2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Monitor stand -->
+  <path d="M11 24h10v2H11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M15 26v1h2v-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Content lines -->
+  <path d="M8 11h16M8 15h16M8 19h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
 </svg>
