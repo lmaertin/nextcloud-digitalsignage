@@ -20,6 +20,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 ### Installing in Nextcloud
 
 1. Clone the app into your Nextcloud `apps/` folder:
+
    ```bash
    cd /path/to/nextcloud/apps/
    git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
@@ -95,9 +96,9 @@ php occ app:enable digitalsignage
 ### Frontend (JavaScript)
 
 - display.js: main display view logic
-   - Slideshow management
-   - Weather API integration
-   - Calendar rendering
+  - Slideshow management
+  - Weather API integration
+  - Calendar rendering
 
 ### Data flow
 
@@ -189,7 +190,7 @@ See [CODE_SIGNING.md](CODE_SIGNING.md) for instructions on code signing and publ
 - [ ] CHANGELOG.md updated with release notes
 - [ ] Release tagged in Git
 - [ ] App archive created and signed
-- [ ] Submitted to https://apps.nextcloud.com/
+- [ ] Submitted to <https://apps.nextcloud.com/>
 
 ## License
 
@@ -198,7 +199,8 @@ AGPL-3.0 - See [LICENSE](LICENSE) file for details.
 ## Support
 
 If you have questions or encounter issues:
-- Open an issue: https://github.com/lmaertin/nextcloud-digitalsignage/issues
+
+- Open an issue: <https://github.com/lmaertin/nextcloud-digitalsignage/issues>
 - Check documentation in this README
 - Review the [CHANGELOG](CHANGELOG.md) for recent changes
 - See Troubleshooting section above
@@ -206,6 +208,7 @@ If you have questions or encounter issues:
 ## Contributing
 
 Contributions are welcome! Please:
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes with clear commit messages
