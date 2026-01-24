@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run PHPUnit inside the Nextcloud dev container before commit
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker is required to run the tests." >&2
+  exit 1
+fi
+
+if ! docker compose ps --services 2>/dev/null | grep -q '^nextcloud$'; then
+  echo "Nextcloud container is not running. Start it with: docker compose up -d nextcloud" >&2
+  exit 1
+fi
+
+# Execute tests inside the running Nextcloud container
+set +e
+output=$(docker compose exec nextcloud bash -lc "cd /var/www/html/apps-extra/digitalsignage && NC_CONTAINER=1 ./vendor/bin/phpunit --testdox" 2>&1)
+status=$?
+set -e
+
+echo "$output"
+
+if [ $status -ne 0 ]; then
+  echo "Pre-commit hook: PHPUnit failed." >&2
+  exit $status
+fi
