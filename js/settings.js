@@ -1,4 +1,15 @@
+const translationsElement = document.getElementById('ds-i18n');
 const translate = (text, params = []) => {
+  if (translationsElement) {
+    const key = text.toLowerCase().replace(/\s+/g, '-');
+    const mapped = translationsElement.dataset[key] || translationsElement.dataset[text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()] || translationsElement.dataset[text];
+    if (mapped) {
+      if (Array.isArray(params) && params.length > 0) {
+        return mapped.replace('%s', params[0]).replace('{url}', params[0]);
+      }
+      return mapped;
+    }
+  }
   if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
     return OC.L10N.translate('digitalsignage', text, params);
   }
@@ -25,7 +36,7 @@ async function loadTokens() {
   try {
     console.log('Loading tokens...');
     console.log('API URL:', API_URLS.list);
-    
+
     const response = await fetch(API_URLS.list, {
       method: 'GET',
       headers: {
@@ -34,25 +45,25 @@ async function loadTokens() {
       },
       credentials: 'same-origin'
     });
-    
+
     console.log('Response status:', response.status);
-    
+
     if (!response.ok) {
       const text = await response.text();
       console.error('Response error:', text);
       throw new Error('HTTP ' + response.status + ': ' + text);
     }
-    
+
     const tokens = await response.json();
     console.log('Tokens received:', tokens);
-    
+
     const container = document.getElementById('tokens-container');
-    
+
     if (!tokens || tokens.length === 0) {
       container.innerHTML = `<p>${translate('No tokens yet')}</p>`;
       return;
     }
-    
+
     container.innerHTML = tokens.map(token => `
       <div class="token-item">
         <div class="token-info">
@@ -65,7 +76,7 @@ async function loadTokens() {
         </div>
       </div>
     `).join('');
-    
+
     // Add event listeners to copy buttons
     container.querySelectorAll('.primary[data-copy-url]').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -76,7 +87,7 @@ async function loadTokens() {
         });
       });
     });
-    
+
     // Add event listeners to delete buttons
     container.querySelectorAll('.error').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -95,10 +106,10 @@ async function createToken() {
     alert(translate('Please enter a name for the token'));
     return;
   }
-  
+
   try {
     console.log('Creating token:', name);
-    
+
     const response = await fetch(API_URLS.create, {
       method: 'POST',
       headers: {
@@ -108,11 +119,11 @@ async function createToken() {
       credentials: 'same-origin',
       body: JSON.stringify({ name: name })
     });
-    
+
     console.log('Create response status:', response.status);
     const result = await response.json();
     console.log('Create result:', result);
-    
+
     if (result.error) {
       alert(`${translate('Error creating token')}: ${result.error}`);
     } else {
@@ -130,11 +141,11 @@ async function deleteToken(id) {
   if (!confirm(translate('Are you sure you want to delete this token?'))) {
     return;
   }
-  
+
   try {
     console.log('Deleting token:', id);
     const url = API_URLS.delete.replace('TOKEN_ID', id);
-    
+
     await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -143,7 +154,7 @@ async function deleteToken(id) {
       },
       credentials: 'same-origin'
     });
-    
+
     loadTokens();
   } catch (error) {
     console.error('Error deleting token:', error);
@@ -158,16 +169,16 @@ document.addEventListener('DOMContentLoaded', function() {
   if (createBtn) {
     createBtn.addEventListener('click', createToken);
   }
-  
+
   // Save settings button
   const saveSettingsBtn = document.getElementById('save-settings-btn');
   if (saveSettingsBtn) {
     saveSettingsBtn.addEventListener('click', saveSettings);
   }
-  
+
   // Load tokens
   loadTokens();
-  
+
   // Load calendars and folders for dropdowns
   loadCalendars();
   loadFolders();
@@ -182,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
       input.addEventListener('input', updateWeatherLink);
     }
   });
-  
+
   // Initialize exclude tags
   initExcludeTags();
 });
@@ -198,10 +209,10 @@ async function loadCalendars() {
       },
       credentials: 'same-origin'
     });
-    
+
     const calendars = await response.json();
     const select = document.getElementById('calendar_names');
-    
+
     // Get current value from PHP (JSON array)
     const currentValueStr = select.dataset.currentValue || '[]';
     let currentValues = [];
@@ -210,8 +221,8 @@ async function loadCalendars() {
     } catch (e) {
       console.error('Failed to parse calendar_names:', e);
     }
-    
-    select.innerHTML = calendars.map(cal => 
+
+    select.innerHTML = calendars.map(cal =>
         `<option value="${cal.displayName}" ${currentValues.includes(cal.displayName) ? 'selected' : ''}>${cal.displayName}</option>`
       ).join('');
   } catch (error) {
@@ -231,15 +242,15 @@ async function loadFolders() {
       },
       credentials: 'same-origin'
     });
-    
+
     const folders = await response.json();
     const select = document.getElementById('image_folder');
-    
+
     // Get current value from PHP
     const currentValue = select.dataset.currentValue || '';
-    
+
     select.innerHTML = `<option value="">${translate('Select folder')}</option>` +
-      folders.sort().map(folder => 
+      folders.sort().map(folder =>
         `<option value="${folder}" ${folder === currentValue ? 'selected' : ''}>${folder}</option>`
       ).join('');
   } catch (error) {
@@ -250,12 +261,12 @@ async function loadFolders() {
 
 async function saveSettings() {
   const msgSpan = document.getElementById('settings-msg');
-  
+
   try {
     // Get selected calendars from multi-select
     const calendarSelect = document.getElementById('calendar_names');
     const selectedCalendars = Array.from(calendarSelect.selectedOptions).map(opt => opt.value);
-    
+
     const data = {
       display_name: document.getElementById('display_name').value,
       calendar_names: JSON.stringify(selectedCalendars),
@@ -265,9 +276,9 @@ async function saveSettings() {
       weather_longitude: document.getElementById('weather_longitude').value,
       calendar_exclude: document.getElementById('calendar_exclude').value
     };
-    
+
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');
-    
+
     const response = await fetch(saveUrl, {
       method: 'POST',
       headers: {
@@ -277,9 +288,9 @@ async function saveSettings() {
       credentials: 'same-origin',
       body: JSON.stringify(data)
     });
-    
+
     const result = await response.json();
-    
+
     if (result.status === 'success') {
       msgSpan.textContent = translate('Settings saved successfully');
       msgSpan.style.color = 'green';
@@ -314,11 +325,11 @@ function initExcludeTags() {
   const hiddenInput = document.getElementById('calendar_exclude');
   const input = document.getElementById('calendar-exclude-input');
   const addBtn = document.getElementById('add-exclude-btn');
-  
+
   if (!hiddenInput || !input || !addBtn) {
     return;
   }
-  
+
   // Load existing tags from hidden input
   try {
     const existingValue = hiddenInput.value || '[]';
@@ -327,9 +338,9 @@ function initExcludeTags() {
     console.error('Error parsing exclude tags:', e);
     excludeTags = [];
   }
-  
+
   renderExcludeTags();
-  
+
   // Add tag on button click
   addBtn.addEventListener('click', function() {
     const value = input.value.trim();
@@ -340,7 +351,7 @@ function initExcludeTags() {
       updateHiddenInput();
     }
   });
-  
+
   // Add tag on Enter key
   input.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
@@ -359,19 +370,19 @@ function initExcludeTags() {
 function renderExcludeTags() {
   const container = document.getElementById('calendar-exclude-tags');
   if (!container) return;
-  
+
   if (excludeTags.length === 0) {
     container.innerHTML = `<span style="color: #999; font-style: italic;">${translate('No exclude terms yet')}</span>`;
     return;
   }
-  
+
   container.innerHTML = excludeTags.map((tag, index) => `
     <span class="exclude-tag">
       <span>${escapeHtml(tag)}</span>
       <span class="exclude-tag-remove" data-index="${index}">×</span>
     </span>
   `).join('');
-  
+
   // Add event listeners to remove buttons
   container.querySelectorAll('.exclude-tag-remove').forEach(btn => {
     btn.addEventListener('click', function() {

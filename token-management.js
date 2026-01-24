@@ -1,8 +1,20 @@
-// Debug: Check if OC is available
-console.log('OC object:', typeof OC !== 'undefined' ? 'available' : 'NOT available');
-if (typeof OC !== 'undefined') {
-  console.log('OC.requestToken:', OC.requestToken);
-}
+const translationsElement = document.getElementById('ds-i18n');
+const translate = (text, params = []) => {
+  if (translationsElement) {
+    const key = text.toLowerCase().replace(/\s+/g, '-');
+    const mapped = translationsElement.dataset[key] || translationsElement.dataset[text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()] || translationsElement.dataset[text];
+    if (mapped) {
+      if (Array.isArray(params) && params.length > 0) {
+        return mapped.replace('%s', params[0]).replace('{url}', params[0]);
+      }
+      return mapped;
+    }
+  }
+  if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
+    return OC.L10N.translate('digitalsignage', text, params);
+  }
+  return Array.isArray(params) && params.length > 0 ? text.replace('%s', params[0]) : text;
+};
 
 // Helper function to escape HTML
 function escapeHtml(text) {
@@ -48,7 +60,7 @@ async function loadTokens() {
     const container = document.getElementById('tokens-container');
     
     if (!tokens || tokens.length === 0) {
-      container.innerHTML = '<p>No tokens created yet.</p>';
+      container.innerHTML = `<p>${translate('No tokens yet')}</p>`;
       return;
     }
     
@@ -58,7 +70,7 @@ async function loadTokens() {
           <strong>${escapeHtml(token.name)}</strong><br>
           <span class="token-url">${escapeHtml(token.url)}</span>
         </div>
-        <button class="button button-delete" data-token-id="${token.id}">Delete</button>
+        <button class="button button-delete" data-token-id="${token.id}">${translate('Delete')}</button>
       </div>
     `).join('');
     
@@ -70,14 +82,14 @@ async function loadTokens() {
     });
   } catch (error) {
     console.error('Error loading tokens:', error);
-    document.getElementById('tokens-container').innerHTML = '<p>Error loading tokens: ' + error.message + '</p>';
+    document.getElementById('tokens-container').innerHTML = `<p>${translate('Error loading tokens')}: ${escapeHtml(error.message)}</p>`;
   }
 }
 
 async function createToken() {
   const name = document.getElementById('token-name').value;
   if (!name) {
-    alert('Please enter a name for the token');
+    alert(translate('Please enter a name for the token'));
     return;
   }
   
@@ -99,20 +111,20 @@ async function createToken() {
     console.log('Create result:', result);
     
     if (result.error) {
-      alert('Error: ' + result.error);
+      alert(`${translate('Error creating token')}: ${result.error}`);
     } else {
-      alert('Token created successfully!\n\nURL: ' + result.url);
+      alert(translate('Token created successfully! URL: %s', [result.url]));
       document.getElementById('token-name').value = '';
       loadTokens();
     }
   } catch (error) {
     console.error('Error creating token:', error);
-    alert('Error creating token: ' + error.message);
+    alert(`${translate('Error creating token')}: ${error.message}`);
   }
 }
 
 async function deleteToken(id) {
-  if (!confirm('Are you sure you want to delete this token?')) {
+  if (!confirm(translate('Are you sure you want to delete this token?'))) {
     return;
   }
   
@@ -132,14 +144,12 @@ async function deleteToken(id) {
     loadTokens();
   } catch (error) {
     console.error('Error deleting token:', error);
-    alert('Error deleting token: ' + error.message);
+    alert(`${translate('Error deleting token')}: ${error.message}`);
   }
 }
 
 // Setup event listeners when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOM loaded, setting up event listeners');
-  
   // Create token button
   const createBtn = document.getElementById('create-token-btn');
   if (createBtn) {
