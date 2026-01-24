@@ -1,13 +1,23 @@
 const translationsElement = document.getElementById('ds-i18n');
 const translate = (text, params = []) => {
+  const normalize = (t) => t.toLowerCase().replace(/[-_\s]+([a-z0-9])/g, (_, c) => c.toUpperCase());
+
   if (translationsElement) {
-    const key = text.toLowerCase().replace(/\s+/g, '-');
-    const mapped = translationsElement.dataset[key] || translationsElement.dataset[text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()] || translationsElement.dataset[text];
-    if (mapped) {
-      if (Array.isArray(params) && params.length > 0) {
-        return mapped.replace('%s', params[0]).replace('{url}', params[0]);
+    const keyCandidates = [
+      normalize(text),
+      text.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(),
+      text.toLowerCase().replace(/\s+/g, '-'),
+      text
+    ];
+
+    for (const key of keyCandidates) {
+      const mapped = translationsElement.dataset[key];
+      if (mapped) {
+        if (Array.isArray(params) && params.length > 0) {
+          return mapped.replace('%s', params[0]).replace('{url}', params[0]);
+        }
+        return mapped;
       }
-      return mapped;
     }
   }
   if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
