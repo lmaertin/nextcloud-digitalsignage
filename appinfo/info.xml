@@ -26,7 +26,7 @@ Supported languages:
     <website>https://github.com/lmaertin/nextcloud-digitalsignage</website>
     <bugs>https://github.com/lmaertin/nextcloud-digitalsignage/issues</bugs>
     <repository type="git">https://github.com/lmaertin/nextcloud-digitalsignage.git</repository>
-    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-display.png</screenshot>
     <dependencies>
         <nextcloud min-version="24" max-version="32"/>
         <php min-version="7.4"/>

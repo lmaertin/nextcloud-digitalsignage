@@ -4,11 +4,11 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 
 ## Features
 
-- 📅 **Calendar Integration**: Display upcoming events from Nextcloud calendars
-- 🖼️ **Image Slideshow**: Automatic slideshow from a Nextcloud folder
-- 🌤️ **Weather**: Current weather information (Open-Meteo API)
-- 🔗 **Public Tokens**: Create tokens for displays without login
-- ⚙️ **Configurable**: Settings for all parameters via UI
+- **Calendar Integration**: Display upcoming events from Nextcloud calendars
+- **Image Slideshow**: Automatic slideshow from a Nextcloud folder
+- **Weather**: Current weather information (Open-Meteo API)
+- **Public Tokens**: Create tokens for displays without login
+- **Configurable**: Settings for all parameters via UI
 
 ## Installation
 
@@ -22,7 +22,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 1. Clone the app into your Nextcloud `apps/` folder:
    ```bash
    cd /path/to/nextcloud/apps/
-   git clone https://github.com/nak-lehrte/digitalsignage.git
+   git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
    ```
 
 2. Or download the app from the Nextcloud App Store
@@ -65,7 +65,7 @@ The token URL opens a full-screen view without login. This can be opened on a Ra
 
 ```bash
 # Clone Repository
-git clone https://github.com/nak-lehrte/digitalsignage.git
+git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
 cd digitalsignage
 
 # Create symlink in Nextcloud
@@ -126,10 +126,39 @@ php occ app:enable digitalsignage
 - `GET /apps/digitalsignage/api/public/{token}/images`
 - `GET /apps/digitalsignage/api/public/{token}/image?id=<file_id>`
 
+## Publishing to App Store
+
+See [CODE_SIGNING.md](CODE_SIGNING.md) for instructions on code signing and publishing to the Nextcloud App Store.
+
+### Checklist for App Store Submission
+
+- [ ] Code signing certificate generated and CSR submitted
+- [ ] Screenshots added to `img/` folder (see [img/SCREENSHOTS.md](img/SCREENSHOTS.md))
+- [ ] Version number updated in `appinfo/info.xml`
+- [ ] CHANGELOG.md updated with release notes
+- [ ] Release tagged in Git
+- [ ] App archive created and signed
+- [ ] Submitted to https://apps.nextcloud.com/
+
 ## License
 
-AGPL-3.0
+AGPL-3.0 - See [LICENSE](LICENSE) file for details.
 
 ## Support
 
-If you have questions or encounter issues, please open an issue in the GitHub repository.
+If you have questions or encounter issues:
+- Open an issue: https://github.com/lmaertin/nextcloud-digitalsignage/issues
+- Check documentation in this README
+- Review the [CHANGELOG](CHANGELOG.md) for recent changes
+
+## Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with clear commit messages
+4. Submit a pull request
+
+## Authors
+
+See [AUTHORS](AUTHORS) file for list of contributors.

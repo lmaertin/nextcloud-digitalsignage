@@ -1,0 +1,64 @@
+name: Build and Sign Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-sign:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create release archive
+        run: |
+          mkdir -p releases
+          # Create clean copy without development files
+          cp -r . releases/digitalsignage
+          cd releases/digitalsignage
+          rm -rf .git .github .gitignore update-server.sh CODE_SIGNING.md RELEASING.md
+          find . -name "*.key" -delete
+          cd ..
+          tar -czf digitalsignage-${{ steps.version.outputs.version }}.tar.gz digitalsignage/
+
+      - name: Setup signing environment
+        run: |
+          mkdir -p certificates
+          echo "${{ secrets.CODESIGN_CERT }}" | base64 -d > certificates/digitalsignage.crt
+          echo "${{ secrets.CODESIGN_KEY }}" > certificates/digitalsignage.key
+          chmod 600 certificates/digitalsignage.key
+
+      - name: Sign release archive
+        run: |
+          cd releases
+          openssl dgst -sha512 -sign certificates/digitalsignage.key digitalsignage-${{ steps.version.outputs.version }}.tar.gz | openssl base64 > digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            releases/digitalsignage-${{ steps.version.outputs.version }}.tar.gz
+            releases/digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare for App Store
+        run: |
+          echo "Release digitalsignage-${{ steps.version.outputs.version }} is ready for App Store submission"
+          echo "Archive: releases/digitalsignage-${{ steps.version.outputs.version }}.tar.gz"
+          echo "Signature: $(cat releases/digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig)"
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          rm -f certificates/digitalsignage.key
+          rm -f releases/*.sig

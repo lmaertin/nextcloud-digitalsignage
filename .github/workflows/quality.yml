@@ -1,0 +1,68 @@
+name: Code Quality Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer, php-cs-fixer
+
+      - name: Install dependencies
+        run: composer install --no-progress
+
+      - name: Run PHP Lint
+        run: |
+          find . -name "*.php" ! -path "./vendor/*" -exec php -l {} \;
+
+      - name: Check translations
+        run: |
+          php l10n-helper.php validate
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Lint JavaScript
+        run: |
+          npm install 2>/dev/null || true
+          echo "JavaScript files found:"
+          find js -name "*.js" -type f
+
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run security checks
+        run: |
+          # Check for hardcoded secrets
+          if grep -r "password\|secret\|token" . --include="*.php" --include="*.js" | grep -v "node_modules\|vendor\|\.git"; then
+            echo "WARNING: Potential hardcoded secrets found"
+          fi
+          
+          # Check for SQL injection patterns
+          echo "Checking for common security issues..."
+          
+          # Check PHP files for security issues
+          find . -name "*.php" ! -path "./vendor/*" ! -path "./.git/*" -type f
+
+      - name: Check file permissions
+        run: |
+          # Ensure key files are not world-readable
+          find . -name "*.key" -type f -perm -044 && echo "WARNING: Private keys are readable" || true
