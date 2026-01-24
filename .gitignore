@@ -28,3 +28,4 @@ vendor/
 
 # Composer lockfile (library best practice)
 composer.lock
+.phpunit.result.cache
