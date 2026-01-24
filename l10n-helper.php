@@ -2,10 +2,10 @@
 <?php
 /**
  * Digital Signage - Translation Helper Script
- * 
- * Hilft beim Hinzufügen neuer Sprachen und Validierung von Übersetzungen
- * 
- * Verwendung:
+ *
+ * Helps with adding new languages and validating translations
+ *
+ * Usage:
  *   php l10n-helper.php add fr    # Add new language French
  *   php l10n-helper.php validate  # Check all translations
  *   php l10n-helper.php list      # Show available languages
