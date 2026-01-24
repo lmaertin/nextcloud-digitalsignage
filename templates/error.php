@@ -30,7 +30,7 @@
 </head>
 <body>
   <div class="error-box">
-    <h1>🔒 Access Denied</h1>
+    <h1>Access Denied</h1>
     <p><?php p($_['message']); ?></p>
   </div>
 </body>
