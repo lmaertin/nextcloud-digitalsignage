@@ -45,6 +45,9 @@ class TokenTest extends TestCase {
 
         $json = json_encode($this->token);
         $this->assertIsString($json);
-        $this->assertStringContainsString('Test Display', $json);
+        $data = json_decode($json, true);
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('id', $data);
+        $this->assertEquals(1, $data['id']);
     }
 }
