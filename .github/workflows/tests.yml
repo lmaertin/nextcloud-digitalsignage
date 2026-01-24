@@ -46,7 +46,13 @@ jobs:
             -v "$PWD":/var/www/html/apps-extra/digitalsignage \
             -w /var/www/html/apps-extra/digitalsignage \
             ghcr.io/juliusknorr/nextcloud-dev-php82:latest \
-            bash -lc "composer install --no-interaction --no-progress && NC_CONTAINER=1 ./vendor/bin/phpunit --coverage-clover coverage.xml"
+            bash -lc "\
+              git config --global --add safe.directory /var/www/html/apps-extra/digitalsignage && \
+              cd /var/www/html && \
+              php occ maintenance:install --database=sqlite --admin-user=admin --admin-pass=admin >/tmp/occ-install.log 2>&1 || true && \
+              cd /var/www/html/apps-extra/digitalsignage && \
+              composer install --no-interaction --no-progress && \
+              NC_CONTAINER=1 ./vendor/bin/phpunit --coverage-clover coverage.xml"
 
       - name: Generate coverage report
         if: matrix.php-version == '8.1' && matrix.nextcloud-version == '32'
