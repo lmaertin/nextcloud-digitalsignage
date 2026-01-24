@@ -138,59 +138,59 @@
   <div class="digitalsignage-container">
   <div class="container">
     <h2>Digital Signage</h2>
-    
+
     <div class="settings-section">
       <h3>⚙️ Display Settings</h3>
-      
+
       <div class="subsection">
         <div class="settings-row">
           <label for="calendar_name">📅 Calendar Name:</label>
           <input type="text" id="calendar_name" name="calendar_name" value="<?php p($_['calendar_name'] ?? 'personal'); ?>" placeholder="personal" />
           <p class="settings-hint">Name of your Nextcloud calendar to display</p>
         </div>
-        
+
         <div class="settings-row">
           <label for="image_folder">🖼️ Image Folder Path:</label>
           <input type="text" id="image_folder" name="image_folder" value="<?php p($_['image_folder'] ?? '/Fotos'); ?>" placeholder="/Fotos/Info-Monitor" />
           <p class="settings-hint">Path to image folder in your Nextcloud (e.g. /Fotos/Info-Monitor)</p>
         </div>
       </div>
-      
+
       <div class="subsection">
         <div class="settings-row">
           <label for="slide_interval">⏱️ Slide Interval (seconds):</label>
           <input type="number" id="slide_interval" name="slide_interval" value="<?php p($_['slide_interval'] ?? '10'); ?>" min="5" max="300" />
           <p class="settings-hint">How long each image is displayed (5-300 seconds)</p>
         </div>
-        
+
         <div class="settings-row">
           <label for="weather_latitude">🌦️ Weather Location - Latitude:</label>
           <input type="text" id="weather_latitude" name="weather_latitude" value="<?php p($_['weather_latitude'] ?? '52.3758'); ?>" placeholder="52.3758" />
         </div>
-        
+
         <div class="settings-row">
           <label for="weather_longitude">🌦️ Weather Location - Longitude:</label>
           <input type="text" id="weather_longitude" name="weather_longitude" value="<?php p($_['weather_longitude'] ?? '9.9747'); ?>" placeholder="9.9747" />
           <p class="settings-hint">Coordinates for weather display (uses Open-Meteo API)</p>
         </div>
-        
+
         <div class="settings-row">
           <label for="calendar_exclude">🚫 Exclude Events (JSON):</label>
           <textarea id="calendar_exclude" name="calendar_exclude" placeholder='["restmülltonne","Gottesdienst"]'><?php p($_['calendar_exclude'] ?? '[]'); ?></textarea>
           <p class="settings-hint">Event titles to hide (case-insensitive, JSON array)</p>
         </div>
       </div>
-      
+
       <button class="button" id="save-settings-btn">💾 Save Settings</button>
       <span id="settings-msg" style="margin-left: 1rem; font-weight: 600;"></span>
     </div>
-    
+
     <div class="create-form">
       <h3>🔑 Create New Display Token</h3>
       <input type="text" id="token-name" placeholder="Display name (e.g., Main Hall Monitor)" />
       <button class="button" id="create-token-btn">Create Token</button>
     </div>
-    
+
     <div class="token-list">
       <h3>📺 Existing Tokens</h3>
       <div id="tokens-container">Loading...</div>
@@ -198,7 +198,7 @@
   </div>
 
   <!-- Data attributes for JavaScript -->
-  <div style="display:none;" 
+  <div style="display:none;"
        data-list-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.list')); ?>"
        data-create-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.create')); ?>"
        data-delete-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.delete', ['id' => 'TOKEN_ID'])); ?>"

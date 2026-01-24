@@ -36,7 +36,7 @@ async function loadTokens() {
   try {
     console.log('Loading tokens...');
     console.log('API URL:', API_URLS.list);
-    
+
     const response = await fetch(API_URLS.list, {
       method: 'GET',
       headers: {
@@ -45,25 +45,25 @@ async function loadTokens() {
       },
       credentials: 'same-origin'
     });
-    
+
     console.log('Response status:', response.status);
-    
+
     if (!response.ok) {
       const text = await response.text();
       console.error('Response error:', text);
       throw new Error('HTTP ' + response.status + ': ' + text);
     }
-    
+
     const tokens = await response.json();
     console.log('Tokens received:', tokens);
-    
+
     const container = document.getElementById('tokens-container');
-    
+
     if (!tokens || tokens.length === 0) {
       container.innerHTML = `<p>${translate('No tokens yet')}</p>`;
       return;
     }
-    
+
     container.innerHTML = tokens.map(token => `
       <div class="token-item">
         <div>
@@ -73,7 +73,7 @@ async function loadTokens() {
         <button class="button button-delete" data-token-id="${token.id}">${translate('Delete')}</button>
       </div>
     `).join('');
-    
+
     // Add event listeners to delete buttons
     container.querySelectorAll('.button-delete').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -92,10 +92,10 @@ async function createToken() {
     alert(translate('Please enter a name for the token'));
     return;
   }
-  
+
   try {
     console.log('Creating token:', name);
-    
+
     const response = await fetch(API_URLS.create, {
       method: 'POST',
       headers: {
@@ -105,11 +105,11 @@ async function createToken() {
       credentials: 'same-origin',
       body: JSON.stringify({ name: name })
     });
-    
+
     console.log('Create response status:', response.status);
     const result = await response.json();
     console.log('Create result:', result);
-    
+
     if (result.error) {
       alert(`${translate('Error creating token')}: ${result.error}`);
     } else {
@@ -127,11 +127,11 @@ async function deleteToken(id) {
   if (!confirm(translate('Are you sure you want to delete this token?'))) {
     return;
   }
-  
+
   try {
     console.log('Deleting token:', id);
     const url = API_URLS.delete.replace('TOKEN_ID', id);
-    
+
     await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -140,7 +140,7 @@ async function deleteToken(id) {
       },
       credentials: 'same-origin'
     });
-    
+
     loadTokens();
   } catch (error) {
     console.error('Error deleting token:', error);
@@ -155,20 +155,20 @@ document.addEventListener('DOMContentLoaded', function() {
   if (createBtn) {
     createBtn.addEventListener('click', createToken);
   }
-  
+
   // Save settings button
   const saveSettingsBtn = document.getElementById('save-settings-btn');
   if (saveSettingsBtn) {
     saveSettingsBtn.addEventListener('click', saveSettings);
   }
-  
+
   // Load tokens
   loadTokens();
 });
 
 async function saveSettings() {
   const msgSpan = document.getElementById('settings-msg');
-  
+
   try {
     const data = {
       calendar_name: document.getElementById('calendar_name').value,
@@ -178,9 +178,9 @@ async function saveSettings() {
       weather_longitude: document.getElementById('weather_longitude').value,
       calendar_exclude: document.getElementById('calendar_exclude').value
     };
-    
+
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');
-    
+
     const response = await fetch(saveUrl, {
       method: 'POST',
       headers: {
@@ -190,9 +190,9 @@ async function saveSettings() {
       credentials: 'same-origin',
       body: JSON.stringify(data)
     });
-    
+
     const result = await response.json();
-    
+
     if (result.status === 'success') {
       msgSpan.textContent = '✓ Einstellungen gespeichert';
       msgSpan.style.color = 'green';

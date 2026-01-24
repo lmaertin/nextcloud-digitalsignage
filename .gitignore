@@ -8,7 +8,6 @@ certificates/*.key
 # Development and documentation files (not part of release)
 CODE_SIGNING.md
 RELEASING.md
-img/SCREENSHOTS.md
 
 # GitHub Actions
 .github/SECRETS.md
