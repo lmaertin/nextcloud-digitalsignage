@@ -17,23 +17,15 @@ echo "PHP syntax check passed"
 echo ""
 echo "Running PHPUnit tests..."
 
-if ! command -v docker >/dev/null 2>&1; then
-  echo "Warning: Docker not available - skipping PHPUnit tests" >&2
-else
-  if ! docker compose ps --services 2>/dev/null | grep -q '^nextcloud$'; then
-    echo "Warning: Nextcloud container not running - skipping PHPUnit tests" >&2
-  else
-    set +e
-    output=$(docker compose exec -T nextcloud bash -lc "cd /var/www/html/apps-extra/digitalsignage && [ -f vendor/bin/phpunit ] && NC_CONTAINER=1 ./vendor/bin/phpunit --testdox || echo 'PHPUnit not installed in container'" 2>&1)
-    status=$?
-    set -e
-
-    echo "$output"
-
-    if [ $status -ne 0 ]; then
-      echo "Warning: PHPUnit tests skipped (not available in container)" >&2
-    else
-      echo "PHPUnit tests passed"
-    fi
-  fi
+if [ ! -f "./vendor/bin/phpunit" ]; then
+  echo "PHPUnit not installed. Run: composer install" >&2
+  exit 1
 fi
+
+./vendor/bin/phpunit --testdox
+if [ $? -ne 0 ]; then
+  echo "Pre-commit hook: PHPUnit tests failed." >&2
+  exit 1
+fi
+
+echo "PHPUnit tests passed"
