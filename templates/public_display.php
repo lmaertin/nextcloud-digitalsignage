@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital Signage</title>
-  <?php 
+  <?php
     $urlGen = \OC::$server->getURLGenerator();
     $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
   ?>
   <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>">
 </head>
-<body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>" 
-      data-public-token="<?php p($_['token'] ?? ''); ?>" 
+<body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
+      data-public-token="<?php p($_['token'] ?? ''); ?>"
       data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>">
   <div class="display-header">
     <h1 id="display-title">Digital Signage</h1>
