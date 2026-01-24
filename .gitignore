@@ -25,3 +25,6 @@ node_modules/
 
 # PHP vendor
 vendor/
+
+# Composer lockfile (library best practice)
+composer.lock
