@@ -37,7 +37,7 @@ async function initSlideshow() {
   const el = document.getElementById('slideshow');
   
   try {
-    console.log('Initialisiere Slideshow...');
+    console.log('Initializing slideshow...');
     
     const res = await fetch(API_BASE + '/images');
     const data = await res.json();
@@ -47,7 +47,7 @@ async function initSlideshow() {
     }
     
     const images = data.images;
-    console.log('Bilder gefunden:', images.length);
+    console.log('Images found:', images.length);
     
     if (!images || images.length === 0) {
       throw new Error('No images found');
@@ -56,7 +56,7 @@ async function initSlideshow() {
     function show() {
       const img = images[Math.floor(Math.random() * images.length)];
       const imageUrl = API_BASE + '/image?id=' + img.id;
-      console.log('Zeige Bild:', img.name);
+      console.log('Showing image:', img.name);
       
       // Fade out
       el.style.opacity = '0';
@@ -71,16 +71,16 @@ async function initSlideshow() {
         el.style.opacity = '1';
       }, 300); // Wait for fade out to complete
       
-      console.log('Bild gesetzt mit weicher Überblendung');
+      console.log('Image set with smooth transition');
     }
     
-    // Erstes Bild sofort anzeigen
+    // Show first image immediately
     show();
     
-    // Dann alle X Sekunden wechseln
+    // Then switch every X seconds
     setInterval(show, config.slideInterval * 1000);
     
-    console.log('Slideshow erfolgreich gestartet');
+    console.log('Slideshow started successfully');
   } catch (error) {
     console.error('Error loading slideshow:', error);
     el.className = 'slideshow';
@@ -105,19 +105,19 @@ async function loadWeather() {
     const cw = d.current_weather;
     const daily = d.daily;
     
-    // Wettercode zu Icon mapping
+    // Weather code to icon mapping
     function getWeatherIcon(weatherCode) {
-      if (weatherCode <= 1) return '☀️'; // Sonnig
+      if (weatherCode <= 1) return '☀️'; // Sunny
       if (weatherCode <= 3) return '⛅'; // Partly cloudy
       if (weatherCode <= 48) return '☁️'; // Cloudy
-      if (weatherCode <= 67) return '🌧️'; // Regen
-      if (weatherCode <= 77) return '🌨️'; // Schnee
-      if (weatherCode <= 82) return '🌦️'; // Schauer
-      if (weatherCode <= 99) return '⛈️'; // Gewitter
+      if (weatherCode <= 67) return '🌧️'; // Rain
+      if (weatherCode <= 77) return '🌨️'; // Snow
+      if (weatherCode <= 82) return '🌦️'; // Showers
+      if (weatherCode <= 99) return '⛈️'; // Thunderstorm
       return '🌤️'; // Default
     }
     
-    // Temperatur zu Icon mapping
+    // Temperature to icon mapping
     function getTemperatureIcon(temp) {
       if (temp >= 25) return '🔥';
       if (temp >= 20) return '🌡️';
@@ -141,7 +141,7 @@ async function loadWeather() {
       }
     }
     
-    // Translate "Today" based on locale
+    // Get localized "Today" label
     function getTodayText() {
       const locale = config.locale || navigator.language || 'en-US';
       
@@ -265,7 +265,7 @@ async function loadICS() {
     const cal = document.getElementById('calendar');
     
     if (upcoming.length === 0) {
-      cal.innerHTML = '<p>Keine anstehenden Termine</p>';
+      cal.innerHTML = '<p>No upcoming events</p>';
     } else {
       cal.innerHTML = '<ul>' + upcoming.map(e => {
         const eventDate = e.startDate;

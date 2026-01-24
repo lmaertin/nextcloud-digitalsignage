@@ -22,11 +22,11 @@
         <div class="slideshow loading" id="slideshow"></div>
       </div>
       <div class="weather-box">
-        <div class="weather" id="weather">Wetter wird geladen...</div>
+        <div class="weather" id="weather">Loading weather...</div>
       </div>
     </div>
     <div class="right">
-      <div class="calendar" id="calendar">Kalender wird geladen...</div>
+      <div class="calendar" id="calendar">Loading calendar...</div>
     </div>
   </div>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
