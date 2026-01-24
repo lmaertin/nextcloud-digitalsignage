@@ -19,7 +19,7 @@ OC.L10N.register(
     "Hide events" : "Hide events",
     "Enter term and press Enter" : "Enter term and press Enter",
     "+ Add" : "+ Add",
-    "Terms that should not be displayed in event titles" : "Terms that should not be displayed in event titles",
+    "Events containing these terms will be hidden" : "Events containing these terms will be hidden",
     "Images / Slideshow" : "Images / Slideshow",
     "Image folder" : "Image folder",
     "Select the folder containing your images" : "Select the folder containing your images",

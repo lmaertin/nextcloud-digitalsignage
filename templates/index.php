@@ -44,7 +44,7 @@ $l = \OC::$server->getL10N('digitalsignage');
                 <button type="button" id="add-exclude-btn" class="button"><?php p($l->t('+ Add')); ?></button>
               </div>
               <input type="hidden" id="calendar_exclude" name="calendar_exclude" value="<?php p($_['calendar_exclude'] ?? '[]'); ?>" />
-              <span class="ds-hint"><?php p($l->t('Terms that should not be displayed in event titles')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden')); ?></span>
             </div>
           </div>
         </div>

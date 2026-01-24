@@ -18,7 +18,7 @@
         "Hide events": "Termine ausblenden",
         "Enter term and press Enter": "Begriff eingeben und Enter drücken",
         "+ Add": "+ Hinzufügen",
-        "Terms that should not be displayed in event titles": "Begriffe, die in Termin-Titeln nicht angezeigt werden sollen",
+        "Events containing these terms will be hidden": "Termine mit diesen Begriffen werden ausgeblendet",
         "Images / Slideshow": "Bilder & Slideshow",
         "Image folder": "Bildordner",
         "Select the folder containing your images": "Ordner mit deinen Bildern auswählen",
