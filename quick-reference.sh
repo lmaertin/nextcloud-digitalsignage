@@ -15,9 +15,9 @@ echo ""
 
 # Sprachen-Management
 echo "🌍 LANGUAGE MANAGEMENT"
-echo "  php l10n-helper.php list      # Verfügbare Sprachen zeigen"
-echo "  php l10n-helper.php validate  # Übersetzungen überprüfen"
-echo "  php l10n-helper.php add fr    # Französisch hinzufügen"
+echo "  php l10n-helper.php list      # Show available languages"
+echo "  php l10n-helper.php validate  # Check translations"
+echo "  php l10n-helper.php add fr    # Add French"
 echo ""
 
 # Testing

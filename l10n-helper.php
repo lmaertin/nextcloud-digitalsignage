@@ -6,9 +6,9 @@
  * Hilft beim Hinzufügen neuer Sprachen und Validierung von Übersetzungen
  * 
  * Verwendung:
- *   php l10n-helper.php add fr    # Neue Sprache Französisch hinzufügen
- *   php l10n-helper.php validate  # Alle Übersetzungen überprüfen
- *   php l10n-helper.php list      # Verfügbare Sprachen anzeigen
+ *   php l10n-helper.php add fr    # Add new language French
+ *   php l10n-helper.php validate  # Check all translations
+ *   php l10n-helper.php list      # Show available languages
  */
 
 if (php_sapi_name() !== 'cli') {

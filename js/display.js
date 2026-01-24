@@ -108,8 +108,8 @@ async function loadWeather() {
     // Wettercode zu Icon mapping
     function getWeatherIcon(weatherCode) {
       if (weatherCode <= 1) return '☀️'; // Sonnig
-      if (weatherCode <= 3) return '⛅'; // Teilweise bewölkt
-      if (weatherCode <= 48) return '☁️'; // Bewölkt
+      if (weatherCode <= 3) return '⛅'; // Partly cloudy
+      if (weatherCode <= 48) return '☁️'; // Cloudy
       if (weatherCode <= 67) return '🌧️'; // Regen
       if (weatherCode <= 77) return '🌨️'; // Schnee
       if (weatherCode <= 82) return '🌦️'; // Schauer

@@ -68,7 +68,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Linke Spalte - Container für Slideshow- und Wetter-Box */
+/* Left column - Container for slideshow and weather box */
 .left {
   display: flex;
   flex-direction: column;
@@ -96,7 +96,7 @@ body {
   border: 2px solid var(--border-color);
 }
 
-/* Slideshow füllt die gesamte Slideshow-Box */
+/* Slideshow fills the entire slideshow box */
 .slideshow {
   width: 100%;
   height: 100%;
@@ -465,7 +465,7 @@ body {
   animation: pulse 1.5s infinite;
 }
 
-/* Zusätzliche visuelle Verbesserungen */
+/* Additional visual enhancements */
 .container::before {
   content: '';
   position: fixed;

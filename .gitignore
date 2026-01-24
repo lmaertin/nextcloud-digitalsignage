@@ -1,0 +1,13 @@
+# Server Update Script - contains sensitive server information
+update-server.sh
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
