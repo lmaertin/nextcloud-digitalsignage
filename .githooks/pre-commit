@@ -12,4 +12,27 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "✓ PHP syntax check passed"
+echo "PHP syntax check passed"
+
+echo ""
+echo "Running PHPUnit tests..."
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Warning: Docker not available - skipping PHPUnit tests" >&2
+else
+  if ! docker compose ps --services 2>/dev/null | grep -q '^nextcloud$'; then
+    echo "Warning: Nextcloud container not running - skipping PHPUnit tests" >&2
+  else
+    set +e
+    docker compose exec nextcloud bash -lc "cd /var/www/html/apps-extra/digitalsignage && NC_CONTAINER=1 ./vendor/bin/phpunit --testdox"
+    status=$?
+    set -e
+
+    if [ $status -ne 0 ]; then
+      echo "Pre-commit hook: PHPUnit tests failed." >&2
+      exit $status
+    fi
+
+    echo "PHPUnit tests passed"
+  fi
+fi
