@@ -2,6 +2,8 @@
 
 A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.
 
+![Digital Signage Display](img/screenshot-display.png)
+
 ## Features (initial release 0.0.1)
 
 - Calendar integration: display upcoming events from Nextcloud calendars
@@ -42,9 +44,12 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
    - **Image Folder**: Select folder from your Nextcloud file tree (e.g., `/Photos/Info-Monitor`)
    - **Slide Interval (seconds)**: Duration per image
    - **Weather Coordinates**: Latitude and longitude (Open-Meteo)
-   - **Hide Events**: Terms as list/tags to exclude from event titles
-
+   - **Hide Events**: Terms as list/tags to exclude from event title
 3. Save the settings
+
+![Settings Screen 1](img/screenshot-settings-1.png)
+![Settings Screen 2](img/screenshot-settings-2.png)
+![Settings Screen 3](img/screenshot-settings-3.png)
 
 ## Usage
 
@@ -55,6 +60,8 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 3. Click **Create Token**; the URL will be displayed
 4. Copy it and open on your display device (kiosk mode recommended)
 5. You can also delete existing tokens there
+
+![Token Management](img/screenshot-tokens.png)
 
 ### Display View
 
