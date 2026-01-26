@@ -4,13 +4,21 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 
 ![Digital Signage Display](img/screenshot-display.png)
 
-## Features (initial release 0.0.1)
+
+## Features (since 0.0.2)
 
 - Calendar integration: display upcoming events from Nextcloud calendars
 - Image slideshow from a Nextcloud folder
 - Weather (Open-Meteo API)
 - Public tokens for displays without login
 - Configurable settings via UI
+- Automated App Store upload (CI/CD)
+- Nightly/pre-release support for App Store uploads
+- Optimized PNG screenshots in app description
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
 ## Installation
 

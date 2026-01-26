@@ -17,7 +17,10 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
+        <changelog lang="en">
+            - PNG screenshots optimized and added to app description
+        </changelog>
     <licence>agpl</licence>
     <author mail="github@lukas-maertin.de">Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
@@ -44,4 +47,11 @@ Supported languages:
             </post-migration>
         </steps>
     </repair>
+    <screenshots>
+        <screenshot>img/screenshot-display.png</screenshot>
+        <screenshot>img/screenshot-settings-1.png</screenshot>
+		<screenshot>img/screenshot-settings-2.png</screenshot>
+		<screenshot>img/screenshot-settings-3.png</screenshot>
+        <screenshot>img/screenshot-tokens.png</screenshot>
+    </screenshots>
 </info>

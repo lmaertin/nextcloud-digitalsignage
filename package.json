@@ -1,12 +1,12 @@
 {
   "name": "digitalsignage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Digital Signage App for Nextcloud",
   "license": "AGPL-3.0",
   "author": "Lukas Märtin <github@lukas-maertin.de>",
   "scripts": {
     "build": "echo 'No build step required'",
-    "package": "tar -czf digitalsignage.tar.gz --exclude='.git' --exclude='node_modules' --exclude='*.tar.gz' .",
+    "package": "tar -czf digitalsignage-0.0.2.tar.gz --exclude='.git' --exclude='node_modules' --exclude='*.tar.gz' .",
     "test": "phpunit",
     "test:coverage": "phpunit --coverage-html coverage"
   }
