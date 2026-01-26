@@ -1,23 +1,26 @@
 
+
 name: Upload to Nextcloud App Store
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Build and Sign Release"]
+    types:
+      - completed
 
 jobs:
   upload-appstore:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download release archive
-        run: |
-          TAG_NAME=${{ github.event.release.tag_name }}
-          wget -O digitalsignage-${TAG_NAME#v}.tar.gz "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/digitalsignage-${TAG_NAME#v}.tar.gz"
-          wget -O digitalsignage-${TAG_NAME#v}.tar.gz.sig "https://github.com/${{ github.repository }}/releases/download/${TAG_NAME}/digitalsignage-${TAG_NAME#v}.tar.gz.sig"
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: .
       - name: Upload to Nextcloud App Store
         env:
           NC_APPSTORE_TOKEN: ${{ secrets.NC_APPSTORE_TOKEN }}
         run: |
-          VERSION=${{ github.event.release.tag_name }}
-          VERSION=${VERSION#v}
+          VERSION=$(echo "${{ github.event.workflow_run.head_branch }}" | sed 's/^v//')
           ./scripts/upload-to-appstore.sh "$VERSION"
