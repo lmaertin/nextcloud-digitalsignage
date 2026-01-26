@@ -10,17 +10,22 @@ use OCP\IRequest;
 use OCP\ISession;
 use OCA\DigitalSignage\Db\TokenMapper;
 
+use OCP\IConfig;
+
 class PublicController extends PublicShareController {
     private $tokenMapper;
+    private $config;
 
     public function __construct(
         string $AppName,
         IRequest $request,
         ISession $session,
-        TokenMapper $tokenMapper
+        TokenMapper $tokenMapper,
+        IConfig $config
     ) {
         parent::__construct($AppName, $request, $session);
         $this->tokenMapper = $tokenMapper;
+        $this->config = $config;
     }
 
     protected function getPasswordHash(): ?string {
