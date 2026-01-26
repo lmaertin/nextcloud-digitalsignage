@@ -37,7 +37,7 @@ class PublicController extends PublicShareController {
             if (empty($token)) {
                 return false;
             }
-            
+
             $tokenEntity = $this->tokenMapper->findByToken($token);
             return $tokenEntity !== null;
         } catch (\Exception $e) {
@@ -65,7 +65,7 @@ class PublicController extends PublicShareController {
         try {
             // Verify token exists
             $tokenEntity = $this->tokenMapper->findByToken($token);
-            
+
             if (!$tokenEntity) {
                 $response = new TemplateResponse('digitalsignage', 'error', [
                     'message' => 'Invalid or expired token'
@@ -76,7 +76,7 @@ class PublicController extends PublicShareController {
             // Get locale from config
             $locale = $this->config->getAppValue('digitalsignage', 'locale', 'de-DE');
             $lang = substr($locale, 0, 2); // Extract language code (de, en, fr, etc.)
-            
+
             $response = new TemplateResponse(
                 'digitalsignage',
                 'public_display',
@@ -86,13 +86,13 @@ class PublicController extends PublicShareController {
                 ],
                 'blank'
             );
-            
+
             // Set CSP to allow open-meteo API
             $policy = new ContentSecurityPolicy();
             $policy->addAllowedConnectDomain('https://api.open-meteo.com');
             $policy->addAllowedScriptDomain('https://cdnjs.cloudflare.com');
             $response->setContentSecurityPolicy($policy);
-            
+
             return $response;
         } catch (\Exception $e) {
             return new TemplateResponse('digitalsignage', 'error', [
