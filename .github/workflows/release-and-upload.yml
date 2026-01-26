@@ -36,7 +36,7 @@ jobs:
 
       - name: Sign release archive
         run: |
-          openssl dgst -sha512 -sign certificates/digitalsignage.key digitalsignage-${{ steps.version.outputs.version }}.tar.gz | openssl base64 > digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig
+          openssl dgst -sha512 -sign certificates/digitalsignage.key -out digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig digitalsignage-${{ steps.version.outputs.version }}.tar.gz
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
