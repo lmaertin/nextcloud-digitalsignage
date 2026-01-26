@@ -23,12 +23,13 @@ jobs:
       - name: Create release archive
         run: |
           # Create clean copy without development files
-          mkdir -p /tmp/release
-          cp -r . /tmp/release/digitalsignage
-          cd /tmp/release/digitalsignage
-          rm -rf .git .github .gitignore update-server.sh CODE_SIGNING.md RELEASING.md
-          find . -name "*.key" -delete
-          cd /tmp/release
+          mkdir -p /tmp/build
+          rsync -av --exclude='.git' --exclude='.github' --exclude='.gitignore' \
+            --exclude='update-server.sh' --exclude='CODE_SIGNING.md' \
+            --exclude='RELEASING.md' --exclude='*.key' --exclude='vendor' \
+            --exclude='.phpunit.result.cache' --exclude='composer.lock' \
+            . /tmp/build/digitalsignage/
+          cd /tmp/build
           tar -czf digitalsignage-${{ steps.version.outputs.version }}.tar.gz digitalsignage/
           # Move back to workspace
           mv digitalsignage-${{ steps.version.outputs.version }}.tar.gz $GITHUB_WORKSPACE/
