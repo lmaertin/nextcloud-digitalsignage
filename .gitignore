@@ -1,16 +1,6 @@
-# Server Update Script - contains sensitive server information
-update-server.sh
-
 # Code signing private keys - NEVER commit!
 *.key
 certificates/*.key
-
-# Development and documentation files (not part of release)
-CODE_SIGNING.md
-RELEASING.md
-
-# GitHub Actions
-.github/SECRETS.md
 
 # IDE
 .vscode/

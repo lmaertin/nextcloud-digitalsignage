@@ -23,7 +23,7 @@ jobs:
           mkdir -p /tmp/release
           cp -r . /tmp/release/digitalsignage
           cd /tmp/release/digitalsignage
-          rm -rf .git .github .gitignore update-server.sh CODE_SIGNING.md RELEASING.md
+          rm -rf .git .github .gitignore scripts
           find . -name "*.key" -delete
           cd /tmp/release
           tar -czf digitalsignage-${{ steps.version.outputs.version }}.tar.gz digitalsignage/
