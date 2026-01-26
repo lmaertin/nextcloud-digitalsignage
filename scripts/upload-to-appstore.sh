@@ -60,12 +60,13 @@ echo "Registering release $ARCHIVE with the Nextcloud App Store (JSON API)..."
 # Encode signature as base64
 SIGNATURE_B64=$(base64 -w 0 "$SIGNATURE")
 
-# Build JSON body
-JSON_BODY="{\n  \"download\": \"$DOWNLOAD_URL\",\n  \"signature\": \"$SIGNATURE_B64\""
+
+# Build valid JSON body
 if [[ "$NIGHTLY" == "true" ]]; then
-  JSON_BODY+="\n  ,\"nightly\": true"
+  JSON_BODY=$(printf '{"download":"%s","signature":"%s","nightly":true}' "$DOWNLOAD_URL" "$SIGNATURE_B64")
+else
+  JSON_BODY=$(printf '{"download":"%s","signature":"%s"}' "$DOWNLOAD_URL" "$SIGNATURE_B64")
 fi
-JSON_BODY+="\n}"
 
 # API call
 response=$(curl -s -w "%{http_code}" -o /tmp/appstore_response.txt -X POST "$API_URL" \
