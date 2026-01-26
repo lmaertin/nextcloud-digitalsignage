@@ -49,16 +49,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get GitHub Release Asset Download URL
+        id: asset_url
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=${{ steps.version.outputs.version }}
+          RELEASE_ID=$(gh api repos/${{ github.repository }}/releases/tags/v$VERSION --jq '.id')
+          ASSET_URL=$(gh api repos/${{ github.repository }}/releases/$RELEASE_ID/assets --jq '.[] | select(.name == "digitalsignage-'$VERSION'.tar.gz") | .browser_download_url')
+          echo "download_url=$ASSET_URL" >> $GITHUB_OUTPUT
+
       - name: Upload to Nextcloud App Store
         env:
           NC_APPSTORE_TOKEN: ${{ secrets.NC_APPSTORE_TOKEN }}
         run: |
           VERSION=${{ steps.version.outputs.version }}
+          DOWNLOAD_URL="${{ steps.asset_url.outputs.download_url }}"
           NIGHTLY=""
           if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
             NIGHTLY="--nightly"
           fi
-          ./scripts/upload-to-appstore.sh "$VERSION" $NIGHTLY
+          ./scripts/upload-to-appstore.sh "$VERSION" "$DOWNLOAD_URL" $NIGHTLY
 
       - name: Clean up sensitive files
         if: always()

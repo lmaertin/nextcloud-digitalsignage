@@ -1,12 +1,13 @@
 #!/bin/bash
 # scripts/upload-to-appstore.sh
-# Uploads a release to the Nextcloud App Store via API
-# Usage: ./scripts/upload-to-appstore.sh <version>
+# Registers a release with the Nextcloud App Store via API (JSON, no direct upload!)
+# Usage: ./scripts/upload-to-appstore.sh <version> <download-url> [--nightly]
 
 set -euo pipefail
 
 
-# Argumente parsen
+
+# Parse arguments
 NIGHTLY="false"
 POSITIONAL=()
 while [[ $# -gt 0 ]]; do
@@ -23,16 +24,19 @@ while [[ $# -gt 0 ]]; do
 done
 set -- "${POSITIONAL[@]}"
 
-if [[ $# -lt 1 ]]; then
-  echo "Usage: $0 <version> [--nightly]"
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <version> <download-url> [--nightly]"
   exit 1
 fi
 
 VERSION="$1"
+DOWNLOAD_URL="$2"
 APP_NAME="digitalsignage"
 ARCHIVE="digitalsignage-${VERSION}.tar.gz"
 SIGNATURE="digitalsignage-${VERSION}.tar.gz.sig"
-API_URL="https://apps.nextcloud.com/api/v1/appstore/apps/${APP_NAME}/releases"
+API_URL="https://apps.nextcloud.com/api/v1/apps/releases"
+
+
 
 if [[ -z "${NC_APPSTORE_TOKEN:-}" ]]; then
   echo "NC_APPSTORE_TOKEN is not set!"
@@ -50,30 +54,31 @@ if [[ ! -f "$SIGNATURE" ]]; then
 fi
 
 
-echo "Uploading $ARCHIVE to Nextcloud App Store..."
 
+echo "Registering release $ARCHIVE with the Nextcloud App Store (JSON API)..."
+
+# Encode signature as base64
+SIGNATURE_B64=$(base64 -w 0 "$SIGNATURE")
+
+# Build JSON body
+JSON_BODY="{\n  \"download\": \"$DOWNLOAD_URL\",\n  \"signature\": \"$SIGNATURE_B64\""
 if [[ "$NIGHTLY" == "true" ]]; then
-  echo "Nightly-Flag ist gesetzt. Upload als Nightly-Release."
-  response=$(curl -s -w "%{http_code}" -o /tmp/appstore_response.txt -X POST "$API_URL" \
-    -H "Authorization: Token $NC_APPSTORE_TOKEN" \
-    -F "archive=@$ARCHIVE" \
-    -F "signature=@$SIGNATURE" \
-    -F "version=$VERSION" \
-    -F "nightly=true")
-else
-  response=$(curl -s -w "%{http_code}" -o /tmp/appstore_response.txt -X POST "$API_URL" \
-    -H "Authorization: Token $NC_APPSTORE_TOKEN" \
-    -F "archive=@$ARCHIVE" \
-    -F "signature=@$SIGNATURE" \
-    -F "version=$VERSION")
+  JSON_BODY+="\n  ,\"nightly\": true"
 fi
+JSON_BODY+="\n}"
+
+# API call
+response=$(curl -s -w "%{http_code}" -o /tmp/appstore_response.txt -X POST "$API_URL" \
+  -H "Authorization: Token $NC_APPSTORE_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "$JSON_BODY")
 
 cat /tmp/appstore_response.txt
 
-if [[ "$response" == "201" ]]; then
-  echo "Upload successful!"
+if [[ "$response" == "201" || "$response" == "200" ]]; then
+  echo "App Store release registered successfully!"
   exit 0
 else
-  echo "Upload failed with status $response"
+  echo "App Store API error, status $response"
   exit 1
 fi
