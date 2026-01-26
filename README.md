@@ -1,3 +1,6 @@
+## [0.0.3]
+
+- Screenshots for app store
 # Digital Signage for Nextcloud
 
 A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.

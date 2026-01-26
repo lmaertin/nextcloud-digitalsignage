@@ -1,3 +1,8 @@
+## [0.0.3] - 2026-01-26
+
+### Added
+- Small thumbnail for main screenshot (App Store preview loads faster)
+
 ## [0.0.2] - 2026-01-26
 
 ### Added

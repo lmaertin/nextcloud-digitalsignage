@@ -17,7 +17,10 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
+            <changelog lang="en">
+                - Added small-thumbnail for main screenshot to improve App Store preview performance
+            </changelog>
         <changelog lang="en">
             - PNG screenshots optimized and added to app description
         </changelog>
@@ -53,5 +56,10 @@ Supported languages:
 		<screenshot>img/screenshot-settings-2.png</screenshot>
 		<screenshot>img/screenshot-settings-3.png</screenshot>
         <screenshot>img/screenshot-tokens.png</screenshot>
+    <screenshots>
+        <screenshot small-thumbnail="https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display-thumb.png">https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-1.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-2.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-3.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-tokens.png</screenshot>
     </screenshots>
-</info>
