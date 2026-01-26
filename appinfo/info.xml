@@ -51,12 +51,6 @@ Supported languages:
         </steps>
     </repair>
     <screenshots>
-        <screenshot>img/screenshot-display.png</screenshot>
-        <screenshot>img/screenshot-settings-1.png</screenshot>
-		<screenshot>img/screenshot-settings-2.png</screenshot>
-		<screenshot>img/screenshot-settings-3.png</screenshot>
-        <screenshot>img/screenshot-tokens.png</screenshot>
-    <screenshots>
         <screenshot small-thumbnail="https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display-thumb.png">https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display.png</screenshot>
         <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-1.png</screenshot>
         <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-2.png</screenshot>

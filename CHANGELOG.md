@@ -2,6 +2,7 @@
 
 ### Added
 - Small thumbnail for main screenshot (App Store preview loads faster)
+- Further screenshots for app store
 
 ## [0.0.2] - 2026-01-26
 
