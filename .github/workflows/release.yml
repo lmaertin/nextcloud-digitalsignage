@@ -35,8 +35,6 @@ jobs:
 
       - name: Setup signing environment
         run: |
-          mkdir -p certificates
-          echo "${{ secrets.CODESIGN_CERT }}" | base64 -d > certificates/digitalsignage.crt
           echo "${{ secrets.CODESIGN_KEY }}" > certificates/digitalsignage.key
           chmod 600 certificates/digitalsignage.key
 
