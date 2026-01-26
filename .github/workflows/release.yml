@@ -9,7 +9,10 @@ permissions:
   contents: write
 
 jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml
   build-and-sign:
+    needs: quality
     runs-on: ubuntu-latest
 
     steps:
@@ -61,11 +64,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare for App Store
-        run: |
-          echo "Release digitalsignage-${{ steps.version.outputs.version }} is ready for App Store submission"
-          echo "Archive: digitalsignage-${{ steps.version.outputs.version }}.tar.gz"
-          echo "Signature: $(cat digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig)"
+      # Schritt zur App Store Vorbereitung entfernt (Screenshots, Changelog etc. werden nicht mehr geprüft)
 
       - name: Clean up sensitive files
         if: always()
