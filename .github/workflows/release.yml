@@ -42,6 +42,14 @@ jobs:
         run: |
           openssl dgst -sha512 -sign certificates/digitalsignage.key digitalsignage-${{ steps.version.outputs.version }}.tar.gz | openssl base64 > digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig
 
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: |
+            digitalsignage-${{ steps.version.outputs.version }}.tar.gz
+            digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
