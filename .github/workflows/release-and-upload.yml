@@ -54,7 +54,11 @@ jobs:
           NC_APPSTORE_TOKEN: ${{ secrets.NC_APPSTORE_TOKEN }}
         run: |
           VERSION=${{ steps.version.outputs.version }}
-          ./scripts/upload-to-appstore.sh "$VERSION"
+          NIGHTLY=""
+          if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
+            NIGHTLY="--nightly"
+          fi
+          ./scripts/upload-to-appstore.sh "$VERSION" $NIGHTLY
 
       - name: Clean up sensitive files
         if: always()
