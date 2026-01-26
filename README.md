@@ -218,6 +218,24 @@ See [CODE_SIGNING.md](CODE_SIGNING.md) for instructions on code signing and publ
 - [ ] App archive created and signed
 - [ ] Submitted to <https://apps.nextcloud.com/>
 
+## GitHub Secrets for Release and App Store Upload
+
+For automated releases and App Store uploads, the following GitHub Secrets are required:
+
+- **CODESIGN_KEY**: Private key for code signing (content of `certificates/digitalsignage.key`). Used in the release workflow to sign the release archive. Never make this public.
+- **NC_APPSTORE_TOKEN**: API token for the Nextcloud App Store (generate in the App Store developer portal). Used in the upload workflow to automatically upload the signed release.
+
+**Function:**
+- `CODESIGN_KEY` is written to a file in the workflow and used by OpenSSL for signing.
+- `NC_APPSTORE_TOKEN` is passed as an environment variable to the upload script and authenticates the API request to the App Store.
+
+**How to set the secrets:**
+- GitHub Repository → Settings → Secrets and variables → Actions → New repository secret
+- Name: `CODESIGN_KEY`, Value: (content of `digitalsignage.key`)
+- Name: `NC_APPSTORE_TOKEN`, Value: (your App Store API token)
+
+The secrets are never stored in the repository and are only accessible to GitHub Actions.
+
 ## License
 
 AGPL-3.0 - See [LICENSE](LICENSE) file for details.
