@@ -17,15 +17,9 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.3</version>
-            <changelog lang="en">
-                - Added small-thumbnail for main screenshot to improve App Store preview performance
-            </changelog>
-        <changelog lang="en">
-            - PNG screenshots optimized and added to app description
-        </changelog>
+    <version>0.0.4</version>
     <licence>agpl</licence>
-    <author mail="github@lukas-maertin.de">Lukas Märtin</author>
+    <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
     <category>multimedia</category>
     <category>tools</category>
