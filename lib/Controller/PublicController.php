@@ -73,10 +73,17 @@ class PublicController extends PublicShareController {
                 return $response;
             }
 
+            // Get locale from config
+            $locale = $this->config->getAppValue('digitalsignage', 'locale', 'de-DE');
+            $lang = substr($locale, 0, 2); // Extract language code (de, en, fr, etc.)
+            
             $response = new TemplateResponse(
                 'digitalsignage',
                 'public_display',
-                ['token' => $token],
+                [
+                    'token' => $token,
+                    'lang' => $lang
+                ],
                 'blank'
             );
             
