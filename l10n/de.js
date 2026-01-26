@@ -76,7 +76,6 @@ OC.L10N.register(
     "Copied!" : "Kopiert!",
     "Error loading tokens" : "Fehler beim Laden der Tokens",
     "Please enter a name for the token" : "Bitte einen Namen für den Token eingeben",
-    "Token created successfully! URL: %s" : "Token erfolgreich erstellt! URL: %s",
     "Are you sure you want to delete this token?" : "Diesen Token wirklich löschen?",
     "Select folder" : "Ordner auswählen",
     "No exclude terms yet" : "Noch keine Begriffe zum Ausblenden",

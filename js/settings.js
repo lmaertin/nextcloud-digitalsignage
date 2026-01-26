@@ -61,7 +61,7 @@ async function loadTokens() {
         </div>
         <div class="token-actions">
           <button class="primary" data-copy-url="${escapeHtml(token.url)}" title="${translate('Copy URL')}">${translate('Copy')}</button>
-          <button class="error" data-token-id="${token.id}" title="${translate('Delete token')}">${translate('Delete')}</button>
+          <button class="error" data-token-id="${token.id}" data-token-name="${escapeHtml(token.name)}" title="${translate('Delete token')}">${translate('Delete')}</button>
         </div>
       </div>
     `).join('');
@@ -80,7 +80,7 @@ async function loadTokens() {
     // Add event listeners to delete buttons
     container.querySelectorAll('.error').forEach(btn => {
       btn.addEventListener('click', function() {
-        deleteToken(this.getAttribute('data-token-id'));
+        deleteToken(this.getAttribute('data-token-id'), this.getAttribute('data-token-name'));
       });
     });
   } catch (error) {
@@ -116,7 +116,7 @@ async function createToken() {
     if (result.error) {
       alert(`${translate('Error creating token')}: ${result.error}`);
     } else {
-      alert(translate('Token created successfully! URL: %s', [result.url]));
+      alert(translate('Token created successfully'));
       document.getElementById('token-name').value = '';
       loadTokens();
     }
@@ -127,7 +127,8 @@ async function createToken() {
 }
 
 async function deleteToken(id) {
-  if (!confirm(translate('Are you sure you want to delete this token?'))) {
+  const msg = translate('Are you sure you want to delete this token?');
+  if (!confirm(msg)) {
     return;
   }
 
