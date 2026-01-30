@@ -1,3 +1,10 @@
+# [0.0.5] - 2026-01-30
+
+
+### Changed
+- Version bump, updated README/Changelog
+- Removed: appinfo/database.xml (no longer supported by Nextcloud)
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

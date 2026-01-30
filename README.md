@@ -1,3 +1,14 @@
+
+
+## [0.0.5]
+
+- Version bump, updated README/Changelog
+- Removed: appinfo/database.xml (no longer supported by Nextcloud)
+
+## [0.0.4]
+
+- Metadata clean up
+
 ## [0.0.3]
 
 - Screenshots for app store
