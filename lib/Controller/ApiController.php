@@ -48,11 +48,11 @@ class ApiController extends Controller {
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true)
         ]);
-        
+
         $policy = new ContentSecurityPolicy();
         $policy->addAllowedConnectDomain('https://api.open-meteo.com');
         $response->setContentSecurityPolicy($policy);
-        
+
         return $response;
     }
 
@@ -63,26 +63,26 @@ class ApiController extends Controller {
         try {
             $calendars = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $this->userId);
             $calendarList = [];
-            
+
             foreach ($calendars as $calendar) {
                 // Skip deleted/trashed calendars
                 if (method_exists($calendar, 'isDeleted') && $calendar->isDeleted()) {
                     continue;
                 }
-                
+
                 // Filter out calendars from trash
                 $uri = $calendar->getUri();
                 if (strpos($uri, 'trash') !== false || strpos($uri, 'deleted') !== false) {
                     continue;
                 }
-                
+
                 $calendarList[] = [
                     'key' => $calendar->getKey(),
                     'displayName' => $calendar->getDisplayName(),
                     'uri' => $calendar->getUri()
                 ];
             }
-            
+
             return new JSONResponse($calendarList);
         } catch (\Exception $e) {
             return new JSONResponse(['error' => $e->getMessage()], 500);
@@ -96,7 +96,7 @@ class ApiController extends Controller {
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
             $folders = $this->listFolders($userFolder, '');
-            
+
             return new JSONResponse($folders);
         } catch (\Exception $e) {
             return new JSONResponse(['error' => $e->getMessage()], 500);
@@ -105,12 +105,12 @@ class ApiController extends Controller {
 
     private function listFolders($folder, $path) {
         $folders = [];
-        
+
         foreach ($folder->getDirectoryListing() as $node) {
             if ($node->getType() === \OCP\Files\FileInfo::TYPE_FOLDER) {
                 $folderPath = $path . '/' . $node->getName();
                 $folders[] = $folderPath;
-                
+
                 // Recursively list subfolders (max depth 3)
                 if (substr_count($folderPath, '/') < 3) {
                     $subfolders = $this->listFolders($node, $folderPath);
@@ -118,7 +118,7 @@ class ApiController extends Controller {
                 }
             }
         }
-        
+
         return $folders;
     }
 
@@ -128,7 +128,7 @@ class ApiController extends Controller {
     public function getCalendar(): JSONResponse {
         try {
             $calendarName = $this->config->getAppValue('digitalsignage', 'calendar_name', '');
-            
+
             if (empty($calendarName)) {
                 return new JSONResponse(['error' => 'No calendar configured'], 400);
             }
@@ -164,8 +164,62 @@ class ApiController extends Controller {
                 'calendar' => $events,
                 'calendarName' => $targetCalendar->getDisplayName()
             ]);
-            
+
             return $response;
+        } catch (\Exception $e) {
+            return new JSONResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function getEventTitles(): JSONResponse {
+        try {
+            $calendarNamesJson = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
+            $calendarNames = json_decode($calendarNamesJson, true);
+
+            if (empty($calendarNames) || !is_array($calendarNames)) {
+                return new JSONResponse([]);
+            }
+
+            $calendars = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $this->userId);
+            $eventTitles = [];
+
+            foreach ($calendarNames as $calendarName) {
+                $targetCalendar = null;
+
+                foreach ($calendars as $calendar) {
+                    if ($calendar->getDisplayName() === $calendarName || $calendar->getKey() === $calendarName) {
+                        $targetCalendar = $calendar;
+                        break;
+                    }
+                }
+
+                if (!$targetCalendar) {
+                    continue;
+                }
+
+                $searchResult = $targetCalendar->search('', [], [], null, null);
+
+                foreach ($searchResult as $eventData) {
+                    $title = null;
+
+                    if (isset($eventData['objects'][0]['SUMMARY'][0])) {
+                        $title = $eventData['objects'][0]['SUMMARY'][0];
+                    } elseif (isset($eventData['SUMMARY'])) {
+                        $title = is_array($eventData['SUMMARY']) ? $eventData['SUMMARY'][0] : $eventData['SUMMARY'];
+                    }
+
+                    if ($title && !empty(trim($title)) && !in_array($title, $eventTitles)) {
+                        $eventTitles[] = trim($title);
+                    }
+                }
+            }
+
+            sort($eventTitles, SORT_STRING | SORT_FLAG_CASE);
+
+            return new JSONResponse($eventTitles);
         } catch (\Exception $e) {
             return new JSONResponse(['error' => $e->getMessage()], 500);
         }
@@ -177,13 +231,13 @@ class ApiController extends Controller {
     public function getImages(): JSONResponse {
         try {
             $imageFolder = $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos/Info-Monitor');
-            
+
             if (empty($imageFolder)) {
                 return new JSONResponse(['error' => 'No image folder configured'], 400);
             }
 
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
-            
+
             try {
                 $folder = $userFolder->get($imageFolder);
             } catch (\OCP\Files\NotFoundException $e) {
@@ -224,7 +278,7 @@ class ApiController extends Controller {
     public function getImage(): StreamResponse {
         try {
             $fileId = $this->request->getParam('id');
-            
+
             if (empty($fileId)) {
                 http_response_code(400);
                 die('Missing file ID');
@@ -239,7 +293,7 @@ class ApiController extends Controller {
             }
 
             $file = $files[0];
-            
+
             if (!($file instanceof \OCP\Files\File)) {
                 http_response_code(400);
                 die('Not a file');
@@ -249,7 +303,7 @@ class ApiController extends Controller {
             $response->addHeader('Content-Type', $file->getMimeType());
             $response->addHeader('Content-Length', $file->getSize());
             $response->addHeader('Content-Disposition', 'inline; filename="' . $file->getName() . '"');
-            
+
             return $response;
         } catch (\Exception $e) {
             http_response_code(500);

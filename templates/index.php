@@ -88,7 +88,8 @@ $l = \OC::$server->getL10N('digitalsignage');
                 <!-- Tags will be inserted here -->
               </div>
               <div class="ds-tag-input-group">
-                <input type="text" id="calendar-exclude-input" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
+                <input type="text" id="calendar-exclude-input" list="event-titles-list" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
+                <datalist id="event-titles-list"></datalist>
                 <button type="button" id="add-exclude-btn" class="button"><?php p($l->t('+ Add')); ?></button>
               </div>
               <input type="hidden" id="calendar_exclude" name="calendar_exclude" value="<?php p($_['calendar_exclude'] ?? '[]'); ?>" />

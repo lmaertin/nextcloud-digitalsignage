@@ -179,6 +179,14 @@ document.addEventListener('DOMContentLoaded', function() {
   loadCalendars();
   loadFolders();
 
+  // Load event titles for autocomplete when calendars change
+  const calendarSelect = document.getElementById('calendar_names');
+  if (calendarSelect) {
+    calendarSelect.addEventListener('change', loadEventTitles);
+    // Load initially after calendars are loaded
+    setTimeout(loadEventTitles, 500);
+  }
+
   // Weather link preview
   updateWeatherLink();
   const latInput = document.getElementById('weather_latitude');
@@ -255,6 +263,42 @@ async function loadFolders() {
   } catch (error) {
     console.error('Error loading folders:', error);
     document.getElementById('image_folder').innerHTML = `<option value="">${translate('Error loading folders')}</option>`;
+  }
+}
+
+async function loadEventTitles() {
+  try {
+    const eventTitlesUrl = OC.generateUrl('/apps/digitalsignage/api/event-titles');
+    const response = await fetch(eventTitlesUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'requesttoken': CSRF_TOKEN
+      },
+      credentials: 'same-origin'
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
+    const titles = await response.json();
+    const datalist = document.getElementById('event-titles-list');
+
+    if (!datalist) {
+      return;
+    }
+
+    datalist.innerHTML = '';
+
+    titles.forEach(title => {
+      if (!excludeTags.includes(title)) {
+        const option = document.createElement('option');
+        option.value = title;
+        datalist.appendChild(option);
+      }
+    });
+  } catch (error) {
   }
 }
 
@@ -355,6 +399,7 @@ function initExcludeTags() {
       input.value = '';
       renderExcludeTags();
       updateHiddenInput();
+      loadEventTitles(); // Reload to update available suggestions
     }
   });
 
@@ -368,6 +413,7 @@ function initExcludeTags() {
         input.value = '';
         renderExcludeTags();
         updateHiddenInput();
+        loadEventTitles(); // Reload to update available suggestions
       }
     }
   });
@@ -396,6 +442,7 @@ function renderExcludeTags() {
       excludeTags.splice(index, 1);
       renderExcludeTags();
       updateHiddenInput();
+      loadEventTitles(); // Reload to update available suggestions
     });
   });
 }

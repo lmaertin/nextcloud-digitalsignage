@@ -17,7 +17,7 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
@@ -45,10 +45,10 @@ Supported languages:
         </steps>
     </repair>
     <screenshots>
-        <screenshot small-thumbnail="https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display-thumb.png">https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-display.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-1.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-2.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-settings-3.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/refs/heads/main/img/screenshot-tokens.png</screenshot>
+        <screenshot small-thumbnail="https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-display-thumb.png">https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-display.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-settings-1.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-settings-2.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-settings-3.png</screenshot>
+        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/v0.0.6/img/screenshot-tokens.png</screenshot>
     </screenshots>
 </info>

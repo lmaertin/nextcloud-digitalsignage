@@ -64,11 +64,11 @@ class PublicApiController extends Controller {
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true)
         ]);
-        
+
         $policy = new ContentSecurityPolicy();
         $policy->addAllowedConnectDomain('https://api.open-meteo.com');
         $response->setContentSecurityPolicy($policy);
-        
+
         return $response;
     }
 
@@ -85,7 +85,7 @@ class PublicApiController extends Controller {
         try {
             $calendarNamesJson = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
             $calendarNames = json_decode($calendarNamesJson, true);
-            
+
             if (empty($calendarNames) || !is_array($calendarNames)) {
                 return new JSONResponse(['error' => 'No calendars configured'], 400);
             }
@@ -96,7 +96,7 @@ class PublicApiController extends Controller {
             // Iterate through each configured calendar name
             foreach ($calendarNames as $calendarName) {
                 $targetCalendar = null;
-                
+
                 foreach ($calendars as $calendar) {
                     if ($calendar->getDisplayName() === $calendarName || $calendar->getKey() === $calendarName) {
                         $targetCalendar = $calendar;
@@ -137,13 +137,13 @@ class PublicApiController extends Controller {
 
         try {
             $imageFolder = $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos/Info-Monitor');
-            
+
             if (empty($imageFolder)) {
                 return new JSONResponse(['error' => 'No image folder configured'], 400);
             }
 
             $userFolder = $this->rootFolder->getUserFolder($userId);
-            
+
             try {
                 $folder = $userFolder->get($imageFolder);
             } catch (\OCP\Files\NotFoundException $e) {
@@ -191,7 +191,7 @@ class PublicApiController extends Controller {
 
         try {
             $fileId = $this->request->getParam('id');
-            
+
             if (empty($fileId)) {
                 http_response_code(400);
                 die('Missing file ID');
@@ -206,7 +206,7 @@ class PublicApiController extends Controller {
             }
 
             $file = $files[0];
-            
+
             if (!($file instanceof \OCP\Files\File)) {
                 http_response_code(400);
                 die('Not a file');
@@ -216,7 +216,7 @@ class PublicApiController extends Controller {
             $response->addHeader('Content-Type', $file->getMimeType());
             $response->addHeader('Content-Length', $file->getSize());
             $response->addHeader('Content-Disposition', 'inline; filename="' . $file->getName() . '"');
-            
+
             return $response;
         } catch (\Exception $e) {
             http_response_code(500);

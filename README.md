@@ -1,36 +1,30 @@
 
-
-## [0.0.5]
-
-- Version bump, updated README/Changelog
-- Removed: appinfo/database.xml (no longer supported by Nextcloud)
-
-## [0.0.4]
-
-- Metadata clean up
-
-## [0.0.3]
-
-- Screenshots for app store
 # Digital Signage for Nextcloud
 
 A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.
 
 ![Digital Signage Display](img/screenshot-display.png)
 
+## Recent Changes
 
-## Features (since 0.0.2)
+### [0.0.6]
 
-- Calendar integration: display upcoming events from Nextcloud calendars
-- Image slideshow from a Nextcloud folder
-- Weather (Open-Meteo API)
-- Public tokens for displays without login
-- Configurable settings via UI
-- Automated App Store upload (CI/CD)
-- Nightly/pre-release support for App Store uploads
-- Optimized PNG screenshots in app description
+- Autocomplete for event exclusion based on actual calendar event titles
+- Customizable display colors (Primary, Background, Text, Gradient Start/End)
+- Toggle to show/hide display name on screen
+- German translations for all new settings
+- Multiple calendars support
 
-## Changelog
+## Features
+
+- **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
+- **Image slideshow**: Automated slideshow from a Nextcloud folder
+- **Customizable appearance**: Configure colors (primary, background, text, gradient) and toggle display title visibility
+- **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
+- **Weather information**: Real-time weather data via Open-Meteo API
+- **Public tokens**: Secure display access without login
+- **Multi-language support**: English and German translations
+- **Configurable settings**: All settings managed through intuitive UI
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
@@ -43,14 +37,14 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
 ### Installing in Nextcloud
 
-1. Clone the app into your Nextcloud `apps/` folder:
+1. Download the app from the Nextcloud App Store
+
+2. Or clone the app into your Nextcloud `apps/` folder:
 
    ```bash
    cd /path/to/nextcloud/apps/
    git clone https://github.com/lmaertin/nextcloud-digitalsignage.git
    ```
-
-2. Or download the app from the Nextcloud App Store (once published)
 
 3. Enable the app in Nextcloud settings or via CLI:
    - UI: **Settings** > **Apps** > "Digital Signage" > **Enable**
@@ -61,12 +55,31 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 1. Open the **Digital Signage** app in Nextcloud (App overview) – settings are integrated directly on the app page.
 
 2. Configure the following settings (via UI, no file edits needed):
-   - **Display Name**: Title shown at the top of the display
+   
+   **Display Settings:**
+   - **Display Name**: Title shown at the top of the display (can be toggled off)
+   - **Show Display Name**: Checkbox to show or hide the display name on screen
+   
+   **Color Customization:**
+   - **Primary Color**: Main accent color for UI elements
+   - **Background Color**: Display background color
+   - **Text Color**: Color for event and information text
+   - **Gradient Start/End**: Header gradient colors for title bar
+   - Colors can be reset to defaults with one click
+   
+   **Content Sources:**
    - **Calendar Sources**: Select multiple calendars from your Nextcloud calendars
    - **Image Folder**: Select folder from your Nextcloud file tree (e.g., `/Photos/Info-Monitor`)
-   - **Slide Interval (seconds)**: Duration per image
-   - **Weather Coordinates**: Latitude and longitude (Open-Meteo)
-   - **Hide Events**: Terms as list/tags to exclude from event title
+   - **Slide Interval (seconds)**: Duration per image in slideshow
+   
+   **Event Filtering:**
+   - **Hide Events**: Exclude specific events by title using autocomplete suggestions
+   - Autocomplete shows actual event titles from your configured calendars
+   - Add multiple exclusion terms as tags
+   
+   **Weather:**
+   - **Weather Coordinates**: Latitude and longitude for Open-Meteo API
+
 3. Save the settings
 
 ![Settings Screen 1](img/screenshot-settings-1.png)

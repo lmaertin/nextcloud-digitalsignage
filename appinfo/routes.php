@@ -12,6 +12,7 @@ return [
         ['name' => 'api#getCalendarsList', 'url' => '/api/calendars', 'verb' => 'GET'],
         ['name' => 'api#getFoldersList', 'url' => '/api/folders', 'verb' => 'GET'],
         ['name' => 'api#getCalendar', 'url' => '/api/calendar', 'verb' => 'GET'],
+        ['name' => 'api#getEventTitles', 'url' => '/api/event-titles', 'verb' => 'GET'],
         ['name' => 'api#getImages', 'url' => '/api/images', 'verb' => 'GET'],
         ['name' => 'api#getImage', 'url' => '/api/image', 'verb' => 'GET'],
 
