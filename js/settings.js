@@ -313,6 +313,7 @@ async function saveSettings() {
     const data = {
       display_name: document.getElementById('display_name').value,
       show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
+      auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       calendar_names: JSON.stringify(selectedCalendars),
       image_folder: document.getElementById('image_folder').value,
       slide_interval: document.getElementById('slide_interval').value,

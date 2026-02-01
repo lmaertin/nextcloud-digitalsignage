@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2026-02-01
+
+### Added
+
+- Fullscreen toggle button integrated into display header
+- Optional auto-prompt for fullscreen mode on page load (configurable setting)
+- Chrome/Safari compatibility with webkit fullscreen API prefixes
+- Internationalized fullscreen dialog using Nextcloud user language
+- Auto-hide functionality for fullscreen button with mouse movement detection
+
 ## [0.0.6] - 2026-02-01
 
 ### Added

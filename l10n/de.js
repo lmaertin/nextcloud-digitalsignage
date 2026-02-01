@@ -14,6 +14,8 @@ OC.L10N.register(
     "Display Name" : "Display-Name",
     "Name for this display (shown on display)" : "Name für diese Anzeige (wird im Display angezeigt)",
     "Name for this display (shown on display). Uncheck to hide." : "Name für diese Anzeige (wird im Display angezeigt). Abwählen zum Ausblenden.",
+    "Auto-prompt for fullscreen" : "Automatisch nach Vollbild fragen",
+    "Automatically ask to enter fullscreen mode when opening the display" : "Beim Öffnen des Displays automatisch fragen, ob Vollbildmodus aktiviert werden soll",
     "Primary" : "Primär",
     "Background" : "Hintergrund",
     "Text" : "Text",

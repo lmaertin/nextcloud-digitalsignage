@@ -30,7 +30,7 @@
   <?php else: ?>
   <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="Vollbild">⛶</button>
   <?php endif; ?>
-  
+
   <div class="container">
     <div class="left">
       <div class="slideshow-box">

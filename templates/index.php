@@ -25,6 +25,15 @@ $l = \OC::$server->getL10N('digitalsignage');
               <span class="ds-hint"><?php p($l->t('Name for this display (shown on display). Uncheck to hide.')); ?></span>
             </div>
           </div>
+          <div class="ds-form-grid">
+            <div class="ds-form-group">
+              <label for="auto_fullscreen_prompt" class="ds-label">
+                <input type="checkbox" id="auto_fullscreen_prompt" name="auto_fullscreen_prompt" value="1" <?php if (isset($_['auto_fullscreen_prompt']) && $_['auto_fullscreen_prompt'] === '1') print 'checked'; ?> />
+                🖥️ <?php p($l->t('Auto-prompt for fullscreen')); ?>
+              </label>
+              <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
+            </div>
+          </div>
           <div class="ds-form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
             <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
               <label for="color_primary" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Primary')); ?></label>

@@ -7,18 +7,19 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 
 ## Recent Changes
 
-### [0.0.6]
+### [0.0.7]
 
-- Autocomplete for event exclusion based on actual calendar event titles
-- Customizable display colors (Primary, Background, Text, Gradient Start/End)
-- Toggle to show/hide display name on screen
-- German translations for all new settings
-- Multiple calendars support
+- Fullscreen toggle button integrated into display header
+- Optional auto-prompt for fullscreen mode (configurable)
+- Chrome/Safari compatibility with webkit API
+- Internationalized fullscreen dialog
+- Auto-hide button with mouse movement detection
 
 ## Features
 
 - **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
 - **Image slideshow**: Automated slideshow from a Nextcloud folder
+- **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Customizable appearance**: Configure colors (primary, background, text, gradient) and toggle display title visibility
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
 - **Weather information**: Real-time weather data via Open-Meteo API
@@ -59,6 +60,9 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    **Display Settings:**
    - **Display Name**: Title shown at the top of the display (can be toggled off)
    - **Show Display Name**: Checkbox to show or hide the display name on screen
+   - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
+     - Useful for kiosk setups and dedicated display devices
+     - Can be declined without affecting functionality
    
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -101,6 +105,17 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 ### Display View
 
 The token URL opens a full-screen view without login. This can be opened on a Raspberry Pi, Android tablet, or other device in kiosk mode.
+
+**Fullscreen Features:**
+- **Manual Toggle**: Click the fullscreen button (⛶) in the top-right corner of the header to enter/exit fullscreen mode
+- **Auto-prompt**: If enabled in settings, a dialog will appear asking to activate fullscreen mode when the page loads
+- **Keyboard Shortcut**: Press `ESC` to exit fullscreen mode
+- **Browser Compatibility**: Works in Chrome, Firefox, Safari, and Edge with webkit prefix support
+
+**Kiosk Mode Tips:**
+- Enable "Auto-prompt for fullscreen" in settings for automatic fullscreen activation
+- Use browser kiosk mode for dedicated displays (e.g., `chromium-browser --kiosk --app=URL`)
+- Fullscreen button auto-hides after 5 seconds of inactivity and reappears on mouse movement
 
 ## Development
 

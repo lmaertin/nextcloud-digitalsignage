@@ -25,6 +25,7 @@ class SettingsController extends Controller {
     public function saveUser(
         string $display_name = '',
         string $show_display_name = '1',
+        string $auto_fullscreen_prompt = '0',
         string $weather_latitude = '52.52',
         string $weather_longitude = '13.405',
         string $slide_interval = '60',
@@ -40,6 +41,7 @@ class SettingsController extends Controller {
     ): JSONResponse {
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
         $this->config->setAppValue('digitalsignage', 'show_display_name', $show_display_name);
+        $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'weather_latitude', $weather_latitude);
         $this->config->setAppValue('digitalsignage', 'weather_longitude', $weather_longitude);
         $this->config->setAppValue('digitalsignage', 'slide_interval', $slide_interval);
@@ -61,6 +63,7 @@ class SettingsController extends Controller {
     public function getUser(): JSONResponse {
         $display_name = $this->config->getAppValue('digitalsignage', 'display_name', '');
         $show_display_name = $this->config->getAppValue('digitalsignage', 'show_display_name', '1');
+        $auto_fullscreen_prompt = $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0');
         $weather_latitude = $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52');
         $weather_longitude = $this->config->getAppValue('digitalsignage', 'weather_longitude', '13.405');
         $slide_interval = $this->config->getAppValue('digitalsignage', 'slide_interval', '60');
@@ -77,6 +80,7 @@ class SettingsController extends Controller {
         return new JSONResponse([
             'display_name' => $display_name,
             'show_display_name' => $show_display_name,
+            'auto_fullscreen_prompt' => $auto_fullscreen_prompt,
             'weather_latitude' => $weather_latitude,
             'weather_longitude' => $weather_longitude,
             'slide_interval' => $slide_interval,

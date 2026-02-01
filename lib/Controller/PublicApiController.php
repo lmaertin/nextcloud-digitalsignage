@@ -10,12 +10,14 @@ use OCP\IConfig;
 use OCP\Files\IRootFolder;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCA\DigitalSignage\Db\TokenMapper;
+use OCP\L10N\IFactory;
 
 class PublicApiController extends Controller {
     private $config;
     private $rootFolder;
     private $calendarManager;
     private $tokenMapper;
+    private $l10nFactory;
 
     public function __construct(
         string $AppName,
@@ -23,13 +25,15 @@ class PublicApiController extends Controller {
         IConfig $config,
         IRootFolder $rootFolder,
         ICalendarManager $calendarManager,
-        TokenMapper $tokenMapper
+        TokenMapper $tokenMapper,
+        IFactory $l10nFactory
     ) {
         parent::__construct($AppName, $request);
         $this->config = $config;
         $this->rootFolder = $rootFolder;
         $this->calendarManager = $calendarManager;
         $this->tokenMapper = $tokenMapper;
+        $this->l10nFactory = $l10nFactory;
     }
 
     private function validateToken(string $token): ?string {
@@ -62,7 +66,13 @@ class PublicApiController extends Controller {
                 'longitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747')
             ],
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
-            'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true)
+            'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
+            'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
+            'i18n' => [
+                'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
+                'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),
+                'fullscreenPromptNo' => $this->getTranslation('fullscreenPromptNo', $userId)
+            ]
         ]);
 
         $policy = new ContentSecurityPolicy();
@@ -70,6 +80,29 @@ class PublicApiController extends Controller {
         $response->setContentSecurityPolicy($policy);
 
         return $response;
+    }
+
+    private function getTranslation(string $key, string $userId): string {
+        // Get user's language from Nextcloud
+        $userLang = $this->config->getUserValue($userId, 'core', 'lang', 'en');
+
+        // Extract base language code (de_DE -> de, en_US -> en)
+        $lang = strtolower(substr($userLang, 0, 2));
+
+        $translations = [
+            'de' => [
+                'fullscreenPromptTitle' => 'Vollbildmodus aktivieren?',
+                'fullscreenPromptYes' => 'Ja',
+                'fullscreenPromptNo' => 'Nein'
+            ],
+            'en' => [
+                'fullscreenPromptTitle' => 'Activate fullscreen mode?',
+                'fullscreenPromptYes' => 'Yes',
+                'fullscreenPromptNo' => 'No'
+            ]
+        ];
+
+        return $translations[$lang][$key] ?? $translations['en'][$key] ?? $key;
     }
 
     /**

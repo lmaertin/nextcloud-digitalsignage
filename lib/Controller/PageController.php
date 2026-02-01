@@ -30,6 +30,7 @@ class PageController extends Controller {
         $params = [
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
+            'auto_fullscreen_prompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0'),
             'calendar_names' => $this->config->getAppValue('digitalsignage', 'calendar_names', '[]'),
             'image_folder' => $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'),
             'slide_interval' => $this->config->getAppValue('digitalsignage', 'slide_interval', '10'),

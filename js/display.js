@@ -312,11 +312,77 @@ async function init() {
     // Initialize fullscreen button
     initFullscreenButton();
 
+    // Auto-prompt for fullscreen if enabled
+    if (config.autoFullscreenPrompt) {
+      promptFullscreen();
+    }
+
     console.log('Digital Signage initialized successfully!');
   } catch(e){
     console.error('Initialization error:', e);
     alert('Error: ' + e.message);
   }
+}
+
+// Auto-prompt for fullscreen
+function promptFullscreen() {
+  // Only prompt if not already in fullscreen
+  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+  if (isFullscreen) return;
+
+  // Get internationalized texts from config
+  const title = config.i18n?.fullscreenPromptTitle || 'Activate fullscreen mode?';
+  const yesText = config.i18n?.fullscreenPromptYes || 'Yes';
+  const noText = config.i18n?.fullscreenPromptNo || 'No';
+
+  // Create custom dialog (not blocking, preserves user gesture)
+  const overlay = document.createElement('div');
+  overlay.className = 'fullscreen-prompt-overlay';
+
+  const dialog = document.createElement('div');
+  dialog.className = 'fullscreen-prompt';
+  dialog.innerHTML = `
+    <h3>${title}</h3>
+    <div class="fullscreen-prompt-buttons">
+      <button class="btn-yes">${yesText}</button>
+      <button class="btn-no">${noText}</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(dialog);
+
+  const closeDialog = () => {
+    overlay.remove();
+    dialog.remove();
+  };
+
+  // Yes button - direct user interaction
+  dialog.querySelector('.btn-yes').addEventListener('click', async () => {
+    closeDialog();
+
+    const elem = document.documentElement;
+    try {
+      if (elem.requestFullscreen) {
+        await elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        await elem.webkitRequestFullscreen();
+      }
+
+      const btn = document.getElementById('fullscreen-btn');
+      if (btn) {
+        btn.textContent = '⤢';
+        btn.classList.add('in-fullscreen');
+        btn.title = 'Vollbild beenden';
+      }
+    } catch (err) {
+      console.error('Fullscreen error:', err);
+    }
+  });
+
+  // No button
+  dialog.querySelector('.btn-no').addEventListener('click', closeDialog);
+  overlay.addEventListener('click', closeDialog);
 }
 
 // Fullscreen functionality
@@ -347,7 +413,7 @@ function initFullscreenButton() {
   btn.addEventListener('click', async () => {
     try {
       const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
-      
+
       if (!isFullscreen) {
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
@@ -386,7 +452,7 @@ function initFullscreenButton() {
       btn.title = 'Vollbild beenden';
     }
   };
-  
+
   document.addEventListener('fullscreenchange', handleFullscreenChange);
   document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 }
