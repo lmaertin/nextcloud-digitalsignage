@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # [0.0.5] - 2026-01-30
 
-
 ### Changed
 - Version bump, updated README/Changelog
 - Removed: appinfo/database.xml (no longer supported by Nextcloud)

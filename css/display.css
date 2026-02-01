@@ -1,29 +1,25 @@
 /* Modern Corporate Design - Digital Signage Dashboard */
 :root {
-  /* Corporate Colors */
+  /* Main configurable colors (set in public_display.php) */
   --primary-blue: #0066cc;
-  --primary-blue-dark: #004499;
-  --primary-blue-light: #3399ff;
-  --primary-blue-accent: #0088ff;
-  
-  /* Moderne, helle Farbpalette */
   --bg-primary: #f8f9fa;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #e9ecef;
-  --bg-card: #ffffff;
   --text-primary: #2c3e50;
-  --text-secondary: #495057;
-  --text-light: #6c757d;
-  --border-color: rgba(0, 102, 204, 0.2);
-  
+  --gradient-start: #0066cc;
+  --gradient-end: #3399ff;
+
+  /* Derived colors - automatically adapt to main colors */
+  --bg-secondary: var(--bg-primary);
+  --bg-card: var(--bg-primary);
+  --border-color: color-mix(in srgb, var(--primary-blue) 20%, transparent);
+
   /* Gradients */
-  --gradient-blue: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-light));
-  --gradient-bg: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  --gradient-card: linear-gradient(135deg, #ffffff, #f8f9fa);
-  
-  /* Shadows */
-  --shadow-card: 0 4px 20px rgba(0, 102, 204, 0.08);
-  --shadow-hover: 0 8px 30px rgba(0, 102, 204, 0.15);
+  --gradient-blue: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  --gradient-bg: var(--bg-primary);
+  --gradient-card: var(--bg-primary);
+
+  /* Shadows with primary color */
+  --shadow-card: 0 4px 20px color-mix(in srgb, var(--primary-blue) 8%, transparent);
+  --shadow-hover: 0 8px 30px color-mix(in srgb, var(--primary-blue) 15%, transparent);
 }
 
 * {
@@ -267,7 +263,7 @@ body {
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(transparent, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+  background: linear-gradient(transparent, color-mix(in srgb, var(--bg-primary) 80%, transparent), var(--bg-primary));
   pointer-events: none;
   z-index: 2;
 }
@@ -280,7 +276,7 @@ body {
 }
 
 .calendar li {
-  background: #ffffff;
+  background: var(--bg-card);
   margin-bottom: 0;
   padding: 0.6rem;
   border-radius: 12px;
@@ -297,7 +293,7 @@ body {
 .calendar li:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
-  border-left-color: var(--primary-blue-light);
+  border-left-color: color-mix(in srgb, var(--primary-blue) 80%, white);
 }
 
 .calendar li::before {
@@ -307,7 +303,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, transparent, rgba(0, 102, 204, 0.05));
+  background: linear-gradient(135deg, transparent, color-mix(in srgb, var(--primary-blue) 5%, transparent));
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -369,56 +365,56 @@ body {
     height: auto;
     min-height: 100vh;
   }
-  
+
   .left {
     height: auto;
     order: 1;
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .slideshow-box {
     min-height: 40vh;
   }
-  
+
   .weather-box {
     min-height: auto;
     padding: 0.8rem;
   }
-  
+
   .weather {
     padding: 0.8rem;
   }
-  
+
   .forecast-grid {
     grid-template-columns: 1fr 1fr;
     gap: 0.8rem;
   }
-  
+
   .forecast-day {
     padding: 0.6rem 0.4rem;
   }
-  
+
   .day-icon, .current-day .day-icon {
     font-size: 2rem;
   }
-  
+
   .right {
     order: 2;
   }
-  
+
   .calendar ul {
     flex-direction: column;
   }
-  
+
   .calendar {
     overflow-y: auto;
   }
-  
+
   .calendar::after {
     display: none;
   }
-  
+
   .calendar::-webkit-scrollbar {
     width: 6px;
   }

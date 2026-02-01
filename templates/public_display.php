@@ -9,13 +9,24 @@
     $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
   ?>
   <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>">
+  <style>
+    :root {
+      --primary-blue: <?php p($_['color_primary'] ?? '#0066cc'); ?>;
+      --bg-primary: <?php p($_['color_bg'] ?? '#f8f9fa'); ?>;
+      --text-primary: <?php p($_['color_text'] ?? '#2c3e50'); ?>;
+      --gradient-start: <?php p($_['color_gradient_start'] ?? '#0066cc'); ?>;
+      --gradient-end: <?php p($_['color_gradient_end'] ?? '#3399ff'); ?>;
+    }
+  </style>
 </head>
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
       data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>">
+  <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
   <div class="display-header">
-    <h1 id="display-title">Digital Signage</h1>
+    <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
   </div>
+  <?php endif; ?>
   <div class="container">
     <div class="left">
       <div class="slideshow-box">

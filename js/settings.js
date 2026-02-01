@@ -166,6 +166,12 @@ document.addEventListener('DOMContentLoaded', function() {
     saveSettingsBtn.addEventListener('click', saveSettings);
   }
 
+  // Reset colors button
+  const resetColorsBtn = document.getElementById('reset-colors-btn');
+  if (resetColorsBtn) {
+    resetColorsBtn.addEventListener('click', resetColorsToDefaults);
+  }
+
   // Load tokens
   loadTokens();
 
@@ -186,6 +192,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Initialize exclude tags
   initExcludeTags();
+
+  // Synchronize color pickers and hex fields (aus index.php ausgelagert)
+  syncColorPickers();
 });
 
 async function loadCalendars() {
@@ -259,12 +268,19 @@ async function saveSettings() {
 
     const data = {
       display_name: document.getElementById('display_name').value,
+      show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
       calendar_names: JSON.stringify(selectedCalendars),
       image_folder: document.getElementById('image_folder').value,
       slide_interval: document.getElementById('slide_interval').value,
       weather_latitude: document.getElementById('weather_latitude').value,
       weather_longitude: document.getElementById('weather_longitude').value,
-      calendar_exclude: document.getElementById('calendar_exclude').value
+      calendar_exclude: document.getElementById('calendar_exclude').value,
+      color_primary: document.getElementById('color_primary').value,
+      color_bg: document.getElementById('color_bg').value,
+      color_text: document.getElementById('color_text').value,
+      color_gradient_start: document.getElementById('color_gradient_start').value,
+      color_gradient_end: document.getElementById('color_gradient_end').value,
+      show_titlebar: '1'
     };
 
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');
@@ -389,4 +405,42 @@ function updateHiddenInput() {
   if (hiddenInput) {
     hiddenInput.value = JSON.stringify(excludeTags);
   }
+}
+
+// Synchronize color pickers and hex fields (aus index.php ausgelagert)
+function syncColorPickers() {
+  ['primary','bg','text','gradient_start','gradient_end'].forEach(function(type) {
+    const colorInput = document.getElementById('color_' + type);
+    const hexInput = document.getElementById('color_' + type + '_hex');
+    if (colorInput && hexInput) {
+      colorInput.addEventListener('input', function() {
+        hexInput.value = colorInput.value;
+      });
+      hexInput.addEventListener('input', function() {
+        if (/^#[0-9a-fA-F]{6}$/.test(hexInput.value)) {
+          colorInput.value = hexInput.value;
+        }
+      });
+    }
+  });
+}
+
+// Reset colors to default values
+function resetColorsToDefaults() {
+  const defaults = {
+    'color_primary': '#0066cc',
+    'color_bg': '#f8f9fa',
+    'color_text': '#2c3e50',
+    'color_gradient_start': '#0066cc',
+    'color_gradient_end': '#3399ff'
+  };
+
+  Object.keys(defaults).forEach(key => {
+    const colorInput = document.getElementById(key);
+    const hexInput = document.getElementById(key + '_hex');
+    if (colorInput && hexInput) {
+      colorInput.value = defaults[key];
+      hexInput.value = defaults[key];
+    }
+  });
 }
