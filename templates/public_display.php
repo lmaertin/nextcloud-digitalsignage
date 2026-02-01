@@ -25,8 +25,12 @@
   <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
   <div class="display-header">
     <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
+    <button id="fullscreen-btn" class="fullscreen-button" title="Vollbild">⛶</button>
   </div>
+  <?php else: ?>
+  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="Vollbild">⛶</button>
   <?php endif; ?>
+  
   <div class="container">
     <div class="left">
       <div class="slideshow-box">

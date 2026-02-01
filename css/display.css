@@ -42,9 +42,10 @@ body {
 .display-header {
   background: var(--gradient-blue);
   color: white;
-  padding: 8px 20px;
+  padding: 8px 60px 8px 20px;
   box-shadow: var(--shadow-card);
   text-align: center;
+  position: relative;
 }
 
 .display-header h1 {
@@ -52,6 +53,56 @@ body {
   font-weight: 300;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.fullscreen-button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.8;
+  backdrop-filter: blur(10px);
+  z-index: 1;
+}
+
+.fullscreen-button.fullscreen-no-header {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 102, 204, 0.8);
+  z-index: 10000;
+}
+
+.fullscreen-button:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.fullscreen-button.fullscreen-no-header:hover {
+  background: rgba(0, 102, 204, 1);
+  transform: scale(1.05);
+}
+
+.fullscreen-button.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fullscreen-button.in-fullscreen {
+  background: rgba(220, 53, 69, 0.8);
+}
+
+.fullscreen-button.in-fullscreen:hover {
+  background: rgba(220, 53, 69, 1);
 }
 
 .container {

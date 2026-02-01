@@ -309,11 +309,86 @@ async function init() {
     setInterval(loadWeather, 3600000); // 1 hour
     setInterval(loadICS, 600000); // 10 minutes
 
+    // Initialize fullscreen button
+    initFullscreenButton();
+
     console.log('Digital Signage initialized successfully!');
   } catch(e){
     console.error('Initialization error:', e);
     alert('Error: ' + e.message);
   }
+}
+
+// Fullscreen functionality
+function initFullscreenButton() {
+  const btn = document.getElementById('fullscreen-btn');
+  if (!btn) return;
+
+  let hideTimeout;
+
+  // Auto-hide button after 5 seconds
+  const hideButton = () => {
+    clearTimeout(hideTimeout);
+    hideTimeout = setTimeout(() => {
+      btn.classList.add('hidden');
+    }, 5000);
+  };
+
+  // Show button on mouse movement
+  document.addEventListener('mousemove', () => {
+    btn.classList.remove('hidden');
+    hideButton();
+  });
+
+  // Initial hide after 5 seconds
+  hideButton();
+
+  // Toggle fullscreen on button click (Chrome-kompatibel)
+  btn.addEventListener('click', async () => {
+    try {
+      const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+      
+      if (!isFullscreen) {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          await elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) {
+          await elem.webkitRequestFullscreen();
+        }
+        btn.textContent = '⤢';
+        btn.classList.add('in-fullscreen');
+        btn.title = 'Vollbild beenden';
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          await document.webkitExitFullscreen();
+        }
+        btn.textContent = '⛶';
+        btn.classList.remove('in-fullscreen');
+        btn.title = 'Vollbild';
+      }
+    } catch (error) {
+      console.error('Fullscreen toggle error:', error);
+    }
+  });
+
+  // Handle fullscreen changes (e.g., ESC key) - Chrome-kompatibel
+  const handleFullscreenChange = () => {
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFullscreen) {
+      btn.textContent = '⛶';
+      btn.classList.remove('in-fullscreen');
+      btn.title = 'Vollbild';
+    } else {
+      btn.textContent = '⤢';
+      btn.classList.add('in-fullscreen');
+      btn.title = 'Vollbild beenden';
+    }
+  };
+  
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 }
 
 // Wait for DOM to be ready before initializing
