@@ -9,6 +9,24 @@ const API_BASE = IS_PUBLIC
 
 let config = null;
 
+// Centralized date formatter functions
+function getDateFormatter(locale, options) {
+  return new Intl.DateTimeFormat(locale || 'en-US', options);
+}
+
+function getShortDateFormatter(locale) {
+  return getDateFormatter(locale, {
+    weekday: 'short',
+    day: '2-digit',
+    month: '2-digit'
+  });
+}
+
+// Remove trailing dots from weekday abbreviations for consistent display
+function removeDots(text) {
+  return text.replace(/\./g, '');
+}
+
 async function loadConfig() {
   try {
     const response = await fetch(API_BASE + '/config');
@@ -130,8 +148,8 @@ async function loadWeather() {
 
     // Temperature formatting based on locale
     function formatTemperature(temp) {
-      // Get locale from config, fallback to browser locale
-      const locale = config.locale || navigator.language || 'en-US';
+      // Get locale from config
+      const locale = config.locale || 'en-US';
 
       // For German locales use comma, for others use period
       if (locale.startsWith('de')) {
@@ -143,7 +161,7 @@ async function loadWeather() {
 
     // Get localized "Today" label
     function getTodayText() {
-      const locale = config.locale || navigator.language || 'en-US';
+      const locale = config.locale || 'en-US';
 
       if (locale.startsWith('de')) {
         return 'Heute';
@@ -176,7 +194,8 @@ async function loadWeather() {
           const max = daily.temperature_2m_max[i+1];
           const weatherCode = daily.weather_code ? daily.weather_code[i+1] : 1;
           const dayIcon = getWeatherIcon(weatherCode);
-          const weekday = new Intl.DateTimeFormat(config.locale || 'en-US',{weekday:'short'}).format(new Date(t));
+          const weekdayFormatter = getDateFormatter(config.locale, {weekday: 'short'});
+          const weekday = removeDots(weekdayFormatter.format(new Date(t)));
           return `<div class="forecast-day">
             <div class="day-name">${weekday}</div>
             <div class="day-icon">${dayIcon}</div>
@@ -256,12 +275,14 @@ async function loadICS() {
 
     console.log('Upcoming events:', upcoming.length);
 
-    const fmtWithTime = new Intl.DateTimeFormat(config.locale || 'de-DE', {
-      weekday:'short', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'
+    const fmtWithTime = getDateFormatter(config.locale, {
+      weekday: 'short',
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
     });
-    const fmtDateOnly = new Intl.DateTimeFormat(config.locale || 'de-DE', {
-      weekday:'short', day:'2-digit', month:'2-digit'
-    });
+    const fmtDateOnly = getShortDateFormatter(config.locale);
     const cal = document.getElementById('calendar');
 
     if (upcoming.length === 0) {
@@ -270,7 +291,7 @@ async function loadICS() {
       cal.innerHTML = '<ul>' + upcoming.map(e => {
         const eventDate = e.startDate;
         const isAllDay = e.isAllDay;
-        const timeStr = isAllDay ? fmtDateOnly.format(eventDate) : fmtWithTime.format(eventDate);
+        const timeStr = removeDots(isAllDay ? fmtDateOnly.format(eventDate) : fmtWithTime.format(eventDate));
         const title = e.summary;
         const location = e.location || null;
 
@@ -288,6 +309,52 @@ async function loadICS() {
     const cal = document.getElementById('calendar');
     cal.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
   }
+}
+
+// Initialize and update date/time display
+function initDateTime() {
+  const timeEl = document.getElementById('time-display');
+  const dateEl = document.getElementById('date-display');
+
+  if (!timeEl || !dateEl) return;
+
+  function updateDateTime() {
+    const now = new Date();
+    const locale = config.locale || 'en-US';
+
+    // Determine if locale uses 24h format (German and most European locales)
+    const use24Hour = locale.startsWith('de') ||
+                      locale.startsWith('fr') ||
+                      locale.startsWith('it') ||
+                      locale.startsWith('es') ||
+                      locale.startsWith('nl') ||
+                      locale.startsWith('pt') ||
+                      locale.startsWith('pl') ||
+                      locale.startsWith('ru') ||
+                      locale.startsWith('ja') ||
+                      locale.startsWith('zh');
+
+    // Format time based on locale
+    const timeFormat = new Intl.DateTimeFormat(locale, {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: !use24Hour
+    });
+
+    // Format date - use centralized short date formatter
+    const dateFormat = getShortDateFormatter(locale);
+
+    timeEl.textContent = timeFormat.format(now);
+    dateEl.textContent = removeDots(dateFormat.format(now));
+  }
+
+  // Update immediately
+  updateDateTime();
+
+  // Update every minute (no seconds displayed)
+  setInterval(updateDateTime, 60000);
+
+  console.log('Date/Time display initialized');
 }
 
 async function init() {
@@ -308,6 +375,9 @@ async function init() {
     // Set up intervals
     setInterval(loadWeather, 3600000); // 1 hour
     setInterval(loadICS, 600000); // 10 minutes
+
+    // Initialize date and time display
+    initDateTime();
 
     // Initialize fullscreen button
     initFullscreenButton();

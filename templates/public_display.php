@@ -37,7 +37,13 @@
         <div class="slideshow loading" id="slideshow"></div>
       </div>
       <div class="weather-box">
-        <div class="weather" id="weather">Loading weather...</div>
+        <div class="weather-container">
+          <div class="datetime-section">
+            <div class="time-display" id="time-display">--:--</div>
+            <div class="date-display" id="date-display">Loading...</div>
+          </div>
+          <div class="weather" id="weather">Loading weather...</div>
+        </div>
       </div>
     </div>
     <div class="right">
