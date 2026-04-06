@@ -1,9 +1,41 @@
 # Changelog
 
+<!-- markdownlint-disable MD024 -->
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.0.9] - 2026-04-06
+
+### Added
+
+- Preset management for image and slideshow settings
+- Separate view token and control token per display
+- Remote preset switching through a public control API
+- Per-display active preset assignment in the settings UI
+- Playback order setting for presets with shuffle and filename order
+- Display revision polling so public displays reload after remote changes
+- Public config responses including active preset and revision information
+- New preset entity, mapper, service and controller
+- New display config service to resolve effective settings from global config and active preset
+- Database migrations for presets, control tokens, active preset assignment, revision tracking and image order mode
+- Unit tests for presets and extended token handling
+
+### Changed
+
+- The visible display title is now defined globally; display entries only use internal labels in the admin UI
+- Image and slideshow settings were moved out of the global settings section into presets
+- Public display rendering now uses the active preset for image folder, crop mode, interval, fullscreen slideshow mode and playback order
+- The settings UI now distinguishes global settings, slideshow presets and displays more clearly
+
+### Fixed
+
+- JSON error handling for preset requests now returns readable API errors instead of HTML fallbacks
+- Broken or missing preset image order values are normalized automatically
+- Localization files for German and English were repaired after malformed prefixes caused translation fallback issues
+- Display slideshow behavior now supports stable sequential playback by filename and reshuffled playback cycles
 
 ## [0.0.7] - 2026-02-01
 
@@ -33,26 +65,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.0.4] - 2026-01-27
 
 ### Changed
+
 - Metadata clean up
 
 ## [0.0.3] - 2026-01-26
 
 ### Added
+
 - Small thumbnail for main screenshot (App Store preview loads faster)
 - Further screenshots for app store
 
 ## [0.0.2] - 2026-01-26
 
 ### Added
+
 - Automated and API-compliant App Store upload via GitHub Actions
 - Nightly/pre-release support for App Store uploads
 - PNG screenshots optimized and added to app description
 
 ### Changed
+
 - Internal scripts and obsolete files removed from release package
 - Build and signing process improved and documented
 
 ## [0.0.1] - 2026-01-24
 
 ### Added
+
 - Initial public release for Nextcloud App Store
