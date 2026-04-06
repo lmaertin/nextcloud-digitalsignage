@@ -12,6 +12,8 @@
         "General": "General",
         "Display Name": "Display Name",
         "Name for this display (shown on display)": "Name for this display (shown on display)",
+        "Text scale": "Text scale",
+        "Text scale factor (0.5 - 3.0, default: 1.0)": "Text scale factor (0.5 - 3.0, default: 1.0)",
         "Calendar": "Calendar",
         "Calendar sources": "Calendar sources",
         "Hold Ctrl/Cmd for multiple selection": "Hold Ctrl/Cmd for multiple selection",

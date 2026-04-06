@@ -35,6 +35,7 @@ class PageController extends Controller {
             'image_folder' => $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'),
             'slide_interval' => $this->config->getAppValue('digitalsignage', 'slide_interval', '10'),
             'image_fit_mode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
+            'text_scale' => $this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
             'weather_latitude' => $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52'),
             'weather_longitude' => $this->config->getAppValue('digitalsignage', 'weather_longitude', '13.405'),
             'calendar_exclude' => $this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'),

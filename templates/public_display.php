@@ -16,6 +16,10 @@
       --text-primary: <?php p($_['color_text'] ?? '#2c3e50'); ?>;
       --gradient-start: <?php p($_['color_gradient_start'] ?? '#0066cc'); ?>;
       --gradient-end: <?php p($_['color_gradient_end'] ?? '#3399ff'); ?>;
+      --text-scale: <?php p($_['text_scale'] ?? '1.0'); ?>;
+    }
+    .calendar li {
+      font-size: calc(1.1rem * var(--text-scale));
     }
   </style>
 </head>

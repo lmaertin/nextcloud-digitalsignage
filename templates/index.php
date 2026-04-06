@@ -133,6 +133,12 @@ $l = \OC::$server->getL10N('digitalsignage');
               </select>
               <span class="ds-hint"><?php p($l->t('Fill crops images to fill screen, Fit shows complete image')); ?></span>
             </div>
+
+            <div class="ds-form-group">
+              <label for="text_scale" class="ds-label">📏 <?php p($l->t('Text scale')); ?></label>
+              <input type="number" id="text_scale" name="text_scale" value="<?php p($_['text_scale'] ?? '1.0'); ?>" min="0.5" max="3.0" step="0.1" class="ds-input" />
+              <span class="ds-hint"><?php p($l->t('Text scale factor (0.5 - 3.0, default: 1.0)')); ?></span>
+            </div>
           </div>
         </div>
 
@@ -198,6 +204,3 @@ $l = \OC::$server->getL10N('digitalsignage');
   </div>
 
   <?php script('digitalsignage', 'settings'); ?>
-    </div>
-  </div>
-</div>

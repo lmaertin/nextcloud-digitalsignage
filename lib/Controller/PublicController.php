@@ -90,6 +90,7 @@ class PublicController extends PublicShareController {
             $showTitlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
             $displayName = $this->config->getAppValue('digitalsignage', 'display_name', '');
             $showDisplayName = $this->config->getAppValue('digitalsignage', 'show_display_name', '1');
+            $textScale = $this->config->getAppValue('digitalsignage', 'text_scale', '1.0');
             if ($showDisplayName === '' || $showDisplayName === null) {
                 $showDisplayName = '1';
             }
@@ -107,7 +108,8 @@ class PublicController extends PublicShareController {
                     'color_gradient_end' => $colorGradientEnd,
                     'show_titlebar' => $showTitlebar,
                     'display_name' => $displayName,
-                    'show_display_name' => $showDisplayName
+                    'show_display_name' => $showDisplayName,
+                    'text_scale' => $textScale
                 ],
                 'blank'
             );
