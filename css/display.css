@@ -20,6 +20,9 @@
   /* Shadows with primary color */
   --shadow-card: 0 4px 20px color-mix(in srgb, var(--primary-blue) 8%, transparent);
   --shadow-hover: 0 8px 30px color-mix(in srgb, var(--primary-blue) 15%, transparent);
+  
+  /* Text shadows */
+  --text-shadow-light: 0 1px 3px rgba(255, 255, 255, 0.8);
 }
 
 * {
@@ -37,6 +40,14 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
+}
+
+/* Reusable glassmorphism effect */
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
 }
 
 .display-header {
@@ -293,9 +304,6 @@ body {
 /* Datum und Uhrzeit Sektion */
 .datetime-section {
   flex: 0 0 auto;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  border-radius: 12px;
   padding: 0.7rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -303,15 +311,14 @@ body {
   align-items: center;
   text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.18);
   min-width: 180px;
 }
 
 .time-display {
-  font-size: 2.8rem;
+  font-size: clamp(2rem, 3vw, 3rem);
   font-weight: 700;
   color: var(--primary-blue);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
   letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -319,23 +326,19 @@ body {
 }
 
 .date-display {
-  font-size: 1.44rem;
+  font-size: clamp(1.3rem, 1.5vw, 1.62rem);
   font-weight: 500;
   color: var(--text-primary);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
   letter-spacing: 0.01em;
 }
 
 /* Wetterbox - In separater Box */
 .weather {
   flex: 1;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px);
-  border-radius: 12px;
   padding: 0.6rem;
   color: var(--text-primary);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .weather-header {
@@ -360,7 +363,7 @@ body {
   font-size: 1.44rem;
   font-weight: 600;
   color: var(--primary-blue);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
 }
 
 .location {
@@ -369,7 +372,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
   font-weight: 500;
 }
 
@@ -398,12 +401,12 @@ body {
 }
 
 .day-name {
-  font-size: 1.35rem;
+  font-size: clamp(0.85rem, 1.4vw, 1.53rem);
   font-weight: 600;
   color: var(--primary-blue);
   margin-bottom: 0.2rem;
   letter-spacing: 0.3px;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
 }
 
 .day-icon {
@@ -412,10 +415,10 @@ body {
 }
 
 .day-temp {
-  font-size: 1.44rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.62rem);
   font-weight: 500;
   color: var(--text-secondary);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+  text-shadow: var(--text-shadow-light);
 }
 
 /* Aktueller Tag - kein Highlighting für einheitliches Design */
@@ -573,14 +576,6 @@ body {
     padding: 0.8rem 1.2rem;
   }
 
-  .time-display {
-    font-size: 2rem;
-  }
-
-  .date-display {
-    font-size: 1.3rem;
-  }
-
   .weather-box {
     min-height: auto;
     padding: 0.8rem;
@@ -601,14 +596,6 @@ body {
 
   .day-icon {
     font-size: 1.6rem;
-  }
-
-  .day-name {
-    font-size: 0.85rem;
-  }
-
-  .day-temp {
-    font-size: 0.9rem;
   }
 
   .right {
@@ -642,16 +629,8 @@ body {
   }
 }
 
-/* Große Bildschirme - größere Schrift für bessere Lesbarkeit */
+/* Große Bildschirme - zusätzliche Anpassungen */
 @media (min-width: 1600px) {
-  .time-display {
-    font-size: 3rem;
-  }
-
-  .date-display {
-    font-size: 1.62rem;
-  }
-
   .datetime-section {
     padding: 1.2rem 2rem;
     min-width: 220px;
@@ -659,14 +638,6 @@ body {
 
   .day-icon {
     font-size: 2rem;
-  }
-
-  .day-name {
-    font-size: 1.53rem;
-  }
-
-  .day-temp {
-    font-size: 1.62rem;
   }
 }
 
