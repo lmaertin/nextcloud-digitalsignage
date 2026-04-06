@@ -20,7 +20,7 @@
   /* Shadows with primary color */
   --shadow-card: 0 4px 20px color-mix(in srgb, var(--primary-blue) 8%, transparent);
   --shadow-hover: 0 8px 30px color-mix(in srgb, var(--primary-blue) 15%, transparent);
-  
+
   /* Text shadows */
   --text-shadow-light: 0 1px 3px rgba(255, 255, 255, 0.8);
 }
