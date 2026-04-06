@@ -24,7 +24,8 @@ function getShortDateFormatter(locale) {
 
 // Remove trailing dots from weekday abbreviations for consistent display
 function removeDots(text) {
-  return text.replace(/\./g, '');
+  // Only remove dot directly after weekday abbreviation (2-3 letters at the start)
+  return text.replace(/^([A-Za-z]{2,3})\./, '$1');
 }
 
 async function loadConfig() {
@@ -81,7 +82,9 @@ async function initSlideshow() {
 
       setTimeout(() => {
         // Change image while invisible
-        el.className = 'slideshow';
+        // Apply image fit mode from config
+        const fitMode = config.imageFitMode || 'cover';
+        el.className = `slideshow fit-${fitMode}`;
         el.innerHTML = '';
         el.style.backgroundImage = `url('${imageUrl}')`;
 

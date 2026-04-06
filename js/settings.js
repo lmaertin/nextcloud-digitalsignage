@@ -317,6 +317,7 @@ async function saveSettings() {
       calendar_names: JSON.stringify(selectedCalendars),
       image_folder: document.getElementById('image_folder').value,
       slide_interval: document.getElementById('slide_interval').value,
+      image_fit_mode: document.getElementById('image_fit_mode').value,
       weather_latitude: document.getElementById('weather_latitude').value,
       weather_longitude: document.getElementById('weather_longitude').value,
       calendar_exclude: document.getElementById('calendar_exclude').value,

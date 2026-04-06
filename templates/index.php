@@ -124,6 +124,15 @@ $l = \OC::$server->getL10N('digitalsignage');
               <input type="number" id="slide_interval" name="slide_interval" value="<?php p($_['slide_interval'] ?? '10'); ?>" min="5" max="300" class="ds-input" />
               <span class="ds-hint"><?php p($l->t('How long each image is shown (5-300 seconds)')); ?></span>
             </div>
+
+            <div class="ds-form-group">
+              <label for="image_fit_mode" class="ds-label">🖼️ <?php p($l->t('Image display mode')); ?></label>
+              <select id="image_fit_mode" name="image_fit_mode" class="ds-input">
+                <option value="cover" <?php if (!isset($_['image_fit_mode']) || $_['image_fit_mode'] === 'cover') print 'selected'; ?>><?php p($l->t('Fill (crop if needed)')); ?></option>
+                <option value="contain" <?php if (isset($_['image_fit_mode']) && $_['image_fit_mode'] === 'contain') print 'selected'; ?>><?php p($l->t('Fit complete (with background)')); ?></option>
+              </select>
+              <span class="ds-hint"><?php p($l->t('Fill crops images to fill screen, Fit shows complete image')); ?></span>
+            </div>
           </div>
         </div>
 

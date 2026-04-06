@@ -171,7 +171,7 @@ body {
 
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 11fr 9fr;
   gap: 1rem;
   height: calc(100vh - 45px);
   padding: 1rem;
@@ -219,6 +219,52 @@ body {
   position: relative;
   min-height: 300px;
   opacity: 1;
+}
+
+/* Image fit mode: contain - show full image with blurred background fill (YouTube style) */
+.slideshow.fit-contain {
+  background-size: contain;
+  background-color: #000;
+}
+
+/* Blurred background for contain mode */
+.slideshow.fit-contain::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(40px);
+  transform: scale(1.1); /* Slightly larger to hide blur edges */
+  z-index: 0;
+  border-radius: 15px;
+  opacity: 0.8;
+}
+
+/* Ensure the actual image is above the blurred background */
+.slideshow.fit-contain::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: inherit;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  border-radius: 15px;
+}
+
+/* Image fit mode: cover - crop to fill (default) */
+.slideshow.fit-cover {
+  background-size: cover;
 }
 
 .slideshow.loading::before {

@@ -68,6 +68,7 @@ class PublicApiController extends Controller {
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
             'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
+            'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),

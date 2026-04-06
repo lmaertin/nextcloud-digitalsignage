@@ -46,7 +46,8 @@ class ApiController extends Controller {
                 'longitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747')
             ],
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
-            'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true)
+            'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
+            'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover')
         ]);
 
         $policy = new ContentSecurityPolicy();
