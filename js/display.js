@@ -116,6 +116,11 @@ async function initSlideshow() {
 }
 
 async function loadWeather() {
+  const weatherEl = document.getElementById('weather');
+  if (!weatherEl) {
+    return;
+  }
+
   try {
     const { latitude, longitude } = config.weather;
     const res = await fetch(
@@ -184,8 +189,7 @@ async function loadWeather() {
     const currentIcon = getWeatherIcon(cw.weathercode);
     const tempIcon = getTemperatureIcon(cw.temperature);
 
-    const we = document.getElementById('weather');
-    we.innerHTML = `
+    weatherEl.innerHTML = `
       <div class="forecast-grid">
         <div class="forecast-day current-day">
           <div class="day-name">${getTodayText()}</div>
@@ -208,7 +212,7 @@ async function loadWeather() {
       </div>`;
   } catch (error) {
     console.error('Error loading weather:', error);
-    document.getElementById('weather').innerHTML = `
+    weatherEl.innerHTML = `
       <div class="weather-error">
         <span class="error-icon">⚠️</span>
         <p>Weather error: ${error.message}</p>
@@ -217,6 +221,11 @@ async function loadWeather() {
 }
 
 async function loadICS() {
+  const cal = document.getElementById('calendar');
+  if (!cal) {
+    return;
+  }
+
   try {
     console.log('Loading calendar from Nextcloud...');
 
@@ -286,8 +295,6 @@ async function loadICS() {
       minute: '2-digit'
     });
     const fmtDateOnly = getShortDateFormatter(config.locale);
-    const cal = document.getElementById('calendar');
-
     if (upcoming.length === 0) {
       cal.innerHTML = '<p>No upcoming events</p>';
     } else {
@@ -309,7 +316,6 @@ async function loadICS() {
     }
   } catch (error) {
     console.error('Error loading calendar:', error);
-    const cal = document.getElementById('calendar');
     cal.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
   }
 }

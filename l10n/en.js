@@ -60,7 +60,7 @@ OC.L10N.register(
     "Error deleting token" : "Error deleting token",
     "Path to the image folder in your Nextcloud" : "Path to the image folder in your Nextcloud",
     "How long each image is shown (5-300 seconds)" : "How long each image is shown (5-300 seconds)",
-    "Image display mode" : "Image display mode",
+    "Crop mode" : "Crop mode",
     "Fill (crop if needed)" : "Fill (crop if needed)",
     "Fit complete (with background)" : "Fit complete (with background)",
     "Fill crops images to fill screen, Fit shows complete image" : "Fill crops images to fill screen, Fit shows complete image",

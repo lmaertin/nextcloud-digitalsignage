@@ -327,7 +327,8 @@ async function saveSettings() {
       color_gradient_start: document.getElementById('color_gradient_start').value,
       color_gradient_end: document.getElementById('color_gradient_end').value,
       show_titlebar: '1',
-      text_scale: document.getElementById('text_scale').value
+      text_scale: document.getElementById('text_scale').value,
+      fullscreen_slideshow: document.getElementById('fullscreen_slideshow').checked ? '1' : '0'
     };
 
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');

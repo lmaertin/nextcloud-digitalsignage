@@ -39,7 +39,8 @@ class SettingsController extends Controller {
         string $color_gradient_end = '#3399ff',
         string $show_titlebar = '1',
         string $image_fit_mode = 'cover',
-        string $text_scale = '1.0'
+        string $text_scale = '1.0',
+        string $fullscreen_slideshow = '0'
     ): JSONResponse {
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
         $this->config->setAppValue('digitalsignage', 'show_display_name', $show_display_name);
@@ -58,6 +59,7 @@ class SettingsController extends Controller {
         $this->config->setAppValue('digitalsignage', 'show_titlebar', $show_titlebar);
         $this->config->setAppValue('digitalsignage', 'image_fit_mode', $image_fit_mode);
         $this->config->setAppValue('digitalsignage', 'text_scale', $text_scale);
+        $this->config->setAppValue('digitalsignage', 'fullscreen_slideshow', $fullscreen_slideshow);
         return new JSONResponse(['status' => 'success']);
     }
 
@@ -82,6 +84,7 @@ class SettingsController extends Controller {
         $show_titlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
         $image_fit_mode = $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover');
         $text_scale = $this->config->getAppValue('digitalsignage', 'text_scale', '1.0');
+        $fullscreen_slideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
 
         return new JSONResponse([
             'display_name' => $display_name,
@@ -101,6 +104,7 @@ class SettingsController extends Controller {
             'show_titlebar' => $show_titlebar,
             'image_fit_mode' => $image_fit_mode,
             'text_scale' => $text_scale,
+            'fullscreen_slideshow' => $fullscreen_slideshow,
         ]);
     }
 }

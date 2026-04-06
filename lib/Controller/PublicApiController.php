@@ -70,6 +70,7 @@ class PublicApiController extends Controller {
             'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'textScale' => (float)$this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
+            'fullscreenSlideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0') === '1',
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),

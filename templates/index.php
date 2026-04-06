@@ -27,10 +27,10 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
           <div class="ds-form-grid">
             <div class="ds-form-group">
-              <label for="auto_fullscreen_prompt" class="ds-label">
+              <div style="display: flex; align-items: center; gap: 10px;">
                 <input type="checkbox" id="auto_fullscreen_prompt" name="auto_fullscreen_prompt" value="1" <?php if (isset($_['auto_fullscreen_prompt']) && $_['auto_fullscreen_prompt'] === '1') print 'checked'; ?> />
-                🖥️ <?php p($l->t('Auto-prompt for fullscreen')); ?>
-              </label>
+                <label for="auto_fullscreen_prompt" class="ds-label" style="margin: 0;"><?php p($l->t('Auto-prompt for fullscreen')); ?></label>
+              </div>
               <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
             </div>
           </div>
@@ -120,13 +120,13 @@ $l = \OC::$server->getL10N('digitalsignage');
             </div>
 
             <div class="ds-form-group">
-              <label for="slide_interval" class="ds-label">⏱️ <?php p($l->t('Slide interval (seconds)')); ?></label>
+              <label for="slide_interval" class="ds-label"><?php p($l->t('Slide interval (seconds)')); ?></label>
               <input type="number" id="slide_interval" name="slide_interval" value="<?php p($_['slide_interval'] ?? '10'); ?>" min="5" max="300" class="ds-input" />
               <span class="ds-hint"><?php p($l->t('How long each image is shown (5-300 seconds)')); ?></span>
             </div>
 
             <div class="ds-form-group">
-              <label for="image_fit_mode" class="ds-label">🖼️ <?php p($l->t('Image display mode')); ?></label>
+              <label for="image_fit_mode" class="ds-label"><?php p($l->t('Crop mode')); ?></label>
               <select id="image_fit_mode" name="image_fit_mode" class="ds-input">
                 <option value="cover" <?php if (!isset($_['image_fit_mode']) || $_['image_fit_mode'] === 'cover') print 'selected'; ?>><?php p($l->t('Fill (crop if needed)')); ?></option>
                 <option value="contain" <?php if (isset($_['image_fit_mode']) && $_['image_fit_mode'] === 'contain') print 'selected'; ?>><?php p($l->t('Fit complete (with background)')); ?></option>
@@ -135,9 +135,17 @@ $l = \OC::$server->getL10N('digitalsignage');
             </div>
 
             <div class="ds-form-group">
-              <label for="text_scale" class="ds-label">📏 <?php p($l->t('Text scale')); ?></label>
+              <label for="text_scale" class="ds-label"><?php p($l->t('Text scale')); ?></label>
               <input type="number" id="text_scale" name="text_scale" value="<?php p($_['text_scale'] ?? '1.0'); ?>" min="0.5" max="3.0" step="0.1" class="ds-input" />
               <span class="ds-hint"><?php p($l->t('Text scale factor (0.5 - 3.0, default: 1.0)')); ?></span>
+            </div>
+
+            <div class="ds-form-group">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="fullscreen_slideshow" name="fullscreen_slideshow" value="1" <?php if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1') print 'checked'; ?> />
+                <label for="fullscreen_slideshow" class="ds-label" style="margin: 0;"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
             </div>
           </div>
         </div>

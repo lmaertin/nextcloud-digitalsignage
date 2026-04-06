@@ -25,7 +25,28 @@
 </head>
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
-      data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>">
+      data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>"
+      class="<?php
+        $bodyClasses = [];
+        if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1') {
+          $bodyClasses[] = 'fullscreen-slideshow-mode';
+        }
+        if (!isset($_['show_display_name']) || $_['show_display_name'] === '1') {
+          $bodyClasses[] = 'has-display-header';
+        }
+        p(implode(' ', $bodyClasses));
+      ?>"><?php if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1'): ?>
+  <!-- Fullscreen slideshow mode - only show images -->
+  <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
+  <div class="display-header">
+    <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
+    <button id="fullscreen-btn" class="fullscreen-button" title="Vollbild">⛶</button>
+  </div>
+  <?php else: ?>
+  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="Vollbild">⛶</button>
+  <?php endif; ?>
+  <div class="slideshow loading" id="slideshow"></div>
+<?php else: ?>
   <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
   <div class="display-header">
     <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
@@ -54,6 +75,7 @@
       <div class="calendar" id="calendar">Loading calendar...</div>
     </div>
   </div>
+  <?php endif; ?>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>" defer></script>
 </body>

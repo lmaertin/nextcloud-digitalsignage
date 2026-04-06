@@ -683,3 +683,30 @@ body {
   background: var(--gradient-bg);
   z-index: -1;
 }
+
+/* Fullscreen slideshow mode */
+.fullscreen-slideshow-mode .display-header {
+  position: relative;
+  z-index: 2;
+}
+
+.fullscreen-slideshow-mode .slideshow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+  min-height: 100vh;
+  z-index: 1;
+}
+
+.fullscreen-slideshow-mode.has-display-header .slideshow {
+  top: 45px;
+  height: calc(100vh - 45px);
+  min-height: calc(100vh - 45px);
+}
+
+.fullscreen-slideshow-mode .fullscreen-button {
+  z-index: 10001;
+}
