@@ -182,7 +182,7 @@ body {
 
 .container {
   display: grid;
-  grid-template-columns: 11fr 9fr;
+  grid-template-columns: minmax(0, var(--content-split-ratio)) minmax(0, calc(100% - var(--content-split-ratio)));
   gap: 1rem;
   height: calc(100vh - 45px);
   padding: 1rem;

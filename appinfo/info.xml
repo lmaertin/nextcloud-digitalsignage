@@ -17,7 +17,7 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.9</version>
+    <version>0.5.0</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

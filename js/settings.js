@@ -457,11 +457,13 @@ async function saveSettings() {
 
   try {
     const calendarSelect = document.getElementById('calendar_names');
+    const contentSplitRatioInput = document.getElementById('content_split_ratio');
     const selectedCalendars = Array.from(calendarSelect.selectedOptions).map((option) => option.value);
     const data = {
       display_name: document.getElementById('display_name').value,
       show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
+      content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '75',
       calendar_names: JSON.stringify(selectedCalendars),
       weather_latitude: document.getElementById('weather_latitude').value,
       weather_longitude: document.getElementById('weather_longitude').value,

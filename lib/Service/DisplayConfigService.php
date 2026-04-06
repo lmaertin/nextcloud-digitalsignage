@@ -22,6 +22,7 @@ class DisplayConfigService {
             'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'showDisplayName' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
             'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
+            'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '75'))),
             'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
             'weatherLongitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true) ?: [],

@@ -10,6 +10,24 @@ const API_BASE = IS_PUBLIC
 let config = null;
 let configRevision = null;
 
+function applyRuntimeConfig() {
+  if (!config) {
+    return;
+  }
+
+  const displayName = config.displayName || 'Digital Signage';
+  const titleEl = document.getElementById('display-title');
+  if (titleEl) {
+    titleEl.textContent = displayName;
+  }
+  document.title = displayName;
+
+  const splitRatio = Number.parseInt(config.contentSplitRatio, 10);
+  if (Number.isFinite(splitRatio) && splitRatio >= 50 && splitRatio <= 85) {
+    document.documentElement.style.setProperty('--content-split-ratio', `${splitRatio}%`);
+  }
+}
+
 function sortImagesByFilename(images) {
   return [...images].sort((left, right) => left.name.localeCompare(right.name, undefined, {
     numeric: true,
@@ -58,14 +76,7 @@ async function loadConfig() {
     config = await response.json();
     configRevision = config.revision ?? null;
     console.log('Configuration loaded successfully');
-
-    // Update header and browser tab title with fallback
-    const displayName = config.displayName || 'Digital Signage';
-    const titleEl = document.getElementById('display-title');
-    if (titleEl) {
-      titleEl.textContent = displayName;
-    }
-    document.title = displayName;
+    applyRuntimeConfig();
   } catch (error) {
     console.error('Configuration loading error:', error);
     throw new Error(`Failed to load configuration: ${error.message}`);
@@ -93,6 +104,7 @@ async function pollConfigChanges() {
 
     config = nextConfig;
     configRevision = nextRevision;
+    applyRuntimeConfig();
   } catch (error) {
     console.error('Config polling error:', error);
   }

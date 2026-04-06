@@ -68,6 +68,7 @@ class PublicApiController extends Controller {
         $response = new JSONResponse([
             'displayName' => $effectiveConfig['displayName'],
             'locale' => $effectiveConfig['locale'],
+            'contentSplitRatio' => $effectiveConfig['contentSplitRatio'],
             'weather' => [
                 'latitude' => $effectiveConfig['weatherLatitude'],
                 'longitude' => $effectiveConfig['weatherLongitude']

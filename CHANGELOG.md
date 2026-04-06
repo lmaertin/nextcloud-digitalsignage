@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.9] - 2026-04-06
+## [0.5.0] - 2026-04-06
 
 ### Added
 
@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Playback order setting for presets with shuffle and filename order
 - Display revision polling so public displays reload after remote changes
 - Public config responses including active preset and revision information
+- Configurable slideshow width percentage for the standard split layout
+- Runtime application of layout changes on already open public displays
 - New preset entity, mapper, service and controller
 - New display config service to resolve effective settings from global config and active preset
 - Database migrations for presets, control tokens, active preset assignment, revision tracking and image order mode
@@ -29,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image and slideshow settings were moved out of the global settings section into presets
 - Public display rendering now uses the active preset for image folder, crop mode, interval, fullscreen slideshow mode and playback order
 - The settings UI now distinguishes global settings, slideshow presets and displays more clearly
+- The settings UI now uses a more consistent layout, title treatment and translation coverage
 
 ### Fixed
 
@@ -36,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Broken or missing preset image order values are normalized automatically
 - Localization files for German and English were repaired after malformed prefixes caused translation fallback issues
 - Display slideshow behavior now supports stable sequential playback by filename and reshuffled playback cycles
+- Invalid translation JSON files were repaired so server-side localization works reliably again
+- Missing translations for display-management texts were added to English and German catalogs
 
 ## [0.0.7] - 2026-02-01
 

@@ -78,6 +78,74 @@
   gap: 8px;
 }
 
+.ds-input-row,
+.ds-checkbox-row,
+.ds-color-controls,
+.ds-subsection-actions {
+  display: flex;
+  align-items: center;
+}
+
+.ds-input-row,
+.ds-checkbox-row {
+  gap: 10px;
+  min-height: 42px;
+}
+
+.ds-input-row .ds-input {
+  flex: 1;
+}
+
+.ds-checkbox-row .ds-label {
+  margin: 0;
+}
+
+.ds-checkbox-row input[type='checkbox'],
+.ds-input-row input[type='checkbox'] {
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+.ds-form-grid-colors {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.ds-color-group {
+  gap: 6px;
+}
+
+.ds-color-group .ds-label {
+  font-size: 0.9rem;
+}
+
+.ds-color-controls {
+  gap: 0.5rem;
+}
+
+.ds-color-picker {
+  width: 50px;
+  min-width: 50px;
+  height: 35px;
+  padding: 2px;
+}
+
+.ds-color-hex {
+  width: 80px;
+  min-width: 80px;
+  font-size: 0.85rem;
+}
+
+.ds-subsection-actions {
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: -0.5rem;
+}
+
+.ds-button-compact {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
 .ds-form-group-full {
   grid-column: 1 / -1;
 }
@@ -334,4 +402,15 @@
 
 .exclude-tag-remove:hover {
   background: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 768px) {
+  .ds-subsection-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ds-button-compact {
+    width: 100%;
+  }
 }

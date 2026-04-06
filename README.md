@@ -11,7 +11,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 - **Preset-based slideshow control**: Switch image folder, crop mode, playback order, interval and fullscreen slideshow mode via presets
 - **Image slideshow**: Automated slideshow from a Nextcloud folder with shuffle or filename order
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
-- **Customizable appearance**: Configure colors (primary, background, text, gradient) and toggle display title visibility
+- **Flexible layout and appearance**: Configure slideshow width, colors (primary, background, text, gradient) and display title visibility
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
 - **Weather information**: Real-time weather data via Open-Meteo API
 - **Display and control tokens**: Separate public view token and control token per display
@@ -50,11 +50,12 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 2. Configure the following settings (via UI, no file edits needed):
 
    **Global Display Settings:**
-   - **Display Name**: Global title shown at the top of all displays (can be toggled off)
-   - **Show Display Name**: Checkbox to show or hide the global display title on screen
-   - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
-     - Useful for kiosk setups and dedicated display devices
-     - Can be declined without affecting functionality
+      - **Display Name**: Global title shown at the top of all displays
+      - **Display Name visibility**: Checkbox next to the title field to show or hide the global display title on screen
+      - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
+      - Useful for kiosk setups and dedicated display devices
+      - Can be declined without affecting functionality
+      - **Slideshow width in percent**: Controls how much width the slideshow uses in the standard split layout; the remaining space is used by calendar and weather
 
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -84,9 +85,10 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show images only
 
    **Displays:**
+   - **Create new display** creates a dedicated screen entry with its own public view token and control token
+   - **Internal display label** is only used to distinguish displays in the admin UI
    - Each display has a **view token** for the public screen URL
    - Each display has a **control token** for remote preset switching
-   - The display name in this section is only an internal label to distinguish displays in the admin UI
    - Each display can be assigned an active preset
 
 3. Save the settings
@@ -112,6 +114,8 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
 The public display URL opens a full-screen view without login. This can be opened on a Raspberry Pi, Android tablet, or other device in kiosk mode.
 
+In the default layout, the slideshow and the calendar/weather area share the screen using the configured slideshow width percentage. Changes to the active preset or the display layout config are picked up automatically by connected displays.
+
 **Fullscreen Features:**
 
 - **Manual Toggle**: Click the fullscreen button (⛶) in the top-right corner of the header to enter/exit fullscreen mode
@@ -128,6 +132,7 @@ The public display URL opens a full-screen view without login. This can be opene
 ### Presets and Displays
 
 - **Global settings** define shared display behavior such as title, colors, calendars, weather, and text scaling.
+- **Layout settings** define how much space the slideshow gets in the standard split view.
 - **Presets** define image and slideshow behavior such as folder, crop mode, playback order, interval, and fullscreen slideshow mode.
 - **Displays** combine a public view URL, a control token, and one active preset.
 
@@ -226,7 +231,7 @@ git commit --no-verify
 - `GET /apps/digitalsignage/api/event-titles`
    Returns event titles for autocomplete-based filtering.
 - `GET /apps/digitalsignage/api/images`
-   Returns images from the globally configured folder.
+   Returns images from the configured source folder.
 - `GET /apps/digitalsignage/api/image?id=<file_id>`
    Streams a single authenticated image.
 - `POST /apps/digitalsignage/settings/user`
@@ -235,9 +240,9 @@ git commit --no-verify
 ### Display Management APIs
 
 - `POST /apps/digitalsignage/api/token/create`
-   Creates a display with view token, control token and default preset.
+   Creates a display with internal label, view token, control token and default preset.
 - `GET /apps/digitalsignage/api/token/list`
-   Lists existing displays, view URLs, control tokens and active presets.
+   Lists existing displays, internal labels, view URLs, control tokens and active presets.
 - `POST /apps/digitalsignage/api/token/{id}/activate-preset`
    Activates a preset for a display from the authenticated UI.
 - `DELETE /apps/digitalsignage/api/token/delete/{id}`

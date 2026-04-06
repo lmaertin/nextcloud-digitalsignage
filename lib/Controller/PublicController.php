@@ -96,6 +96,7 @@ class PublicController extends PublicShareController {
             $displayName = $effectiveConfig['displayName'];
             $showDisplayName = $effectiveConfig['showDisplayName'];
             $textScale = (string)$effectiveConfig['textScale'];
+            $contentSplitRatio = (string)$effectiveConfig['contentSplitRatio'];
             $fullscreenSlideshow = $effectiveConfig['fullscreenSlideshow'] ? '1' : '0';
             if ($showDisplayName === '' || $showDisplayName === null) {
                 $showDisplayName = '1';
@@ -116,6 +117,7 @@ class PublicController extends PublicShareController {
                     'display_name' => $displayName,
                     'show_display_name' => $showDisplayName,
                     'text_scale' => $textScale,
+                    'content_split_ratio' => $contentSplitRatio,
                     'fullscreen_slideshow' => $fullscreenSlideshow
                 ],
                 'blank'

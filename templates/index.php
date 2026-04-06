@@ -17,8 +17,8 @@ $l = \OC::$server->getL10N('digitalsignage');
           <h4 class="ds-subsection-title">⚙️ <?php p($l->t('General')); ?></h4>
           <div class="ds-form-grid">
             <div class="ds-form-group">
-              <label for="display_name" class="ds-label">📺 <?php p($l->t('Display Name')); ?></label>
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="display_name" class="ds-label"><?php p($l->t('Display Name')); ?></label>
+              <div class="ds-input-row">
                 <input type="checkbox" id="show_display_name" name="show_display_name" value="1" <?php if (!isset($_['show_display_name']) || $_['show_display_name'] === '1') print 'checked'; ?> />
                 <input type="text" id="display_name" name="display_name" value="<?php p($_['display_name'] ?? $l->t('Digital Signage')); ?>" placeholder="<?php p($l->t('Digital Signage')); ?>" class="ds-input" />
               </div>
@@ -27,53 +27,59 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
           <div class="ds-form-grid">
             <div class="ds-form-group">
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="ds-checkbox-row">
                 <input type="checkbox" id="auto_fullscreen_prompt" name="auto_fullscreen_prompt" value="1" <?php if (isset($_['auto_fullscreen_prompt']) && $_['auto_fullscreen_prompt'] === '1') print 'checked'; ?> />
-                <label for="auto_fullscreen_prompt" class="ds-label" style="margin: 0;"><?php p($l->t('Auto-prompt for fullscreen')); ?></label>
+                <label for="auto_fullscreen_prompt" class="ds-label"><?php p($l->t('Auto-prompt for fullscreen')); ?></label>
               </div>
               <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
             </div>
-          </div>
-          <div class="ds-form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-            <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <label for="color_primary" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Primary')); ?></label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="color_primary" name="color_primary" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" class="ds-input" style="width: 50px; height: 35px; padding: 2px;" />
-                <input type="text" id="color_primary_hex" name="color_primary_hex" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input" style="width: 80px; font-size: 0.85rem;" />
-              </div>
-            </div>
-            <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <label for="color_bg" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Background')); ?></label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="color_bg" name="color_bg" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" class="ds-input" style="width: 50px; height: 35px; padding: 2px;" />
-                <input type="text" id="color_bg_hex" name="color_bg_hex" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" maxlength="7" class="ds-input" style="width: 80px; font-size: 0.85rem;" />
-              </div>
-            </div>
-            <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <label for="color_text" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Text')); ?></label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="color_text" name="color_text" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" class="ds-input" style="width: 50px; height: 35px; padding: 2px;" />
-                <input type="text" id="color_text_hex" name="color_text_hex" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" maxlength="7" class="ds-input" style="width: 80px; font-size: 0.85rem;" />
-              </div>
-            </div>
-            <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <label for="color_gradient_start" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Gradient Start')); ?></label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="color_gradient_start" name="color_gradient_start" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" class="ds-input" style="width: 50px; height: 35px; padding: 2px;" />
-                <input type="text" id="color_gradient_start_hex" name="color_gradient_start_hex" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input" style="width: 80px; font-size: 0.85rem;" />
-              </div>
-            </div>
-            <div class="ds-form-group" style="display: flex; flex-direction: column; gap: 0.3rem;">
-              <label for="color_gradient_end" class="ds-label" style="font-size: 0.9rem;"><?php p($l->t('Gradient End')); ?></label>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="color_gradient_end" name="color_gradient_end" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" class="ds-input" style="width: 50px; height: 35px; padding: 2px;" />
-                <input type="text" id="color_gradient_end_hex" name="color_gradient_end_hex" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" maxlength="7" class="ds-input" style="width: 80px; font-size: 0.85rem;" />
-              </div>
+
+            <div class="ds-form-group">
+              <label for="content_split_ratio" class="ds-label"><?php p($l->t('Slideshow width percent')); ?></label>
+              <input type="number" id="content_split_ratio" name="content_split_ratio" value="<?php p($_['content_split_ratio'] ?? '75'); ?>" min="50" max="85" step="1" class="ds-input" />
+              <span class="ds-hint"><?php p($l->t('Width of the slideshow column. The remaining width is used for the calendar/weather column.')); ?></span>
             </div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: -0.5rem;">
+          <div class="ds-form-grid ds-form-grid-colors">
+            <div class="ds-form-group ds-color-group">
+              <label for="color_primary" class="ds-label"><?php p($l->t('Primary')); ?></label>
+              <div class="ds-color-controls">
+                <input type="color" id="color_primary" name="color_primary" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                <input type="text" id="color_primary_hex" name="color_primary_hex" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+              </div>
+            </div>
+            <div class="ds-form-group ds-color-group">
+              <label for="color_bg" class="ds-label"><?php p($l->t('Background')); ?></label>
+              <div class="ds-color-controls">
+                <input type="color" id="color_bg" name="color_bg" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" class="ds-input ds-color-picker" />
+                <input type="text" id="color_bg_hex" name="color_bg_hex" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+              </div>
+            </div>
+            <div class="ds-form-group ds-color-group">
+              <label for="color_text" class="ds-label"><?php p($l->t('Text')); ?></label>
+              <div class="ds-color-controls">
+                <input type="color" id="color_text" name="color_text" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" class="ds-input ds-color-picker" />
+                <input type="text" id="color_text_hex" name="color_text_hex" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+              </div>
+            </div>
+            <div class="ds-form-group ds-color-group">
+              <label for="color_gradient_start" class="ds-label"><?php p($l->t('Gradient Start')); ?></label>
+              <div class="ds-color-controls">
+                <input type="color" id="color_gradient_start" name="color_gradient_start" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                <input type="text" id="color_gradient_start_hex" name="color_gradient_start_hex" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+              </div>
+            </div>
+            <div class="ds-form-group ds-color-group">
+              <label for="color_gradient_end" class="ds-label"><?php p($l->t('Gradient End')); ?></label>
+              <div class="ds-color-controls">
+                <input type="color" id="color_gradient_end" name="color_gradient_end" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" class="ds-input ds-color-picker" />
+                <input type="text" id="color_gradient_end_hex" name="color_gradient_end_hex" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+              </div>
+            </div>
+          </div>
+          <div class="ds-subsection-actions">
             <span class="ds-hint"><?php p($l->t('Configure display colors. Gradient applies to title bar only.')); ?></span>
-            <button type="button" id="reset-colors-btn" class="button" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            <button type="button" id="reset-colors-btn" class="button ds-button-compact">
               <?php p($l->t('Reset to defaults')); ?>
             </button>
           </div>
@@ -92,7 +98,7 @@ $l = \OC::$server->getL10N('digitalsignage');
             </div>
 
             <div class="ds-form-group ds-form-group-full">
-              <label for="calendar_exclude" class="ds-label">🚫 <?php p($l->t('Hide events')); ?></label>
+              <label for="calendar_exclude" class="ds-label"><?php p($l->t('Hide events')); ?></label>
               <div id="calendar-exclude-tags" class="ds-tag-container">
                 <!-- Tags will be inserted here -->
               </div>
@@ -130,7 +136,7 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
 
           <div class="ds-form-group ds-form-group-full">
-            <label class="ds-label">📍 <?php p($l->t('Control link')); ?></label>
+            <label class="ds-label"><?php p($l->t('Control link')); ?></label>
             <a id="weather-map-link" class="button" href="https://www.openstreetmap.org/?mlat=<?php p($_['weather_latitude'] ?? '52.3758'); ?>&mlon=<?php p($_['weather_longitude'] ?? '9.9747'); ?>&zoom=14" target="_blank" rel="noopener">
               <?php p($l->t('Open OpenStreetMap with these coordinates')); ?>
             </a>
@@ -178,9 +184,9 @@ $l = \OC::$server->getL10N('digitalsignage');
             </div>
 
             <div class="ds-form-group">
-              <div style="display: flex; align-items: center; gap: 10px;">
+              <div class="ds-checkbox-row">
                 <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
-                <label for="preset-fullscreen-slideshow" class="ds-label" style="margin: 0;"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
+                <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
               </div>
               <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
             </div>
@@ -195,10 +201,10 @@ $l = \OC::$server->getL10N('digitalsignage');
       </div>
 
       <div class="section ds-section">
-        <h3 class="ds-section-title"><?php p($l->t('Displays')); ?></h3>
+        <h3 class="ds-section-title">📺 <?php p($l->t('Displays')); ?></h3>
 
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title"><?php p($l->t('Create new display')); ?></h4>
+          <h4 class="ds-subsection-title">➕ <?php p($l->t('Create new display')); ?></h4>
           <div class="ds-token-create">
             <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />
             <button class="button primary" id="create-token-btn"><?php p($l->t('Create display')); ?></button>
@@ -207,7 +213,7 @@ $l = \OC::$server->getL10N('digitalsignage');
         </div>
 
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title"><?php p($l->t('Existing displays')); ?></h4>
+          <h4 class="ds-subsection-title">📋 <?php p($l->t('Existing displays')); ?></h4>
           <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
         </div>
 
