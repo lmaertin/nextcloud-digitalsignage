@@ -8,6 +8,25 @@ const API_BASE = IS_PUBLIC
   : BASE_URL + 'apps/digitalsignage/api';
 
 let config = null;
+let configRevision = null;
+
+function sortImagesByFilename(images) {
+  return [...images].sort((left, right) => left.name.localeCompare(right.name, undefined, {
+    numeric: true,
+    sensitivity: 'base'
+  }));
+}
+
+function shuffleImages(images) {
+  const shuffled = [...images];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
 
 // Centralized date formatter functions
 function getDateFormatter(locale, options) {
@@ -37,6 +56,7 @@ async function loadConfig() {
     }
 
     config = await response.json();
+    configRevision = config.revision ?? null;
     console.log('Configuration loaded successfully');
 
     // Update header and browser tab title with fallback
@@ -49,6 +69,32 @@ async function loadConfig() {
   } catch (error) {
     console.error('Configuration loading error:', error);
     throw new Error(`Failed to load configuration: ${error.message}`);
+  }
+}
+
+async function pollConfigChanges() {
+  if (!IS_PUBLIC) {
+    return;
+  }
+
+  try {
+    const response = await fetch(API_BASE + '/config');
+    if (!response.ok) {
+      return;
+    }
+
+    const nextConfig = await response.json();
+    const nextRevision = nextConfig.revision ?? null;
+
+    if (configRevision !== null && nextRevision !== null && nextRevision !== configRevision) {
+      window.location.reload();
+      return;
+    }
+
+    config = nextConfig;
+    configRevision = nextRevision;
+  } catch (error) {
+    console.error('Config polling error:', error);
   }
 }
 
@@ -72,8 +118,32 @@ async function initSlideshow() {
       throw new Error('No images found');
     }
 
+    const playbackMode = config.imageOrderMode === 'filename' ? 'filename' : 'shuffle';
+    let playbackImages = playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images);
+    let currentIndex = 0;
+
+    function getNextImage() {
+      if (playbackImages.length === 0) {
+        return null;
+      }
+
+      if (currentIndex >= playbackImages.length) {
+        playbackImages = playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images);
+        currentIndex = 0;
+      }
+
+      const nextImage = playbackImages[currentIndex];
+      currentIndex += 1;
+
+      return nextImage;
+    }
+
     function show() {
-      const img = images[Math.floor(Math.random() * images.length)];
+      const img = getNextImage();
+      if (!img) {
+        throw new Error('No images found');
+      }
+
       const imageUrl = API_BASE + '/image?id=' + img.id;
       console.log('Showing image:', img.name);
 
@@ -384,6 +454,7 @@ async function init() {
     // Set up intervals
     setInterval(loadWeather, 3600000); // 1 hour
     setInterval(loadICS, 600000); // 10 minutes
+    setInterval(pollConfigChanges, 15000); // 15 seconds
 
     // Initialize date and time display
     initDateTime();

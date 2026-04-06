@@ -2,236 +2,402 @@ const translate = (text, params = []) => {
   if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
     return OC.L10N.translate('digitalsignage', text, params);
   }
+
   return Array.isArray(params) && params.length > 0 ? text.replace('%s', params[0]) : text;
 };
 
-// Helper function to escape HTML
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
-// Get URLs from data attributes
+const dataNode = document.querySelector('[data-csrf-token]');
+
 const API_URLS = {
-  list: document.querySelector('[data-list-url]')?.getAttribute('data-list-url'),
-  create: document.querySelector('[data-create-url]')?.getAttribute('data-create-url'),
-  delete: document.querySelector('[data-delete-url]')?.getAttribute('data-delete-url')
+  list: dataNode?.getAttribute('data-list-url'),
+  create: dataNode?.getAttribute('data-create-url'),
+  activatePreset: dataNode?.getAttribute('data-activate-preset-url'),
+  delete: dataNode?.getAttribute('data-delete-url'),
+  presetList: dataNode?.getAttribute('data-preset-list-url'),
+  presetCreate: dataNode?.getAttribute('data-preset-create-url'),
+  presetUpdate: dataNode?.getAttribute('data-preset-update-url'),
+  presetDelete: dataNode?.getAttribute('data-preset-delete-url')
 };
 
-const CSRF_TOKEN = document.querySelector('[data-csrf-token]')?.getAttribute('data-csrf-token');
+const CSRF_TOKEN = dataNode?.getAttribute('data-csrf-token');
+
+let excludeTags = [];
+let presets = [];
+
+function fetchJson(url, options = {}) {
+  return fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      requesttoken: CSRF_TOKEN,
+      ...(options.headers || {})
+    },
+    credentials: 'same-origin',
+    ...options
+  });
+}
+
+async function parseJsonResponse(response) {
+  const body = await response.text();
+
+  try {
+    return JSON.parse(body);
+  } catch (error) {
+    const compactBody = body.trim();
+    if (compactBody.startsWith('<!DOCTYPE') || compactBody.startsWith('<html')) {
+      throw new Error('Server returned HTML instead of JSON');
+    }
+
+    throw new Error(compactBody || 'Invalid JSON response');
+  }
+}
+
+function getPresetFormData() {
+  return {
+    name: document.getElementById('preset-name').value.trim(),
+    image_folder: document.getElementById('preset-image-folder').value,
+    image_fit_mode: document.getElementById('preset-image-fit-mode').value,
+    image_order_mode: document.getElementById('preset-image-order-mode').value,
+    imageOrderMode: document.getElementById('preset-image-order-mode').value,
+    slide_interval: parseInt(document.getElementById('preset-slide-interval').value, 10) || 10,
+    fullscreen_slideshow: document.getElementById('preset-fullscreen-slideshow').checked ? '1' : '0'
+  };
+}
+
+function resetPresetForm() {
+  document.getElementById('preset-id').value = '';
+  document.getElementById('preset-name').value = '';
+  document.getElementById('preset-image-folder').value = '';
+  document.getElementById('preset-image-fit-mode').value = 'cover';
+  document.getElementById('preset-image-order-mode').value = 'shuffle';
+  document.getElementById('preset-slide-interval').value = '10';
+  document.getElementById('preset-fullscreen-slideshow').checked = false;
+  document.getElementById('save-preset-btn').textContent = translate('Save preset');
+  document.getElementById('cancel-preset-edit-btn').style.display = 'none';
+}
+
+function fillPresetForm(preset) {
+  document.getElementById('preset-id').value = String(preset.id);
+  document.getElementById('preset-name').value = preset.name;
+  document.getElementById('preset-image-folder').value = preset.imageFolder;
+  document.getElementById('preset-image-fit-mode').value = preset.imageFitMode;
+  document.getElementById('preset-image-order-mode').value = preset.imageOrderMode || 'shuffle';
+  document.getElementById('preset-slide-interval').value = String(preset.slideInterval);
+  document.getElementById('preset-fullscreen-slideshow').checked = Boolean(preset.fullscreenSlideshow);
+  document.getElementById('save-preset-btn').textContent = translate('Update preset');
+  document.getElementById('cancel-preset-edit-btn').style.display = 'inline-flex';
+}
+
+function renderPresetSummary(preset) {
+  const mode = preset.imageFitMode === 'contain'
+    ? translate('Fit complete (with background)')
+    : translate('Fill (crop if needed)');
+  const orderMode = preset.imageOrderMode === 'filename'
+    ? translate('By filename')
+    : translate('Shuffle');
+  const fullscreen = preset.fullscreenSlideshow
+    ? translate('Fullscreen slideshow mode')
+    : translate('Standard layout');
+
+  return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(fullscreen)} | ${preset.slideInterval}s`;
+}
+
+function renderPresetList() {
+  const container = document.getElementById('presets-container');
+  if (!container) {
+    return;
+  }
+
+  if (presets.length === 0) {
+    container.innerHTML = `<p>${translate('No presets yet')}</p>`;
+    return;
+  }
+
+  container.innerHTML = presets.map((preset) => `
+    <div class="preset-item">
+      <div class="preset-details">
+        <div class="preset-name">${escapeHtml(preset.name)}</div>
+        <div class="preset-summary">${renderPresetSummary(preset)}</div>
+      </div>
+      <div class="token-actions">
+        <button class="button" data-preset-edit="${preset.id}">${translate('Edit')}</button>
+        <button class="button error" data-preset-delete="${preset.id}">${translate('Delete')}</button>
+      </div>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('[data-preset-edit]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const preset = presets.find((entry) => entry.id === parseInt(button.getAttribute('data-preset-edit'), 10));
+      if (preset) {
+        fillPresetForm(preset);
+      }
+    });
+  });
+
+  container.querySelectorAll('[data-preset-delete]').forEach((button) => {
+    button.addEventListener('click', () => {
+      deletePreset(parseInt(button.getAttribute('data-preset-delete'), 10));
+    });
+  });
+}
+
+function renderPresetOptions(activePresetId) {
+  return presets.map((preset) => {
+    const selected = preset.id === activePresetId ? 'selected' : '';
+    return `<option value="${preset.id}" ${selected}>${escapeHtml(preset.name)}</option>`;
+  }).join('');
+}
+
+async function loadPresets() {
+  try {
+    const response = await fetchJson(API_URLS.presetList, { method: 'GET' });
+    const result = await parseJsonResponse(response);
+
+    if (!response.ok) {
+      throw new Error(result.error || translate('Error loading presets'));
+    }
+
+    presets = Array.isArray(result) ? result : [];
+    renderPresetList();
+  } catch (error) {
+    console.error('Error loading presets:', error);
+    const container = document.getElementById('presets-container');
+    if (container) {
+      container.innerHTML = `<p>${translate('Error loading presets')}: ${escapeHtml(error.message)}</p>`;
+    }
+  }
+}
+
+async function savePreset() {
+  const presetId = document.getElementById('preset-id').value;
+  const data = getPresetFormData();
+
+  if (!data.name) {
+    alert(translate('Please enter a preset name'));
+    return;
+  }
+
+  try {
+    const isUpdate = presetId !== '';
+    const url = isUpdate
+      ? API_URLS.presetUpdate.replace('PRESET_ID', presetId)
+      : API_URLS.presetCreate;
+    const method = isUpdate ? 'PUT' : 'POST';
+
+    const response = await fetchJson(url, {
+      method,
+      body: JSON.stringify(data)
+    });
+    const result = await parseJsonResponse(response);
+
+    if (!response.ok || result.error) {
+      throw new Error(result.error || translate('Error saving preset'));
+    }
+
+    resetPresetForm();
+    await loadPresets();
+    await loadTokens();
+  } catch (error) {
+    console.error('Error saving preset:', error);
+    alert(`${translate('Error saving preset')}: ${error.message}`);
+  }
+}
+
+async function deletePreset(id) {
+  if (!confirm(translate('Are you sure you want to delete this preset?'))) {
+    return;
+  }
+
+  try {
+    const response = await fetchJson(API_URLS.presetDelete.replace('PRESET_ID', String(id)), {
+      method: 'DELETE'
+    });
+    const result = await parseJsonResponse(response);
+
+    if (!response.ok || result.error) {
+      throw new Error(result.error || translate('Error deleting preset'));
+    }
+
+    resetPresetForm();
+    await loadPresets();
+    await loadTokens();
+  } catch (error) {
+    console.error('Error deleting preset:', error);
+    alert(`${translate('Error deleting preset')}: ${error.message}`);
+  }
+}
+
+async function activatePreset(displayId, presetId) {
+  try {
+    const response = await fetchJson(API_URLS.activatePreset.replace('DISPLAY_ID', String(displayId)), {
+      method: 'POST',
+      body: JSON.stringify({ presetId })
+    });
+    const result = await parseJsonResponse(response);
+
+    if (!response.ok || result.error) {
+      throw new Error(result.error || translate('Error activating preset'));
+    }
+
+    await loadTokens();
+  } catch (error) {
+    console.error('Error activating preset:', error);
+    alert(`${translate('Error activating preset')}: ${error.message}`);
+  }
+}
+
+function copyToClipboard(button, value, originalLabel) {
+  navigator.clipboard.writeText(value || '').then(() => {
+    button.textContent = translate('Copied!');
+    setTimeout(() => {
+      button.textContent = originalLabel;
+    }, 2000);
+  });
+}
 
 async function loadTokens() {
   try {
-    console.log('Loading tokens...');
-    console.log('API URL:', API_URLS.list);
-
-    const response = await fetch(API_URLS.list, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin'
-    });
-
-    console.log('Response status:', response.status);
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error('Response error:', text);
-      throw new Error('HTTP ' + response.status + ': ' + text);
-    }
-
-    const tokens = await response.json();
-    console.log('Tokens received:', tokens);
-
+    const response = await fetchJson(API_URLS.list, { method: 'GET' });
+    const tokens = await parseJsonResponse(response);
     const container = document.getElementById('tokens-container');
 
+    if (!response.ok) {
+      throw new Error(tokens.error || translate('Error loading tokens'));
+    }
+
     if (!tokens || tokens.length === 0) {
-      container.innerHTML = `<p>${translate('No tokens yet')}</p>`;
+      container.innerHTML = `<p>${translate('No displays yet')}</p>`;
       return;
     }
 
-    container.innerHTML = tokens.map(token => `
+    container.innerHTML = tokens.map((token) => `
       <div class="token-item">
         <div class="token-info">
           <div class="token-name">${escapeHtml(token.name)}</div>
-          <div class="token-url">${escapeHtml(token.url)}</div>
+          <div class="token-meta">
+            <div class="token-row">
+              <span class="token-row-label">${translate('View URL')}</span>
+              <span class="token-url">${escapeHtml(token.url)}</span>
+            </div>
+            <div class="token-row">
+              <span class="token-row-label">${translate('Control token')}</span>
+              <span class="token-url">${escapeHtml(token.controlToken || '')}</span>
+            </div>
+            <div class="token-row">
+              <span class="token-row-label">${translate('Active preset')}</span>
+              <select class="ds-input token-select" data-display-preset-select="${token.id}">
+                ${renderPresetOptions(token.activePresetId)}
+              </select>
+              <button class="button" data-display-activate="${token.id}">${translate('Activate preset')}</button>
+            </div>
+          </div>
         </div>
         <div class="token-actions">
-          <button class="primary" data-copy-url="${escapeHtml(token.url)}" title="${translate('Copy URL')}">${translate('Copy')}</button>
-          <button class="error" data-token-id="${token.id}" data-token-name="${escapeHtml(token.name)}" title="${translate('Delete token')}">${translate('Delete')}</button>
+          <button class="primary" data-copy-url="${escapeHtml(token.url)}">${translate('Copy URL')}</button>
+          <button class="primary" data-copy-control="${escapeHtml(token.controlToken || '')}">${translate('Copy control token')}</button>
+          <button class="error" data-token-id="${token.id}">${translate('Delete')}</button>
         </div>
       </div>
     `).join('');
 
-    // Add event listeners to copy buttons
-    container.querySelectorAll('.primary[data-copy-url]').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const url = this.getAttribute('data-copy-url');
-        navigator.clipboard.writeText(url).then(() => {
-          this.textContent = translate('Copied!');
-          setTimeout(() => { this.textContent = translate('Copy'); }, 2000);
-        });
+    container.querySelectorAll('[data-copy-url]').forEach((button) => {
+      button.addEventListener('click', () => copyToClipboard(button, button.getAttribute('data-copy-url'), translate('Copy URL')));
+    });
+
+    container.querySelectorAll('[data-copy-control]').forEach((button) => {
+      button.addEventListener('click', () => copyToClipboard(button, button.getAttribute('data-copy-control'), translate('Copy control token')));
+    });
+
+    container.querySelectorAll('[data-display-activate]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const displayId = parseInt(button.getAttribute('data-display-activate'), 10);
+        const select = container.querySelector(`[data-display-preset-select="${displayId}"]`);
+        if (select) {
+          activatePreset(displayId, parseInt(select.value, 10));
+        }
       });
     });
 
-    // Add event listeners to delete buttons
-    container.querySelectorAll('.error').forEach(btn => {
-      btn.addEventListener('click', function() {
-        deleteToken(this.getAttribute('data-token-id'), this.getAttribute('data-token-name'));
-      });
+    container.querySelectorAll('[data-token-id]').forEach((button) => {
+      button.addEventListener('click', () => deleteToken(button.getAttribute('data-token-id')));
     });
   } catch (error) {
-    console.error('Error loading tokens:', error);
+    console.error('Error loading displays:', error);
     document.getElementById('tokens-container').innerHTML = `<p>${translate('Error loading tokens')}: ${escapeHtml(error.message)}</p>`;
   }
 }
 
 async function createToken() {
-  const name = document.getElementById('token-name').value;
+  const name = document.getElementById('token-name').value.trim();
   if (!name) {
     alert(translate('Please enter a name for the token'));
     return;
   }
 
   try {
-    console.log('Creating token:', name);
-
-    const response = await fetch(API_URLS.create, {
+    const response = await fetchJson(API_URLS.create, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin',
-      body: JSON.stringify({ name: name })
+      body: JSON.stringify({ name })
     });
+    const result = await parseJsonResponse(response);
 
-    console.log('Create response status:', response.status);
-    const result = await response.json();
-    console.log('Create result:', result);
-
-    if (result.error) {
-      alert(`${translate('Error creating token')}: ${result.error}`);
-    } else {
-      alert(translate('Token created successfully'));
-      document.getElementById('token-name').value = '';
-      loadTokens();
+    if (!response.ok || result.error) {
+      throw new Error(result.error || translate('Error creating token'));
     }
+
+    document.getElementById('token-name').value = '';
+    await loadTokens();
   } catch (error) {
-    console.error('Error creating token:', error);
+    console.error('Error creating display:', error);
     alert(`${translate('Error creating token')}: ${error.message}`);
   }
 }
 
 async function deleteToken(id) {
-  const msg = translate('Are you sure you want to delete this token?');
-  if (!confirm(msg)) {
+  if (!confirm(translate('Are you sure you want to delete this token?'))) {
     return;
   }
 
   try {
-    console.log('Deleting token:', id);
     const url = API_URLS.delete.replace('TOKEN_ID', id);
+    const response = await fetchJson(url, { method: 'DELETE' });
+    const result = await parseJsonResponse(response);
 
-    await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin'
-    });
+    if (!response.ok || result.error) {
+      throw new Error(result.error || translate('Error deleting token'));
+    }
 
-    loadTokens();
+    await loadTokens();
   } catch (error) {
     console.error('Error deleting token:', error);
     alert(`${translate('Error deleting token')}: ${error.message}`);
   }
 }
 
-// Setup event listeners when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-  // Create token button
-  const createBtn = document.getElementById('create-token-btn');
-  if (createBtn) {
-    createBtn.addEventListener('click', createToken);
-  }
-
-  // Save settings button
-  const saveSettingsBtn = document.getElementById('save-settings-btn');
-  if (saveSettingsBtn) {
-    saveSettingsBtn.addEventListener('click', saveSettings);
-  }
-
-  // Reset colors button
-  const resetColorsBtn = document.getElementById('reset-colors-btn');
-  if (resetColorsBtn) {
-    resetColorsBtn.addEventListener('click', resetColorsToDefaults);
-  }
-
-  // Load tokens
-  loadTokens();
-
-  // Load calendars and folders for dropdowns
-  loadCalendars();
-  loadFolders();
-
-  // Load event titles for autocomplete when calendars change
-  const calendarSelect = document.getElementById('calendar_names');
-  if (calendarSelect) {
-    calendarSelect.addEventListener('change', loadEventTitles);
-    // Load initially after calendars are loaded
-    setTimeout(loadEventTitles, 500);
-  }
-
-  // Weather link preview
-  updateWeatherLink();
-  const latInput = document.getElementById('weather_latitude');
-  const lonInput = document.getElementById('weather_longitude');
-  [latInput, lonInput].forEach(input => {
-    if (input) {
-      input.addEventListener('change', updateWeatherLink);
-      input.addEventListener('input', updateWeatherLink);
-    }
-  });
-
-  // Initialize exclude tags
-  initExcludeTags();
-
-  // Synchronize color pickers and hex fields (aus index.php ausgelagert)
-  syncColorPickers();
-});
-
 async function loadCalendars() {
   try {
     const calendarsUrl = OC.generateUrl('/apps/digitalsignage/api/calendars');
-    const response = await fetch(calendarsUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin'
-    });
-
+    const response = await fetchJson(calendarsUrl, { method: 'GET' });
     const calendars = await response.json();
     const select = document.getElementById('calendar_names');
-
-    // Get current value from PHP (JSON array)
     const currentValueStr = select.dataset.currentValue || '[]';
     let currentValues = [];
+
     try {
       currentValues = JSON.parse(currentValueStr);
-    } catch (e) {
-      console.error('Failed to parse calendar_names:', e);
+    } catch (error) {
+      console.error('Failed to parse calendar_names:', error);
     }
 
-    select.innerHTML = calendars.map(cal =>
-        `<option value="${cal.displayName}" ${currentValues.includes(cal.displayName) ? 'selected' : ''}>${cal.displayName}</option>`
-      ).join('');
+    select.innerHTML = calendars.map((calendar) =>
+      `<option value="${calendar.displayName}" ${currentValues.includes(calendar.displayName) ? 'selected' : ''}>${calendar.displayName}</option>`
+    ).join('');
   } catch (error) {
     console.error('Error loading calendars:', error);
     document.getElementById('calendar_name').innerHTML = `<option value="">${translate('Calendar loading error')}</option>`;
@@ -241,57 +407,40 @@ async function loadCalendars() {
 async function loadFolders() {
   try {
     const foldersUrl = OC.generateUrl('/apps/digitalsignage/api/folders');
-    const response = await fetch(foldersUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin'
-    });
-
+    const response = await fetchJson(foldersUrl, { method: 'GET' });
     const folders = await response.json();
-    const select = document.getElementById('image_folder');
+    const presetFolderSelect = document.getElementById('preset-image-folder');
+    const optionsMarkup = `<option value="">${translate('Select folder')}</option>` +
+      folders.sort().map((folder) => `<option value="${folder}">${folder}</option>`).join('');
 
-    // Get current value from PHP
-    const currentValue = select.dataset.currentValue || '';
-
-    select.innerHTML = `<option value="">${translate('Select folder')}</option>` +
-      folders.sort().map(folder =>
-        `<option value="${folder}" ${folder === currentValue ? 'selected' : ''}>${folder}</option>`
-      ).join('');
+    if (presetFolderSelect) {
+      presetFolderSelect.innerHTML = optionsMarkup;
+    }
   } catch (error) {
     console.error('Error loading folders:', error);
-    document.getElementById('image_folder').innerHTML = `<option value="">${translate('Error loading folders')}</option>`;
+    const presetFolderSelect = document.getElementById('preset-image-folder');
+    if (presetFolderSelect) {
+      presetFolderSelect.innerHTML = `<option value="">${translate('Error loading folders')}</option>`;
+    }
   }
 }
 
 async function loadEventTitles() {
   try {
     const eventTitlesUrl = OC.generateUrl('/apps/digitalsignage/api/event-titles');
-    const response = await fetch(eventTitlesUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin'
-    });
-
+    const response = await fetchJson(eventTitlesUrl, { method: 'GET' });
     if (!response.ok) {
       return;
     }
 
     const titles = await response.json();
     const datalist = document.getElementById('event-titles-list');
-
     if (!datalist) {
       return;
     }
 
     datalist.innerHTML = '';
-
-    titles.forEach(title => {
+    titles.forEach((title) => {
       if (!excludeTags.includes(title)) {
         const option = document.createElement('option');
         option.value = title;
@@ -299,6 +448,7 @@ async function loadEventTitles() {
       }
     });
   } catch (error) {
+    console.error('Error loading event titles:', error);
   }
 }
 
@@ -306,18 +456,13 @@ async function saveSettings() {
   const msgSpan = document.getElementById('settings-msg');
 
   try {
-    // Get selected calendars from multi-select
     const calendarSelect = document.getElementById('calendar_names');
-    const selectedCalendars = Array.from(calendarSelect.selectedOptions).map(opt => opt.value);
-
+    const selectedCalendars = Array.from(calendarSelect.selectedOptions).map((option) => option.value);
     const data = {
       display_name: document.getElementById('display_name').value,
       show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       calendar_names: JSON.stringify(selectedCalendars),
-      image_folder: document.getElementById('image_folder').value,
-      slide_interval: document.getElementById('slide_interval').value,
-      image_fit_mode: document.getElementById('image_fit_mode').value,
       weather_latitude: document.getElementById('weather_latitude').value,
       weather_longitude: document.getElementById('weather_longitude').value,
       calendar_exclude: document.getElementById('calendar_exclude').value,
@@ -327,28 +472,22 @@ async function saveSettings() {
       color_gradient_start: document.getElementById('color_gradient_start').value,
       color_gradient_end: document.getElementById('color_gradient_end').value,
       show_titlebar: '1',
-      text_scale: document.getElementById('text_scale').value,
-      fullscreen_slideshow: document.getElementById('fullscreen_slideshow').checked ? '1' : '0'
+      text_scale: document.getElementById('text_scale').value
     };
 
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');
-
-    const response = await fetch(saveUrl, {
+    const response = await fetchJson(saveUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'requesttoken': CSRF_TOKEN
-      },
-      credentials: 'same-origin',
       body: JSON.stringify(data)
     });
-
     const result = await response.json();
 
     if (result.status === 'success') {
       msgSpan.textContent = translate('Settings saved successfully');
       msgSpan.style.color = 'green';
-      setTimeout(() => { msgSpan.textContent = ''; }, 3000);
+      setTimeout(() => {
+        msgSpan.textContent = '';
+      }, 3000);
     } else {
       throw new Error(translate('Error saving settings'));
     }
@@ -359,9 +498,6 @@ async function saveSettings() {
   }
 }
 
-// Exclude Tags Management
-let excludeTags = [];
-
 function updateWeatherLink() {
   const link = document.getElementById('weather-map-link');
   const latInput = document.getElementById('weather_latitude');
@@ -369,63 +505,55 @@ function updateWeatherLink() {
   if (!link || !latInput || !lonInput) {
     return;
   }
+
   const lat = parseFloat(latInput.value) || 0;
   const lon = parseFloat(lonInput.value) || 0;
-  const zoom = 14;
-  link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=${zoom}`;
+  link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`;
 }
 
 function initExcludeTags() {
   const hiddenInput = document.getElementById('calendar_exclude');
   const input = document.getElementById('calendar-exclude-input');
-  const addBtn = document.getElementById('add-exclude-btn');
+  const addButton = document.getElementById('add-exclude-btn');
 
-  if (!hiddenInput || !input || !addBtn) {
+  if (!hiddenInput || !input || !addButton) {
     return;
   }
 
-  // Load existing tags from hidden input
   try {
-    const existingValue = hiddenInput.value || '[]';
-    excludeTags = JSON.parse(existingValue);
-  } catch (e) {
-    console.error('Error parsing exclude tags:', e);
+    excludeTags = JSON.parse(hiddenInput.value || '[]');
+  } catch (error) {
+    console.error('Error parsing exclude tags:', error);
     excludeTags = [];
   }
 
   renderExcludeTags();
 
-  // Add tag on button click
-  addBtn.addEventListener('click', function() {
+  const addTag = () => {
     const value = input.value.trim();
     if (value && !excludeTags.includes(value)) {
       excludeTags.push(value);
       input.value = '';
       renderExcludeTags();
       updateHiddenInput();
-      loadEventTitles(); // Reload to update available suggestions
+      loadEventTitles();
     }
-  });
+  };
 
-  // Add tag on Enter key
-  input.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const value = input.value.trim();
-      if (value && !excludeTags.includes(value)) {
-        excludeTags.push(value);
-        input.value = '';
-        renderExcludeTags();
-        updateHiddenInput();
-        loadEventTitles(); // Reload to update available suggestions
-      }
+  addButton.addEventListener('click', addTag);
+  input.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addTag();
     }
   });
 }
 
 function renderExcludeTags() {
   const container = document.getElementById('calendar-exclude-tags');
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   if (excludeTags.length === 0) {
     container.innerHTML = `<span style="color: #999; font-style: italic;">${translate('No exclude terms yet')}</span>`;
@@ -435,18 +563,17 @@ function renderExcludeTags() {
   container.innerHTML = excludeTags.map((tag, index) => `
     <span class="exclude-tag">
       <span>${escapeHtml(tag)}</span>
-      <span class="exclude-tag-remove" data-index="${index}">×</span>
+      <span class="exclude-tag-remove" data-index="${index}">x</span>
     </span>
   `).join('');
 
-  // Add event listeners to remove buttons
-  container.querySelectorAll('.exclude-tag-remove').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const index = parseInt(this.getAttribute('data-index'));
+  container.querySelectorAll('.exclude-tag-remove').forEach((button) => {
+    button.addEventListener('click', () => {
+      const index = parseInt(button.getAttribute('data-index'), 10);
       excludeTags.splice(index, 1);
       renderExcludeTags();
       updateHiddenInput();
-      loadEventTitles(); // Reload to update available suggestions
+      loadEventTitles();
     });
   });
 }
@@ -458,40 +585,71 @@ function updateHiddenInput() {
   }
 }
 
-// Synchronize color pickers and hex fields (aus index.php ausgelagert)
 function syncColorPickers() {
-  ['primary','bg','text','gradient_start','gradient_end'].forEach(function(type) {
-    const colorInput = document.getElementById('color_' + type);
-    const hexInput = document.getElementById('color_' + type + '_hex');
-    if (colorInput && hexInput) {
-      colorInput.addEventListener('input', function() {
-        hexInput.value = colorInput.value;
-      });
-      hexInput.addEventListener('input', function() {
-        if (/^#[0-9a-fA-F]{6}$/.test(hexInput.value)) {
-          colorInput.value = hexInput.value;
-        }
-      });
+  ['primary', 'bg', 'text', 'gradient_start', 'gradient_end'].forEach((type) => {
+    const colorInput = document.getElementById(`color_${type}`);
+    const hexInput = document.getElementById(`color_${type}_hex`);
+    if (!colorInput || !hexInput) {
+      return;
     }
+
+    colorInput.addEventListener('input', () => {
+      hexInput.value = colorInput.value;
+    });
+
+    hexInput.addEventListener('input', () => {
+      if (/^#[0-9a-fA-F]{6}$/.test(hexInput.value)) {
+        colorInput.value = hexInput.value;
+      }
+    });
   });
 }
 
-// Reset colors to default values
 function resetColorsToDefaults() {
   const defaults = {
-    'color_primary': '#0066cc',
-    'color_bg': '#f8f9fa',
-    'color_text': '#2c3e50',
-    'color_gradient_start': '#0066cc',
-    'color_gradient_end': '#3399ff'
+    color_primary: '#0066cc',
+    color_bg: '#f8f9fa',
+    color_text: '#2c3e50',
+    color_gradient_start: '#0066cc',
+    color_gradient_end: '#3399ff'
   };
 
-  Object.keys(defaults).forEach(key => {
+  Object.entries(defaults).forEach(([key, value]) => {
     const colorInput = document.getElementById(key);
-    const hexInput = document.getElementById(key + '_hex');
+    const hexInput = document.getElementById(`${key}_hex`);
     if (colorInput && hexInput) {
-      colorInput.value = defaults[key];
-      hexInput.value = defaults[key];
+      colorInput.value = value;
+      hexInput.value = value;
     }
   });
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('create-token-btn')?.addEventListener('click', createToken);
+  document.getElementById('save-settings-btn')?.addEventListener('click', saveSettings);
+  document.getElementById('reset-colors-btn')?.addEventListener('click', resetColorsToDefaults);
+  document.getElementById('save-preset-btn')?.addEventListener('click', savePreset);
+  document.getElementById('cancel-preset-edit-btn')?.addEventListener('click', resetPresetForm);
+
+  const calendarSelect = document.getElementById('calendar_names');
+  if (calendarSelect) {
+    calendarSelect.addEventListener('change', loadEventTitles);
+  }
+
+  const latInput = document.getElementById('weather_latitude');
+  const lonInput = document.getElementById('weather_longitude');
+  [latInput, lonInput].forEach((input) => {
+    input?.addEventListener('change', updateWeatherLink);
+    input?.addEventListener('input', updateWeatherLink);
+  });
+
+  initExcludeTags();
+  syncColorPickers();
+  updateWeatherLink();
+  resetPresetForm();
+
+  await Promise.all([loadCalendars(), loadFolders()]);
+  await loadPresets();
+  await loadTokens();
+  setTimeout(loadEventTitles, 500);
+});

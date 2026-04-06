@@ -22,7 +22,7 @@ $l = \OC::$server->getL10N('digitalsignage');
                 <input type="checkbox" id="show_display_name" name="show_display_name" value="1" <?php if (!isset($_['show_display_name']) || $_['show_display_name'] === '1') print 'checked'; ?> />
                 <input type="text" id="display_name" name="display_name" value="<?php p($_['display_name'] ?? $l->t('Digital Signage')); ?>" placeholder="<?php p($l->t('Digital Signage')); ?>" class="ds-input" />
               </div>
-              <span class="ds-hint"><?php p($l->t('Name for this display (shown on display). Uncheck to hide.')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Global name shown on all displays. Uncheck to hide.')); ?></span>
             </div>
           </div>
           <div class="ds-form-grid">
@@ -104,48 +104,11 @@ $l = \OC::$server->getL10N('digitalsignage');
               <input type="hidden" id="calendar_exclude" name="calendar_exclude" value="<?php p($_['calendar_exclude'] ?? '[]'); ?>" />
               <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden')); ?></span>
             </div>
-          </div>
-        </div>
-
-        <!-- Images / Slideshow -->
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🖼️ <?php p($l->t('Images / Slideshow')); ?></h4>
-          <div class="ds-form-grid">
-            <div class="ds-form-group">
-              <label for="image_folder" class="ds-label"><?php p($l->t('Image folder')); ?></label>
-              <select id="image_folder" name="image_folder" class="ds-input" data-current-value="<?php p($_['image_folder'] ?? ''); ?>">
-                <option value=""><?php p($l->t('Folders are loading...')); ?></option>
-              </select>
-              <span class="ds-hint"><?php p($l->t('Path to the image folder in your Nextcloud')); ?></span>
-            </div>
-
-            <div class="ds-form-group">
-              <label for="slide_interval" class="ds-label"><?php p($l->t('Slide interval (seconds)')); ?></label>
-              <input type="number" id="slide_interval" name="slide_interval" value="<?php p($_['slide_interval'] ?? '10'); ?>" min="5" max="300" class="ds-input" />
-              <span class="ds-hint"><?php p($l->t('How long each image is shown (5-300 seconds)')); ?></span>
-            </div>
-
-            <div class="ds-form-group">
-              <label for="image_fit_mode" class="ds-label"><?php p($l->t('Crop mode')); ?></label>
-              <select id="image_fit_mode" name="image_fit_mode" class="ds-input">
-                <option value="cover" <?php if (!isset($_['image_fit_mode']) || $_['image_fit_mode'] === 'cover') print 'selected'; ?>><?php p($l->t('Fill (crop if needed)')); ?></option>
-                <option value="contain" <?php if (isset($_['image_fit_mode']) && $_['image_fit_mode'] === 'contain') print 'selected'; ?>><?php p($l->t('Fit complete (with background)')); ?></option>
-              </select>
-              <span class="ds-hint"><?php p($l->t('Fill crops images to fill screen, Fit shows complete image')); ?></span>
-            </div>
 
             <div class="ds-form-group">
               <label for="text_scale" class="ds-label"><?php p($l->t('Text scale')); ?></label>
               <input type="number" id="text_scale" name="text_scale" value="<?php p($_['text_scale'] ?? '1.0'); ?>" min="0.5" max="3.0" step="0.1" class="ds-input" />
-              <span class="ds-hint"><?php p($l->t('Text scale factor (0.5 - 3.0, default: 1.0)')); ?></span>
-            </div>
-
-            <div class="ds-form-group">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="fullscreen_slideshow" name="fullscreen_slideshow" value="1" <?php if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1') print 'checked'; ?> />
-                <label for="fullscreen_slideshow" class="ds-label" style="margin: 0;"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
-              </div>
-              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Scales calendar entries only (0.5 - 3.0, default: 1.0)')); ?></span>
             </div>
           </div>
         </div>
@@ -175,21 +138,76 @@ $l = \OC::$server->getL10N('digitalsignage');
           </div>
         </div>
 
+        <div class="ds-subsection">
+          <h4 class="ds-subsection-title">🖼️ <?php p($l->t('Images / Slideshow presets')); ?></h4>
+          <span class="ds-hint" style="display: block; margin-bottom: 1rem;"><?php p($l->t('Manage image folders, crop mode, fullscreen slideshow and interval per preset.')); ?></span>
+          <div class="ds-form-grid">
+            <input type="hidden" id="preset-id" value="" />
+            <div class="ds-form-group">
+              <label for="preset-name" class="ds-label"><?php p($l->t('Preset name')); ?></label>
+              <input type="text" id="preset-name" placeholder="<?php p($l->t('Images / Slideshow preset name')); ?>" class="ds-input" />
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-image-folder" class="ds-label"><?php p($l->t('Image folder')); ?></label>
+              <select id="preset-image-folder" class="ds-input">
+                <option value=""><?php p($l->t('Folders are loading...')); ?></option>
+              </select>
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-image-fit-mode" class="ds-label"><?php p($l->t('Crop mode')); ?></label>
+              <select id="preset-image-fit-mode" class="ds-input">
+                <option value="cover"><?php p($l->t('Fill (crop if needed)')); ?></option>
+                <option value="contain"><?php p($l->t('Fit complete (with background)')); ?></option>
+              </select>
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-image-order-mode" class="ds-label"><?php p($l->t('Playback order')); ?></label>
+              <select id="preset-image-order-mode" class="ds-input">
+                <option value="shuffle"><?php p($l->t('Shuffle')); ?></option>
+                <option value="filename"><?php p($l->t('By filename')); ?></option>
+              </select>
+              <span class="ds-hint"><?php p($l->t('Shuffle mixes images, By filename uses ascending filename order.')); ?></span>
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-slide-interval" class="ds-label"><?php p($l->t('Slide interval (seconds)')); ?></label>
+              <input type="number" id="preset-slide-interval" value="10" min="5" max="300" class="ds-input" />
+            </div>
+
+            <div class="ds-form-group">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
+                <label for="preset-fullscreen-slideshow" class="ds-label" style="margin: 0;"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
+            </div>
+          </div>
+          <div class="ds-inline-actions">
+            <button class="button primary" id="save-preset-btn"><?php p($l->t('Save preset')); ?></button>
+            <button class="button" id="cancel-preset-edit-btn" style="display:none;"><?php p($l->t('Cancel edit')); ?></button>
+          </div>
+          <div id="presets-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
+        </div>
+
       </div>
 
       <div class="section ds-section">
-        <h3 class="ds-section-title">🔑 <?php p($l->t('Tokens')); ?></h3>
+        <h3 class="ds-section-title"><?php p($l->t('Displays')); ?></h3>
 
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title"><?php p($l->t('Create new display token')); ?></h4>
+          <h4 class="ds-subsection-title"><?php p($l->t('Create new display')); ?></h4>
           <div class="ds-token-create">
-            <input type="text" id="token-name" placeholder="<?php p($l->t('Display name (e.g. reception screen)')); ?>" class="ds-input" />
-            <button class="button primary" id="create-token-btn"><?php p($l->t('Create token')); ?></button>
+            <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />
+            <button class="button primary" id="create-token-btn"><?php p($l->t('Create display')); ?></button>
           </div>
+          <span class="ds-hint"><?php p($l->t('Used only to distinguish displays in the admin UI.')); ?></span>
         </div>
 
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title"><?php p($l->t('Existing tokens')); ?></h4>
+          <h4 class="ds-subsection-title"><?php p($l->t('Existing displays')); ?></h4>
           <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
         </div>
 
@@ -207,7 +225,12 @@ $l = \OC::$server->getL10N('digitalsignage');
   <div style="display:none;"
        data-list-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.list')); ?>"
        data-create-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.create')); ?>"
+      data-activate-preset-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.activatePreset', ['id' => 'DISPLAY_ID'])); ?>"
        data-delete-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.delete', ['id' => 'TOKEN_ID'])); ?>"
+      data-preset-list-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.list')); ?>"
+      data-preset-create-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.create')); ?>"
+      data-preset-update-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.update', ['id' => 'PRESET_ID'])); ?>"
+      data-preset-delete-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.delete', ['id' => 'PRESET_ID'])); ?>"
        data-csrf-token="<?php p(\OC::$server->getCSRFTokenManager()->getToken()->getEncryptedValue()); ?>">
   </div>
 

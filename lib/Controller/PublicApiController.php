@@ -10,6 +10,7 @@ use OCP\IConfig;
 use OCP\Files\IRootFolder;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCA\DigitalSignage\Db\TokenMapper;
+use OCA\DigitalSignage\Service\DisplayConfigService;
 use OCP\L10N\IFactory;
 
 class PublicApiController extends Controller {
@@ -17,6 +18,7 @@ class PublicApiController extends Controller {
     private $rootFolder;
     private $calendarManager;
     private $tokenMapper;
+    private $displayConfigService;
     private $l10nFactory;
 
     public function __construct(
@@ -26,6 +28,7 @@ class PublicApiController extends Controller {
         IRootFolder $rootFolder,
         ICalendarManager $calendarManager,
         TokenMapper $tokenMapper,
+        DisplayConfigService $displayConfigService,
         IFactory $l10nFactory
     ) {
         parent::__construct($AppName, $request);
@@ -33,16 +36,17 @@ class PublicApiController extends Controller {
         $this->rootFolder = $rootFolder;
         $this->calendarManager = $calendarManager;
         $this->tokenMapper = $tokenMapper;
+        $this->displayConfigService = $displayConfigService;
         $this->l10nFactory = $l10nFactory;
     }
 
-    private function validateToken(string $token): ?string {
+    private function validateToken(string $token): ?\OCA\DigitalSignage\Db\Token {
         try {
             $tokenEntity = $this->tokenMapper->findByToken($token);
             if (!$tokenEntity) {
                 return null;
             }
-            return $tokenEntity->getUserId();
+            return $tokenEntity;
         } catch (\Exception $e) {
             return null;
         }
@@ -53,24 +57,31 @@ class PublicApiController extends Controller {
      * @NoCSRFRequired
      */
     public function getConfig(string $token): JSONResponse {
-        $userId = $this->validateToken($token);
-        if (!$userId) {
+        $display = $this->validateToken($token);
+        if (!$display) {
             return new JSONResponse(['error' => 'Invalid token'], 403);
         }
 
+        $userId = $display->getUserId();
+        $effectiveConfig = $this->displayConfigService->getEffectiveConfig($display);
+
         $response = new JSONResponse([
-            'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
-            'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
+            'displayName' => $effectiveConfig['displayName'],
+            'locale' => $effectiveConfig['locale'],
             'weather' => [
-                'latitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
-                'longitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747')
+                'latitude' => $effectiveConfig['weatherLatitude'],
+                'longitude' => $effectiveConfig['weatherLongitude']
             ],
-            'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
-            'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
-            'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
-            'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
-            'textScale' => (float)$this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
-            'fullscreenSlideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0') === '1',
+            'slideInterval' => $effectiveConfig['slideInterval'],
+            'calendarExclude' => $effectiveConfig['calendarExclude'],
+            'autoFullscreenPrompt' => $effectiveConfig['autoFullscreenPrompt'],
+            'imageFitMode' => $effectiveConfig['imageFitMode'],
+            'imageOrderMode' => $effectiveConfig['imageOrderMode'],
+            'textScale' => $effectiveConfig['textScale'],
+            'fullscreenSlideshow' => $effectiveConfig['fullscreenSlideshow'],
+            'activePresetId' => $effectiveConfig['activePresetId'],
+            'activePresetName' => $effectiveConfig['activePresetName'],
+            'revision' => $effectiveConfig['revision'],
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),
@@ -113,10 +124,12 @@ class PublicApiController extends Controller {
      * @NoCSRFRequired
      */
     public function getCalendar(string $token): JSONResponse {
-        $userId = $this->validateToken($token);
-        if (!$userId) {
+        $display = $this->validateToken($token);
+        if (!$display) {
             return new JSONResponse(['error' => 'Invalid token'], 403);
         }
+
+        $userId = $display->getUserId();
 
         try {
             $calendarNamesJson = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
@@ -166,13 +179,16 @@ class PublicApiController extends Controller {
      * @NoCSRFRequired
      */
     public function getImages(string $token): JSONResponse {
-        $userId = $this->validateToken($token);
-        if (!$userId) {
+        $display = $this->validateToken($token);
+        if (!$display) {
             return new JSONResponse(['error' => 'Invalid token'], 403);
         }
 
+        $userId = $display->getUserId();
+
         try {
-            $imageFolder = $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos/Info-Monitor');
+            $effectiveConfig = $this->displayConfigService->getEffectiveConfig($display);
+            $imageFolder = $effectiveConfig['imageFolder'];
 
             if (empty($imageFolder)) {
                 return new JSONResponse(['error' => 'No image folder configured'], 400);
@@ -219,8 +235,8 @@ class PublicApiController extends Controller {
      * @NoCSRFRequired
      */
     public function getImage(string $token): StreamResponse {
-        $userId = $this->validateToken($token);
-        if (!$userId) {
+        $display = $this->validateToken($token);
+        if (!$display) {
             http_response_code(403);
             die('Invalid token');
         }
@@ -233,7 +249,7 @@ class PublicApiController extends Controller {
                 die('Missing file ID');
             }
 
-            $userFolder = $this->rootFolder->getUserFolder($userId);
+            $userFolder = $this->rootFolder->getUserFolder($display->getUserId());
             $files = $userFolder->getById((int)$fileId);
 
             if (empty($files)) {

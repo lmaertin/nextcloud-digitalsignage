@@ -1,8 +1,17 @@
 /* Digital Signage Settings Styles */
+/* Expand settings page and use a stable two-column desktop layout */
+#app-content,
+#app-content-wrapper {
+  width: 100%;
+  max-width: none;
+}
+
 .ds-section {
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch;
+  width: 100%;
+  min-width: 0;
   background: var(--color-main-background);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-large);
@@ -129,6 +138,12 @@
   flex: 1;
 }
 
+.ds-inline-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
 .ds-save-bar {
   position: fixed;
   bottom: 30px;
@@ -233,6 +248,62 @@
   min-width: 110px;
   padding: 8px 16px;
 }
+
+.token-meta {
+  display: grid;
+  gap: 8px;
+}
+
+.token-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.token-row-label {
+  min-width: 120px;
+  font-weight: 600;
+  color: var(--color-text-maxcontrast);
+}
+
+.token-select {
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.preset-item {
+  padding: 16px 18px;
+  background: var(--color-background-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.preset-item:hover {
+  border-color: var(--color-primary-element);
+}
+
+.preset-details {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.preset-name {
+  font-weight: 600;
+  color: var(--color-primary-element);
+}
+
+.preset-summary {
+  color: var(--color-text-maxcontrast);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
 
 .exclude-tag {
   display: inline-flex;

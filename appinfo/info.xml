@@ -17,7 +17,7 @@ Supported languages:
 - English (en)
 - Deutsch (de)
 ]]></description>
-    <version>0.0.7</version>
+    <version>0.0.9</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
@@ -41,6 +41,12 @@ Supported languages:
         <steps>
             <post-migration>
                 <migration>OCA\DigitalSignage\Migration\Version1000Date20260120000000</migration>
+            </post-migration>
+            <post-migration>
+                <migration>OCA\DigitalSignage\Migration\Version1100Date20260406000000</migration>
+            </post-migration>
+            <post-migration>
+                <migration>OCA\DigitalSignage\Migration\Version1200Date20260406010000</migration>
             </post-migration>
         </steps>
     </repair>

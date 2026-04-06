@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace OCA\DigitalSignage\Tests\Unit\Controller;
 
 use OCA\DigitalSignage\Db\Token;
+use OCA\DigitalSignage\Db\PresetMapper;
 use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Controller\TokenController;
+use OCA\DigitalSignage\Service\PresetService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +21,8 @@ use PHPUnit\Framework\TestCase;
 class TokenControllerTest extends TestCase {
     private TokenController $controller;
     private TokenMapper $mapper;
+    private PresetMapper $presetMapper;
+    private PresetService $presetService;
     private IRequest $request;
 
     protected function setUp(): void {
@@ -26,11 +30,18 @@ class TokenControllerTest extends TestCase {
 
         $this->request = $this->createMock(IRequest::class);
         $this->mapper = $this->createMock(TokenMapper::class);
+        $this->presetMapper = $this->createMock(PresetMapper::class);
+        $this->presetService = $this->createMock(PresetService::class);
+
+        $this->presetService->method('ensureDefaultPreset');
+        $this->presetMapper->method('findForUser')->willReturn(null);
 
         $this->controller = new TokenController(
             'digitalsignage',
             $this->request,
             $this->mapper,
+            $this->presetMapper,
+            $this->presetService,
             'testUser'
         );
     }
@@ -44,9 +55,14 @@ class TokenControllerTest extends TestCase {
         $token->setId(1);
         $token->setName('Test Display');
         $token->setToken('test-token');
+        $token->setControlToken('test-control-token');
         $token->setUserId('testUser');
+        $token->setRevision(1);
+        $token->setCreatedAt(time());
+        $token->setUpdatedAt(time());
 
         $this->mapper->method('findByUserId')->willReturn([$token]);
+        $this->mapper->method('update')->willReturn($token);
 
         $response = $this->controller->list();
 

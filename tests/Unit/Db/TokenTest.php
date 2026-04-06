@@ -23,11 +23,18 @@ class TokenTest extends TestCase {
     public function testTokenCanBeCreated(): void {
         $this->token->setName('Test Display');
         $this->token->setToken('test-token-123');
+        $this->token->setControlToken('control-token-123');
         $this->token->setUserId('admin');
+        $this->token->setActivePresetId(4);
+        $this->token->setRevision(2);
+        $this->token->setUpdatedAt(time());
 
         $this->assertEquals('Test Display', $this->token->getName());
         $this->assertEquals('test-token-123', $this->token->getToken());
+        $this->assertEquals('control-token-123', $this->token->getControlToken());
         $this->assertEquals('admin', $this->token->getUserId());
+        $this->assertEquals(4, $this->token->getActivePresetId());
+        $this->assertEquals(2, $this->token->getRevision());
     }
 
     public function testTokenCreatedAtIsSet(): void {
@@ -40,8 +47,11 @@ class TokenTest extends TestCase {
         $this->token->setId(1);
         $this->token->setName('Test Display');
         $this->token->setToken('test-token-123');
+        $this->token->setControlToken('control-token-123');
         $this->token->setUserId('admin');
+        $this->token->setRevision(1);
         $this->token->setCreatedAt(time());
+        $this->token->setUpdatedAt(time());
 
         $json = json_encode($this->token);
         $this->assertIsString($json);

@@ -9,23 +9,27 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\IRequest;
 use OCP\ISession;
 use OCA\DigitalSignage\Db\TokenMapper;
+use OCA\DigitalSignage\Service\DisplayConfigService;
 
 use OCP\IConfig;
 
 class PublicController extends PublicShareController {
     private $tokenMapper;
     private $config;
+    private $displayConfigService;
 
     public function __construct(
         string $AppName,
         IRequest $request,
         ISession $session,
         TokenMapper $tokenMapper,
-        IConfig $config
+        IConfig $config,
+        DisplayConfigService $displayConfigService
     ) {
         parent::__construct($AppName, $request, $session);
         $this->tokenMapper = $tokenMapper;
         $this->config = $config;
+        $this->displayConfigService = $displayConfigService;
     }
 
     protected function getPasswordHash(): ?string {
@@ -82,16 +86,17 @@ class PublicController extends PublicShareController {
             $locale = $this->config->getAppValue('digitalsignage', 'locale', 'de-DE');
             $lang = substr($locale, 0, 2); // Extract language code (de, en, fr, etc.)
 
-            $colorPrimary = $this->config->getAppValue('digitalsignage', 'color_primary', '#0066cc');
-            $colorBg = $this->config->getAppValue('digitalsignage', 'color_bg', '#f8f9fa');
-            $colorText = $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50');
-            $colorGradientStart = $this->config->getAppValue('digitalsignage', 'color_gradient_start', '#0066cc');
-            $colorGradientEnd = $this->config->getAppValue('digitalsignage', 'color_gradient_end', '#3399ff');
+            $effectiveConfig = $this->displayConfigService->getEffectiveConfig($tokenEntity);
+            $colorPrimary = $effectiveConfig['colorPrimary'];
+            $colorBg = $effectiveConfig['colorBg'];
+            $colorText = $effectiveConfig['colorText'];
+            $colorGradientStart = $effectiveConfig['colorGradientStart'];
+            $colorGradientEnd = $effectiveConfig['colorGradientEnd'];
             $showTitlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
-            $displayName = $this->config->getAppValue('digitalsignage', 'display_name', '');
-            $showDisplayName = $this->config->getAppValue('digitalsignage', 'show_display_name', '1');
-            $textScale = $this->config->getAppValue('digitalsignage', 'text_scale', '1.0');
-            $fullscreenSlideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
+            $displayName = $effectiveConfig['displayName'];
+            $showDisplayName = $effectiveConfig['showDisplayName'];
+            $textScale = (string)$effectiveConfig['textScale'];
+            $fullscreenSlideshow = $effectiveConfig['fullscreenSlideshow'] ? '1' : '0';
             if ($showDisplayName === '' || $showDisplayName === null) {
                 $showDisplayName = '1';
             }
