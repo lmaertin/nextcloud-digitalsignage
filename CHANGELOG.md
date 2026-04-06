@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Preset management for image and slideshow settings
+- French translation updated and aligned with the current feature set
 - Separate view token and control token per display
 - Remote preset switching through a public control API
 - Per-display active preset assignment in the settings UI

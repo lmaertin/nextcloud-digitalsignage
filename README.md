@@ -16,7 +16,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 - **Weather information**: Real-time weather data via Open-Meteo API
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
-- **Multi-language support**: English and German translations
+- **Multi-language support**: English, German and French translations
 - **Configurable settings**: Global display settings plus per-display preset assignment through the UI
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
