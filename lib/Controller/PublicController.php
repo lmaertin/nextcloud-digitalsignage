@@ -1,6 +1,7 @@
 <?php
 namespace OCA\DigitalSignage\Controller;
 
+use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\AppFramework\PublicShareController;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\JSONResponse;
@@ -95,7 +96,8 @@ class PublicController extends PublicShareController {
             $showTitlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
             $displayName = $effectiveConfig['displayName'];
             $showDisplayName = $effectiveConfig['showDisplayName'];
-            $textScale = (string)$effectiveConfig['textScale'];
+            $textSizes = $effectiveConfig['textSizes'] ?? TextSizeConfig::getConfiguredSizes($this->config);
+            $textSizeCssVariables = $effectiveConfig['textSizeCssVariables'] ?? TextSizeConfig::toCssVariables($textSizes);
             $contentSplitRatio = (string)$effectiveConfig['contentSplitRatio'];
             $fullscreenSlideshow = $effectiveConfig['fullscreenSlideshow'] ? '1' : '0';
             if ($showDisplayName === '' || $showDisplayName === null) {
@@ -116,7 +118,8 @@ class PublicController extends PublicShareController {
                     'show_titlebar' => $showTitlebar,
                     'display_name' => $displayName,
                     'show_display_name' => $showDisplayName,
-                    'text_scale' => $textScale,
+                    'text_sizes' => $textSizes,
+                    'text_size_css_variables' => $textSizeCssVariables,
                     'content_split_ratio' => $contentSplitRatio,
                     'fullscreen_slideshow' => $fullscreenSlideshow
                 ],

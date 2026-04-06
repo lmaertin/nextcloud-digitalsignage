@@ -1,6 +1,7 @@
 <?php
 namespace OCA\DigitalSignage\Controller;
 
+use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
@@ -31,12 +32,13 @@ class PageController extends Controller {
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
             'auto_fullscreen_prompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0'),
-            'content_split_ratio' => $this->config->getAppValue('digitalsignage', 'content_split_ratio', '75'),
+            'content_split_ratio' => $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'),
             'calendar_names' => $this->config->getAppValue('digitalsignage', 'calendar_names', '[]'),
             'image_folder' => $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'),
             'slide_interval' => $this->config->getAppValue('digitalsignage', 'slide_interval', '10'),
             'image_fit_mode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
-            'text_scale' => $this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
+            'text_sizes' => TextSizeConfig::getConfiguredSizes($this->config),
+            'text_size_fields' => TextSizeConfig::getFieldDefinitions($this->config),
             'fullscreen_slideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0'),
             'weather_latitude' => $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52'),
             'weather_longitude' => $this->config->getAppValue('digitalsignage', 'weather_longitude', '13.405'),

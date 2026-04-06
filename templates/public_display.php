@@ -16,11 +16,10 @@
       --text-primary: <?php p($_['color_text'] ?? '#2c3e50'); ?>;
       --gradient-start: <?php p($_['color_gradient_start'] ?? '#0066cc'); ?>;
       --gradient-end: <?php p($_['color_gradient_end'] ?? '#3399ff'); ?>;
-      --text-scale: <?php p($_['text_scale'] ?? '1.0'); ?>;
-      --content-split-ratio: <?php p($_['content_split_ratio'] ?? '75'); ?>%;
-    }
-    .calendar li {
-      font-size: calc(1.1rem * var(--text-scale));
+<?php foreach (($_['text_size_css_variables'] ?? []) as $cssVariable => $value): ?>
+      <?php p($cssVariable); ?>: <?php p($value); ?>;
+<?php endforeach; ?>
+      --content-split-ratio: <?php p($_['content_split_ratio'] ?? '50'); ?>%;
     }
   </style>
 </head>

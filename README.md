@@ -3,6 +3,8 @@
 
 A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.
 
+Short App Store summary: Public information screens for Nextcloud with calendars, weather, image slideshows, presets and remote switching.
+
 ![Digital Signage Display](img/screenshot-display.png)
 
 ## Features
@@ -11,7 +13,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and im
 - **Preset-based slideshow control**: Switch image folder, crop mode, playback order, interval and fullscreen slideshow mode via presets
 - **Image slideshow**: Automated slideshow from a Nextcloud folder with shuffle or filename order
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
-- **Flexible layout and appearance**: Configure slideshow width, colors (primary, background, text, gradient) and display title visibility
+- **Flexible layout and appearance**: Configure slideshow width, colors, display title visibility and per-text-class font sizes
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
 - **Weather information**: Real-time weather data via Open-Meteo API
 - **Display and control tokens**: Separate public view token and control token per display
@@ -55,7 +57,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
       - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
-      - **Slideshow width in percent**: Controls how much width the slideshow uses in the standard split layout; the remaining space is used by calendar and weather
+      - **Slideshow width in percent**: Controls how much width the image area uses in the standard split layout; the remaining space is used by calendar and weather
 
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -66,7 +68,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
    **Content Sources:**
    - **Calendar Sources**: Select multiple calendars from your Nextcloud calendars
-   - **Text Scale**: Scales calendar entries on large screens
+   - **Text Sizes**: Configure display, clock, weather and calendar typography per text class
 
    **Event Filtering:**
    - **Hide Events**: Exclude specific events by title using autocomplete suggestions
@@ -132,11 +134,18 @@ In the default layout, the slideshow and the calendar/weather area share the scr
 ### Presets and Displays
 
 - **Global settings** define shared display behavior such as title, colors, calendars, weather, and text scaling.
-- **Layout settings** define how much space the slideshow gets in the standard split view.
+- **Layout settings** define how much horizontal space the image area gets in the standard split view.
 - **Presets** define image and slideshow behavior such as folder, crop mode, playback order, interval, and fullscreen slideshow mode.
 - **Displays** combine a public view URL, a control token, and one active preset.
 
 This separation makes it possible to keep common settings global while switching display modes remotely.
+
+## App Store Meta
+
+- Name: Digital Signage
+- Summary: Public information screens for Nextcloud with calendars, weather, image slideshows, presets and remote switching.
+- Highlights:
+   Calendar events, weather and images on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
 
 ## Development
 

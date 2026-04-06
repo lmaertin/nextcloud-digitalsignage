@@ -1,6 +1,7 @@
 <?php
 namespace OCA\DigitalSignage\Controller;
 
+use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -26,7 +27,7 @@ class SettingsController extends Controller {
         string $display_name = '',
         string $show_display_name = '1',
         string $auto_fullscreen_prompt = '0',
-        string $content_split_ratio = '75',
+        string $content_split_ratio = '50',
         string $weather_latitude = '52.52',
         string $weather_longitude = '13.405',
         string $slide_interval = '60',
@@ -40,15 +41,23 @@ class SettingsController extends Controller {
         string $color_gradient_end = '#3399ff',
         string $show_titlebar = '1',
         string $image_fit_mode = 'cover',
-        string $text_scale = '1.0',
+        string $text_size_display_title = '',
+        string $text_size_clock_time = '',
+        string $text_size_clock_date = '',
+        string $text_size_weather_temperature = '',
+        string $text_size_weather_day = '',
+        string $text_size_appointments_title = '',
+        string $text_size_appointments_time = '',
+        string $text_size_appointments_location = '',
         string $fullscreen_slideshow = '0'
     ): JSONResponse {
-        $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 75));
+        $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
 
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
         $this->config->setAppValue('digitalsignage', 'show_display_name', $show_display_name);
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
+        $this->config->deleteAppValue('digitalsignage', 'left_column_split_ratio');
         $this->config->setAppValue('digitalsignage', 'weather_latitude', $weather_latitude);
         $this->config->setAppValue('digitalsignage', 'weather_longitude', $weather_longitude);
         $this->config->setAppValue('digitalsignage', 'slide_interval', $slide_interval);
@@ -62,7 +71,16 @@ class SettingsController extends Controller {
         $this->config->setAppValue('digitalsignage', 'color_gradient_end', $color_gradient_end);
         $this->config->setAppValue('digitalsignage', 'show_titlebar', $show_titlebar);
         $this->config->setAppValue('digitalsignage', 'image_fit_mode', $image_fit_mode);
-        $this->config->setAppValue('digitalsignage', 'text_scale', $text_scale);
+        TextSizeConfig::saveConfiguredSizes($this->config, [
+            'display_title' => $text_size_display_title,
+            'clock_time' => $text_size_clock_time,
+            'clock_date' => $text_size_clock_date,
+            'weather_temperature' => $text_size_weather_temperature,
+            'weather_day' => $text_size_weather_day,
+            'appointments_title' => $text_size_appointments_title,
+            'appointments_time' => $text_size_appointments_time,
+            'appointments_location' => $text_size_appointments_location,
+        ]);
         $this->config->setAppValue('digitalsignage', 'fullscreen_slideshow', $fullscreen_slideshow);
         return new JSONResponse(['status' => 'success']);
     }
@@ -74,7 +92,7 @@ class SettingsController extends Controller {
         $display_name = $this->config->getAppValue('digitalsignage', 'display_name', '');
         $show_display_name = $this->config->getAppValue('digitalsignage', 'show_display_name', '1');
         $auto_fullscreen_prompt = $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0');
-        $content_split_ratio = $this->config->getAppValue('digitalsignage', 'content_split_ratio', '75');
+        $content_split_ratio = $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50');
         $weather_latitude = $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52');
         $weather_longitude = $this->config->getAppValue('digitalsignage', 'weather_longitude', '13.405');
         $slide_interval = $this->config->getAppValue('digitalsignage', 'slide_interval', '60');
@@ -88,7 +106,7 @@ class SettingsController extends Controller {
         $color_gradient_end = $this->config->getAppValue('digitalsignage', 'color_gradient_end', '#3399ff');
         $show_titlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
         $image_fit_mode = $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover');
-        $text_scale = $this->config->getAppValue('digitalsignage', 'text_scale', '1.0');
+        $text_sizes = TextSizeConfig::getConfiguredSizes($this->config);
         $fullscreen_slideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
 
         return new JSONResponse([
@@ -109,7 +127,7 @@ class SettingsController extends Controller {
             'color_gradient_end' => $color_gradient_end,
             'show_titlebar' => $show_titlebar,
             'image_fit_mode' => $image_fit_mode,
-            'text_scale' => $text_scale,
+            'text_sizes' => $text_sizes,
             'fullscreen_slideshow' => $fullscreen_slideshow,
         ]);
     }

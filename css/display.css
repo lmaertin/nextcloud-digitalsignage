@@ -60,7 +60,7 @@ body {
 }
 
 .display-header h1 {
-  font-size: 1.3em;
+  font-size: var(--font-size-display-title);
   font-weight: 300;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -315,7 +315,7 @@ body {
 }
 
 .time-display {
-  font-size: clamp(2rem, 3vw, 3rem);
+  font-size: var(--font-size-clock-time);
   font-weight: 700;
   color: var(--primary-blue);
   text-shadow: var(--text-shadow-light);
@@ -326,7 +326,7 @@ body {
 }
 
 .date-display {
-  font-size: clamp(1.3rem, 1.5vw, 1.62rem);
+  font-size: var(--font-size-clock-date);
   font-weight: 500;
   color: var(--text-primary);
   text-shadow: var(--text-shadow-light);
@@ -360,14 +360,14 @@ body {
 }
 
 .temperature {
-  font-size: 1.44rem;
+  font-size: var(--font-size-weather-temperature);
   font-weight: 600;
   color: var(--primary-blue);
   text-shadow: var(--text-shadow-light);
 }
 
 .location {
-  font-size: 1.58rem;
+  font-size: var(--font-size-weather-day);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -401,7 +401,7 @@ body {
 }
 
 .day-name {
-  font-size: clamp(0.85rem, 1.4vw, 1.53rem);
+  font-size: var(--font-size-weather-day);
   font-weight: 600;
   color: var(--primary-blue);
   margin-bottom: 0.2rem;
@@ -415,7 +415,7 @@ body {
 }
 
 .day-temp {
-  font-size: clamp(0.9rem, 1.5vw, 1.62rem);
+  font-size: var(--font-size-weather-temperature);
   font-weight: 500;
   color: var(--text-secondary);
   text-shadow: var(--text-shadow-light);
@@ -473,7 +473,7 @@ body {
   border-left: 4px solid var(--primary-blue);
   box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.4;
   color: var(--text-primary);
   position: relative;
@@ -507,7 +507,7 @@ body {
   font-weight: 600;
   color: var(--primary-blue);
   margin-bottom: 0.3rem;
-  font-size: 1.18em;
+  font-size: var(--font-size-appointments-title);
 }
 
 /* Termin-Zeit und Ort in einer Zeile */
@@ -521,11 +521,13 @@ body {
 
 /* Termin-Zeit */
 .event-time {
+  font-size: var(--font-size-appointments-time);
   flex-shrink: 0;
 }
 
 /* Ortsangabe mit Nadel-Icon */
 .event-location {
+  font-size: var(--font-size-appointments-location);
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -563,6 +565,7 @@ body {
   }
 
   .slideshow-box {
+    flex: 0 0 auto;
     min-height: 40vh;
   }
 
@@ -577,6 +580,7 @@ body {
   }
 
   .weather-box {
+    flex: 0 0 auto;
     min-height: auto;
     padding: 0.8rem;
   }

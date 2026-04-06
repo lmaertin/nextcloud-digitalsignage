@@ -56,6 +56,23 @@
   padding-bottom: 0;
 }
 
+.ds-settings-group + .ds-settings-group {
+  margin-top: 24px;
+}
+
+.ds-settings-group-title {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-main-text);
+}
+
+.ds-settings-group-subtitle {
+  margin: 0 0 14px 0;
+  color: var(--color-text-maxcontrast);
+  font-size: 0.9rem;
+}
+
 .ds-subsection-title {
   font-size: 1.05em;
   font-weight: 500;
@@ -110,6 +127,10 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
+.ds-form-grid-compact {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .ds-color-group {
   gap: 6px;
 }
@@ -136,9 +157,13 @@
 }
 
 .ds-subsection-actions {
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   margin-top: -0.5rem;
+}
+
+.ds-subsection-actions-end {
+  justify-content: flex-end;
 }
 
 .ds-button-compact {
@@ -407,10 +432,10 @@
 @media (max-width: 768px) {
   .ds-subsection-actions {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-end;
   }
 
   .ds-button-compact {
-    width: 100%;
+    width: auto;
   }
 }

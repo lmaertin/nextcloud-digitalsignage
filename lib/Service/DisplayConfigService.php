@@ -6,6 +6,7 @@ namespace OCA\DigitalSignage\Service;
 
 use OCA\DigitalSignage\Db\PresetMapper;
 use OCA\DigitalSignage\Db\Token;
+use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\IConfig;
 
 class DisplayConfigService {
@@ -22,12 +23,13 @@ class DisplayConfigService {
             'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'showDisplayName' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
             'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
-            'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '75'))),
+            'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
             'weatherLongitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true) ?: [],
             'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
-            'textScale' => (float)$this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
+            'textSizes' => TextSizeConfig::getConfiguredSizes($this->config),
+            'textSizeCssVariables' => TextSizeConfig::toCssVariables(TextSizeConfig::getConfiguredSizes($this->config)),
             'imageFolder' => $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'),
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'imageOrderMode' => $this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle'),

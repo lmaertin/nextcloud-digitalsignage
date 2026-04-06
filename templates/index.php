@@ -9,7 +9,7 @@ $l = \OC::$server->getL10N('digitalsignage');
   <div id="app-content-wrapper" style="padding: 30px; max-width: 1400px; margin: 0 auto;">
     <div class="ds-stack">
       <div class="section ds-section">
-        <h3 class="ds-section-title">📺 <?php p($l->t('Digital Signage')); ?></h3>
+        <h3 class="ds-section-title"><?php p($l->t('Digital Signage')); ?></h3>
         <p class="ds-section-subtitle"><?php p($l->t('Configure your digital display')); ?></p>
 
         <!-- General Settings -->
@@ -33,55 +33,6 @@ $l = \OC::$server->getL10N('digitalsignage');
               </div>
               <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
             </div>
-
-            <div class="ds-form-group">
-              <label for="content_split_ratio" class="ds-label"><?php p($l->t('Slideshow width percent')); ?></label>
-              <input type="number" id="content_split_ratio" name="content_split_ratio" value="<?php p($_['content_split_ratio'] ?? '75'); ?>" min="50" max="85" step="1" class="ds-input" />
-              <span class="ds-hint"><?php p($l->t('Width of the slideshow column. The remaining width is used for the calendar/weather column.')); ?></span>
-            </div>
-          </div>
-          <div class="ds-form-grid ds-form-grid-colors">
-            <div class="ds-form-group ds-color-group">
-              <label for="color_primary" class="ds-label"><?php p($l->t('Primary')); ?></label>
-              <div class="ds-color-controls">
-                <input type="color" id="color_primary" name="color_primary" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
-                <input type="text" id="color_primary_hex" name="color_primary_hex" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
-              </div>
-            </div>
-            <div class="ds-form-group ds-color-group">
-              <label for="color_bg" class="ds-label"><?php p($l->t('Background')); ?></label>
-              <div class="ds-color-controls">
-                <input type="color" id="color_bg" name="color_bg" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" class="ds-input ds-color-picker" />
-                <input type="text" id="color_bg_hex" name="color_bg_hex" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" maxlength="7" class="ds-input ds-color-hex" />
-              </div>
-            </div>
-            <div class="ds-form-group ds-color-group">
-              <label for="color_text" class="ds-label"><?php p($l->t('Text')); ?></label>
-              <div class="ds-color-controls">
-                <input type="color" id="color_text" name="color_text" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" class="ds-input ds-color-picker" />
-                <input type="text" id="color_text_hex" name="color_text_hex" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" maxlength="7" class="ds-input ds-color-hex" />
-              </div>
-            </div>
-            <div class="ds-form-group ds-color-group">
-              <label for="color_gradient_start" class="ds-label"><?php p($l->t('Gradient Start')); ?></label>
-              <div class="ds-color-controls">
-                <input type="color" id="color_gradient_start" name="color_gradient_start" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
-                <input type="text" id="color_gradient_start_hex" name="color_gradient_start_hex" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
-              </div>
-            </div>
-            <div class="ds-form-group ds-color-group">
-              <label for="color_gradient_end" class="ds-label"><?php p($l->t('Gradient End')); ?></label>
-              <div class="ds-color-controls">
-                <input type="color" id="color_gradient_end" name="color_gradient_end" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" class="ds-input ds-color-picker" />
-                <input type="text" id="color_gradient_end_hex" name="color_gradient_end_hex" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" maxlength="7" class="ds-input ds-color-hex" />
-              </div>
-            </div>
-          </div>
-          <div class="ds-subsection-actions">
-            <span class="ds-hint"><?php p($l->t('Configure display colors. Gradient applies to title bar only.')); ?></span>
-            <button type="button" id="reset-colors-btn" class="button ds-button-compact">
-              <?php p($l->t('Reset to defaults')); ?>
-            </button>
           </div>
         </div>
 
@@ -110,11 +61,91 @@ $l = \OC::$server->getL10N('digitalsignage');
               <input type="hidden" id="calendar_exclude" name="calendar_exclude" value="<?php p($_['calendar_exclude'] ?? '[]'); ?>" />
               <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden')); ?></span>
             </div>
+          </div>
+        </div>
 
-            <div class="ds-form-group">
-              <label for="text_scale" class="ds-label"><?php p($l->t('Text scale')); ?></label>
-              <input type="number" id="text_scale" name="text_scale" value="<?php p($_['text_scale'] ?? '1.0'); ?>" min="0.5" max="3.0" step="0.1" class="ds-input" />
-              <span class="ds-hint"><?php p($l->t('Scales calendar entries only (0.5 - 3.0, default: 1.0)')); ?></span>
+        <div class="ds-subsection">
+          <h4 class="ds-subsection-title">🎨 <?php p($l->t('Stylesheet')); ?></h4>
+
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Layout')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Adjust column proportions for the display layout.')); ?></p>
+            <div class="ds-form-grid">
+              <div class="ds-form-group">
+                <label for="content_split_ratio" class="ds-label"><?php p($l->t('Slideshow width percent')); ?></label>
+                <input type="number" id="content_split_ratio" name="content_split_ratio" value="<?php p($_['content_split_ratio'] ?? '50'); ?>" min="50" max="85" step="1" class="ds-input" />
+                <span class="ds-hint"><?php p($l->t('Width of the slideshow column. The remaining width is used for the calendar/weather column.')); ?></span>
+              </div>
+            </div>
+            <div class="ds-subsection-actions ds-subsection-actions-end">
+              <button type="button" id="reset-layout-btn" class="button ds-button-compact">
+                <?php p($l->t('Reset to defaults')); ?>
+              </button>
+            </div>
+          </div>
+
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Colors')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Configure display colors. Gradient applies to title bar only.')); ?></p>
+            <div class="ds-form-grid ds-form-grid-colors">
+              <div class="ds-form-group ds-color-group">
+                <label for="color_primary" class="ds-label"><?php p($l->t('Primary')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="color_primary" name="color_primary" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="color_primary_hex" name="color_primary_hex" value="<?php p($_['color_primary'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="color_bg" class="ds-label"><?php p($l->t('Background')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="color_bg" name="color_bg" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="color_bg_hex" name="color_bg_hex" value="<?php p($_['color_bg'] ?? '#f8f9fa'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="color_text" class="ds-label"><?php p($l->t('Text')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="color_text" name="color_text" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="color_text_hex" name="color_text_hex" value="<?php p($_['color_text'] ?? '#2c3e50'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="color_gradient_start" class="ds-label"><?php p($l->t('Gradient Start')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="color_gradient_start" name="color_gradient_start" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="color_gradient_start_hex" name="color_gradient_start_hex" value="<?php p($_['color_gradient_start'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="color_gradient_end" class="ds-label"><?php p($l->t('Gradient End')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="color_gradient_end" name="color_gradient_end" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="color_gradient_end_hex" name="color_gradient_end_hex" value="<?php p($_['color_gradient_end'] ?? '#3399ff'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+            </div>
+            <div class="ds-subsection-actions ds-subsection-actions-end">
+              <button type="button" id="reset-colors-btn" class="button ds-button-compact">
+                <?php p($l->t('Reset to defaults')); ?>
+              </button>
+            </div>
+          </div>
+
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Text sizes')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Set font sizes per text class using relative rem values.')); ?></p>
+            <div class="ds-form-grid ds-form-grid-compact">
+              <?php foreach (($_['text_size_fields'] ?? []) as $field): ?>
+              <div class="ds-form-group">
+                <label for="<?php p($field['configKey']); ?>" class="ds-label"><?php p($l->t($field['label'])); ?></label>
+                <input type="number" id="<?php p($field['configKey']); ?>" name="<?php p($field['configKey']); ?>" value="<?php p($field['value']); ?>" placeholder="<?php p($field['default']); ?>" min="0.1" step="0.1" inputmode="decimal" class="ds-input" data-text-size-field="1" data-default-value="<?php p($field['default']); ?>" />
+              </div>
+              <?php endforeach; ?>
+            </div>
+            <div class="ds-subsection-actions ds-subsection-actions-end">
+              <button type="button" id="reset-text-sizes-btn" class="button ds-button-compact">
+                <?php p($l->t('Reset to defaults')); ?>
+              </button>
             </div>
           </div>
         </div>

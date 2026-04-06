@@ -81,6 +81,13 @@ function resetPresetForm() {
   document.getElementById('cancel-preset-edit-btn').style.display = 'none';
 }
 
+function getTextSizeSettings() {
+  return Array.from(document.querySelectorAll('[data-text-size-field="1"]')).reduce((values, input) => {
+    values[input.name] = input.value.trim();
+    return values;
+  }, {});
+}
+
 function fillPresetForm(preset) {
   document.getElementById('preset-id').value = String(preset.id);
   document.getElementById('preset-name').value = preset.name;
@@ -463,7 +470,7 @@ async function saveSettings() {
       display_name: document.getElementById('display_name').value,
       show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
-      content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '75',
+      content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
       calendar_names: JSON.stringify(selectedCalendars),
       weather_latitude: document.getElementById('weather_latitude').value,
       weather_longitude: document.getElementById('weather_longitude').value,
@@ -474,7 +481,7 @@ async function saveSettings() {
       color_gradient_start: document.getElementById('color_gradient_start').value,
       color_gradient_end: document.getElementById('color_gradient_end').value,
       show_titlebar: '1',
-      text_scale: document.getElementById('text_scale').value
+      ...getTextSizeSettings()
     };
 
     const saveUrl = OC.generateUrl('/apps/digitalsignage/settings/user');
@@ -626,10 +633,34 @@ function resetColorsToDefaults() {
   });
 }
 
+function resetLayoutToDefaults() {
+  const defaults = {
+    content_split_ratio: '50'
+  };
+
+  Object.entries(defaults).forEach(([key, value]) => {
+    const input = document.getElementById(key);
+    if (input) {
+      input.value = value;
+    }
+  });
+}
+
+function resetTextSizesToDefaults() {
+  document.querySelectorAll('[data-text-size-field="1"]').forEach((input) => {
+    const defaultValue = input.getAttribute('data-default-value');
+    if (defaultValue !== null) {
+      input.value = defaultValue;
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('create-token-btn')?.addEventListener('click', createToken);
   document.getElementById('save-settings-btn')?.addEventListener('click', saveSettings);
+  document.getElementById('reset-layout-btn')?.addEventListener('click', resetLayoutToDefaults);
   document.getElementById('reset-colors-btn')?.addEventListener('click', resetColorsToDefaults);
+  document.getElementById('reset-text-sizes-btn')?.addEventListener('click', resetTextSizesToDefaults);
   document.getElementById('save-preset-btn')?.addEventListener('click', savePreset);
   document.getElementById('cancel-preset-edit-btn')?.addEventListener('click', resetPresetForm);
 

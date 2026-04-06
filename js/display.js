@@ -26,6 +26,14 @@ function applyRuntimeConfig() {
   if (Number.isFinite(splitRatio) && splitRatio >= 50 && splitRatio <= 85) {
     document.documentElement.style.setProperty('--content-split-ratio', `${splitRatio}%`);
   }
+
+  if (config.textSizeCssVariables && typeof config.textSizeCssVariables === 'object') {
+    Object.entries(config.textSizeCssVariables).forEach(([cssVariable, value]) => {
+      if (typeof value === 'string' && value.trim() !== '') {
+        document.documentElement.style.setProperty(cssVariable, value);
+      }
+    });
+  }
 }
 
 function sortImagesByFilename(images) {

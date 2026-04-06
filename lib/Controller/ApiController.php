@@ -1,6 +1,7 @@
 <?php
 namespace OCA\DigitalSignage\Controller;
 
+use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\AppFramework\Http\StreamResponse;
@@ -41,6 +42,7 @@ class ApiController extends Controller {
     public function getConfig(): JSONResponse {
         $response = new JSONResponse([
             'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
+            'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weather' => [
                 'latitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
                 'longitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747')
@@ -49,7 +51,8 @@ class ApiController extends Controller {
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'imageOrderMode' => $this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle'),
-            'textScale' => (float)$this->config->getAppValue('digitalsignage', 'text_scale', '1.0'),
+            'textSizes' => TextSizeConfig::getConfiguredSizes($this->config),
+            'textSizeCssVariables' => TextSizeConfig::toCssVariables(TextSizeConfig::getConfiguredSizes($this->config)),
             'fullscreenSlideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0') === '1'
         ]);
 

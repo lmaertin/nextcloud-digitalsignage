@@ -7,6 +7,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-04-06
+
+### Added
+
+- Per-text-class font size settings for display title, clock, weather and calendar content
+- Style settings grouped into layout, colors and text sizes with dedicated reset actions
+- Runtime font-size CSS variables so already open public displays can apply typography changes directly
+
+### Changed
+
+- Default split layout width is now 50 percent for a balanced standard layout
+- Layout wording in the settings UI was tightened and aligned with the remaining width-based configuration
+- README and app metadata were refreshed for the current preset, layout and typography feature set
+
+### Fixed
+
+- Resetting text sizes now restores the configured base defaults instead of legacy scaled values
+- Legacy text-scaling paths and outdated translation strings were removed from settings, runtime config and API payloads
+- The main settings header no longer uses an emoji label
+
 ## [0.5.0] - 2026-04-06
 
 ### Added

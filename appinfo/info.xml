@@ -3,14 +3,17 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>digitalsignage</id>
     <name>Digital Signage</name>
-    <summary>Display digital signage with calendar events and image slideshow</summary>
-    <description><![CDATA[Digital Signage displays calendar events from your Nextcloud calendar and images from a folder in a full-screen presentation.
+    <summary>Display calendars, weather and image slideshows on public screens</summary>
+    <description><![CDATA[Digital Signage turns Nextcloud into a simple information screen solution for offices, schools and shared spaces.
+
+Show calendar events, weather information and images on public displays without requiring a login. Use presets for slideshow behavior, assign them per display and switch them remotely through the control API.
 
 Features:
 - Calendar events from your Nextcloud calendar
 - Image slideshow from a Nextcloud folder
 - Weather information (external API)
-- Configurable display settings
+- Per-display presets and remote preset switching
+- Configurable layout, colors and text sizes
 - Public share for display without login
 
 Supported languages:
@@ -19,7 +22,7 @@ Supported languages:
 - Français (fr)
 - Nederlands (nl)
 ]]></description>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
