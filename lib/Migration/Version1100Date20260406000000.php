@@ -44,12 +44,12 @@ class Version1100Date20260406000000 extends SimpleMigrationStep {
                 ]);
             }
 
-            if (!$table->hasIndex('digitalsignage_control_token_idx')) {
-                $table->addUniqueIndex(['control_token'], 'digitalsignage_control_token_idx');
+            if (!$table->hasIndex('ctrl_token_idx')) {
+                $table->addUniqueIndex(['control_token'], 'ctrl_token_idx');
             }
 
-            if (!$table->hasIndex('digitalsignage_active_preset_idx')) {
-                $table->addIndex(['active_preset_id'], 'digitalsignage_active_preset_idx');
+            if (!$table->hasIndex('act_preset_idx')) {
+                $table->addIndex(['active_preset_id'], 'act_preset_idx');
             }
         }
 
@@ -98,8 +98,8 @@ class Version1100Date20260406000000 extends SimpleMigrationStep {
             ]);
 
             $table->setPrimaryKey(['id']);
-            $table->addIndex(['user_id'], 'digitalsignage_preset_user_idx');
-            $table->addUniqueIndex(['user_id', 'name'], 'digitalsignage_preset_user_name_idx');
+            $table->addIndex(['user_id'], 'preset_user_idx');
+            $table->addUniqueIndex(['user_id', 'name'], 'preset_user_name_uq');
         }
 
         return $schema;
