@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.4] - 2026-04-15
+
+### Fixed
+
+- Migration index names were shortened to avoid MySQL/MariaDB identifier-length errors during schema updates.
+- Locale fallback now resolves reliably to English for unsupported app languages.
+- Fullscreen labels and prompt texts are now fully localized through the app l10n pipeline.
+
+### Added
+
+- Spanish and Italian translation catalogs were added (es, it).
+
 ## [0.5.1] - 2026-04-06
 
 ### Added

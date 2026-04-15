@@ -18,7 +18,7 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Weather information**: Real-time weather data via Open-Meteo API
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
-- **Multi-language support**: English, German, French and Dutch translations
+- **Multi-language support**: English, German, French, Dutch, Spanish and Italian translations
 - **Configurable settings**: Global display settings plus per-display preset assignment through the UI
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
