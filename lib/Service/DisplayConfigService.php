@@ -18,11 +18,43 @@ class DisplayConfigService {
         $this->presetMapper = $presetMapper;
     }
 
+    private function normalizeLocale(string $locale): string {
+        $normalized = str_replace('_', '-', trim($locale));
+        if ($normalized === '') {
+            return 'en';
+        }
+
+        if (preg_match('/^[a-z]{2}$/i', $normalized) === 1) {
+            return strtolower($normalized);
+        }
+
+        if (preg_match('/^[a-z]{2}-[a-z]{2}$/i', $normalized) === 1) {
+            $parts = explode('-', $normalized, 2);
+            return strtolower($parts[0]) . '-' . strtoupper($parts[1]);
+        }
+
+        return 'en';
+    }
+
+    private function resolveLocale(Token $display): string {
+        $configuredLocale = trim($this->config->getAppValue('digitalsignage', 'locale', ''));
+        if ($configuredLocale !== '') {
+            return $this->normalizeLocale($configuredLocale);
+        }
+
+        $userLocale = trim($this->config->getUserValue($display->getUserId(), 'core', 'lang', 'en'));
+        if ($userLocale !== '') {
+            return $this->normalizeLocale($userLocale);
+        }
+
+        return 'en';
+    }
+
     public function getEffectiveConfig(Token $display): array {
         $effective = [
             'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'showDisplayName' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
-            'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
+            'locale' => $this->resolveLocale($display),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
             'weatherLongitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747'),

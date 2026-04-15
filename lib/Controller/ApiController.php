@@ -19,6 +19,40 @@ class ApiController extends Controller {
     private $userSession;
     private $userId;
 
+    private function normalizeLocale(string $locale): string {
+        $normalized = str_replace('_', '-', trim($locale));
+        if ($normalized === '') {
+            return 'en';
+        }
+
+        if (preg_match('/^[a-z]{2}$/i', $normalized) === 1) {
+            return strtolower($normalized);
+        }
+
+        if (preg_match('/^[a-z]{2}-[a-z]{2}$/i', $normalized) === 1) {
+            $parts = explode('-', $normalized, 2);
+            return strtolower($parts[0]) . '-' . strtoupper($parts[1]);
+        }
+
+        return 'en';
+    }
+
+    private function resolveLocale(): string {
+        $configuredLocale = trim($this->config->getAppValue('digitalsignage', 'locale', ''));
+        if ($configuredLocale !== '') {
+            return $this->normalizeLocale($configuredLocale);
+        }
+
+        if (!empty($this->userId)) {
+            $userLocale = trim($this->config->getUserValue((string)$this->userId, 'core', 'lang', 'en'));
+            if ($userLocale !== '') {
+                return $this->normalizeLocale($userLocale);
+            }
+        }
+
+        return 'en';
+    }
+
     public function __construct(
         string $AppName,
         IRequest $request,
@@ -41,7 +75,7 @@ class ApiController extends Controller {
      */
     public function getConfig(): JSONResponse {
         $response = new JSONResponse([
-            'locale' => $this->config->getAppValue('digitalsignage', 'locale', 'de-DE'),
+            'locale' => $this->resolveLocale(),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weather' => [
                 'latitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),

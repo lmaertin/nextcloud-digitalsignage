@@ -13,11 +13,28 @@ use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Service\DisplayConfigService;
 
 use OCP\IConfig;
+use OCP\L10N\IFactory;
 
 class PublicController extends PublicShareController {
     private $tokenMapper;
     private $config;
     private $displayConfigService;
+    private $l10nFactory;
+
+    private function resolveAppLanguage(?string $language, ?string $locale = null): string {
+        if (is_string($language) && $language !== '' && $this->l10nFactory->languageExists('digitalsignage', $language)) {
+            return $language;
+        }
+
+        if (is_string($locale) && $locale !== '') {
+            $localeLanguage = $this->l10nFactory->findLanguageFromLocale('digitalsignage', str_replace('-', '_', $locale));
+            if (is_string($localeLanguage) && $localeLanguage !== '') {
+                return $localeLanguage;
+            }
+        }
+
+        return 'en';
+    }
 
     public function __construct(
         string $AppName,
@@ -25,12 +42,14 @@ class PublicController extends PublicShareController {
         ISession $session,
         TokenMapper $tokenMapper,
         IConfig $config,
-        DisplayConfigService $displayConfigService
+        DisplayConfigService $displayConfigService,
+        IFactory $l10nFactory
     ) {
         parent::__construct($AppName, $request, $session);
         $this->tokenMapper = $tokenMapper;
         $this->config = $config;
         $this->displayConfigService = $displayConfigService;
+        $this->l10nFactory = $l10nFactory;
     }
 
     protected function getPasswordHash(): ?string {
@@ -83,11 +102,10 @@ class PublicController extends PublicShareController {
                 return $response;
             }
 
-            // Get locale from config
-            $locale = $this->config->getAppValue('digitalsignage', 'locale', 'de-DE');
-            $lang = substr($locale, 0, 2); // Extract language code (de, en, fr, etc.)
-
             $effectiveConfig = $this->displayConfigService->getEffectiveConfig($tokenEntity);
+            $locale = (string)($effectiveConfig['locale'] ?? 'en');
+            $lang = substr(strtolower(str_replace('_', '-', $locale)), 0, 2);
+            $appLanguage = $this->resolveAppLanguage($lang, $locale);
             $colorPrimary = $effectiveConfig['colorPrimary'];
             $colorBg = $effectiveConfig['colorBg'];
             $colorText = $effectiveConfig['colorText'];
@@ -100,6 +118,7 @@ class PublicController extends PublicShareController {
             $textSizeCssVariables = $effectiveConfig['textSizeCssVariables'] ?? TextSizeConfig::toCssVariables($textSizes);
             $contentSplitRatio = (string)$effectiveConfig['contentSplitRatio'];
             $fullscreenSlideshow = $effectiveConfig['fullscreenSlideshow'] ? '1' : '0';
+            $l10n = $this->l10nFactory->get('digitalsignage', $appLanguage, $locale);
             if ($showDisplayName === '' || $showDisplayName === null) {
                 $showDisplayName = '1';
             }
@@ -121,7 +140,9 @@ class PublicController extends PublicShareController {
                     'text_sizes' => $textSizes,
                     'text_size_css_variables' => $textSizeCssVariables,
                     'content_split_ratio' => $contentSplitRatio,
-                    'fullscreen_slideshow' => $fullscreenSlideshow
+                    'fullscreen_slideshow' => $fullscreenSlideshow,
+                    'fullscreen_title_enter' => $l10n->t('Fullscreen'),
+                    'fullscreen_title_exit' => $l10n->t('Exit fullscreen')
                 ],
                 'blank'
             );

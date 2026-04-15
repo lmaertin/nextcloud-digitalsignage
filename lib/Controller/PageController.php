@@ -6,20 +6,39 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\IConfig;
+use OCP\L10N\IFactory;
 
 class PageController extends Controller {
     private $config;
     private $userId;
+    private $l10nFactory;
 
     public function __construct(
         string $AppName,
         IRequest $request,
         IConfig $config,
+        IFactory $l10nFactory,
         ?string $UserId
     ) {
         parent::__construct($AppName, $request);
         $this->config = $config;
+        $this->l10nFactory = $l10nFactory;
         $this->userId = $UserId;
+    }
+
+    private function resolveAppLanguage(?string $language, ?string $locale = null): string {
+        if (is_string($language) && $language !== '' && $this->l10nFactory->languageExists('digitalsignage', $language)) {
+            return $language;
+        }
+
+        if (is_string($locale) && $locale !== '') {
+            $localeLanguage = $this->l10nFactory->findLanguageFromLocale('digitalsignage', str_replace('-', '_', $locale));
+            if (is_string($localeLanguage) && $localeLanguage !== '') {
+                return $localeLanguage;
+            }
+        }
+
+        return 'en';
     }
 
     /**
@@ -27,8 +46,16 @@ class PageController extends Controller {
      * @NoCSRFRequired
      */
     public function index(): TemplateResponse {
+        $userLanguage = $this->userId !== null
+            ? $this->config->getUserValue($this->userId, 'core', 'lang', 'en')
+            : 'en';
+        $userLocale = $this->userId !== null
+            ? $this->config->getUserValue($this->userId, 'core', 'locale', null)
+            : null;
+
         // Load current settings for display in the form
         $params = [
+            'translation_lang' => $this->resolveAppLanguage($userLanguage, $userLocale),
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
             'auto_fullscreen_prompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0'),

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php p($_['lang'] ?? 'de'); ?>">
+<html lang="<?php p($_['lang'] ?? 'en'); ?>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +26,8 @@
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
       data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>"
+  data-fullscreen-title-enter="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>"
+  data-fullscreen-title-exit="<?php p($_['fullscreen_title_exit'] ?? 'Exit fullscreen'); ?>"
       class="<?php
         $bodyClasses = [];
         if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1') {
@@ -40,20 +42,20 @@
   <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
   <div class="display-header">
     <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
-    <button id="fullscreen-btn" class="fullscreen-button" title="Vollbild">⛶</button>
+    <button id="fullscreen-btn" class="fullscreen-button" title="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>">⛶</button>
   </div>
   <?php else: ?>
-  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="Vollbild">⛶</button>
+  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>">⛶</button>
   <?php endif; ?>
   <div class="slideshow loading" id="slideshow"></div>
 <?php else: ?>
   <?php if ((!isset($_['show_display_name']) || $_['show_display_name'] === '1')): ?>
   <div class="display-header">
     <h1 id="display-title"><?php p(empty($_['display_name']) ? 'Digital Signage' : $_['display_name']); ?></h1>
-    <button id="fullscreen-btn" class="fullscreen-button" title="Vollbild">⛶</button>
+    <button id="fullscreen-btn" class="fullscreen-button" title="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>">⛶</button>
   </div>
   <?php else: ?>
-  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="Vollbild">⛶</button>
+  <button id="fullscreen-btn" class="fullscreen-button fullscreen-no-header" title="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>">⛶</button>
   <?php endif; ?>
 
   <div class="container">

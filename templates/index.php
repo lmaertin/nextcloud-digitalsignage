@@ -2,7 +2,7 @@
 <!-- Farbsynchronisation jetzt in settings.js ausgelagert (CSP-konform) -->
 <?php
 style('digitalsignage', 'settings');
-$l = \OC::$server->getL10N('digitalsignage');
+$l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
 ?>
 
 <div id="app-content">

@@ -55,22 +55,64 @@ function shuffleImages(images) {
 }
 
 // Centralized date formatter functions
+function normalizeLocale(locale) {
+  const raw = (locale || '').trim();
+  if (!raw) {
+    return 'en-US';
+  }
+
+  const normalized = raw.replace('_', '-');
+  const candidate = normalized;
+
+  try {
+    const [canonical] = Intl.getCanonicalLocales(candidate);
+    return canonical || 'en-US';
+  } catch (error) {
+    return 'en-US';
+  }
+}
+
+function getLocale() {
+  const configuredLocale = config && typeof config.locale === 'string' ? config.locale.trim() : '';
+  if (configuredLocale) {
+    return normalizeLocale(configuredLocale);
+  }
+
+  const htmlLang = (document.documentElement.lang || '').trim();
+  if (htmlLang) {
+    return normalizeLocale(htmlLang);
+  }
+
+  return normalizeLocale(navigator.language || 'en-US');
+}
+
 function getDateFormatter(locale, options) {
-  return new Intl.DateTimeFormat(locale || 'en-US', options);
+  try {
+    return new Intl.DateTimeFormat(normalizeLocale(locale || getLocale()), options);
+  } catch (error) {
+    return new Intl.DateTimeFormat('en-US', options);
+  }
 }
 
 function getShortDateFormatter(locale) {
   return getDateFormatter(locale, {
     weekday: 'short',
-    day: '2-digit',
-    month: '2-digit'
+    day: 'numeric',
+    month: 'short'
+  });
+}
+
+function getClockDateFormatter(locale) {
+  return getDateFormatter(locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'long'
   });
 }
 
 // Remove trailing dots from weekday abbreviations for consistent display
 function removeDots(text) {
-  // Only remove dot directly after weekday abbreviation (2-3 letters at the start)
-  return text.replace(/^([A-Za-z]{2,3})\./, '$1');
+  return text.replace(/^([\p{L}]{1,5})\./u, '$1');
 }
 
 async function loadConfig() {
@@ -246,34 +288,30 @@ async function loadWeather() {
 
     // Temperature formatting based on locale
     function formatTemperature(temp) {
-      // Get locale from config
-      const locale = config.locale || 'en-US';
-
-      // For German locales use comma, for others use period
-      if (locale.startsWith('de')) {
-        return temp.toString().replace('.', ',');
-      } else {
-        return temp.toString(); // Keep period for English and other locales
+      const locale = normalizeLocale(getLocale());
+      const value = Number(temp);
+      const hasFraction = Math.abs(value % 1) > Number.EPSILON;
+      try {
+        return new Intl.NumberFormat(locale, {
+          minimumFractionDigits: hasFraction ? 1 : 0,
+          maximumFractionDigits: 1
+        }).format(value);
+      } catch (error) {
+        return String(value);
       }
     }
 
-    // Get localized "Today" label
+    // Get localized "Today" label from Intl instead of manual locale mapping
     function getTodayText() {
-      const locale = config.locale || 'en-US';
-
-      if (locale.startsWith('de')) {
-        return 'Heute';
-      } else if (locale.startsWith('en')) {
-        return 'Today';
-      } else if (locale.startsWith('fr')) {
-        return "Aujourd'hui";
-      } else if (locale.startsWith('es')) {
-        return 'Hoy';
-      } else if (locale.startsWith('it')) {
-        return 'Oggi';
-      } else {
-        return 'Today'; // Default to English
+      const locale = normalizeLocale(getLocale());
+      if (typeof Intl.RelativeTimeFormat === 'function') {
+        try {
+          return new Intl.RelativeTimeFormat(locale, {numeric: 'auto'}).format(0, 'day');
+        } catch (error) {
+          return 'Today';
+        }
       }
+      return 'Today';
     }
 
     const currentIcon = getWeatherIcon(cw.weathercode);
@@ -291,7 +329,7 @@ async function loadWeather() {
           const max = daily.temperature_2m_max[i+1];
           const weatherCode = daily.weather_code ? daily.weather_code[i+1] : 1;
           const dayIcon = getWeatherIcon(weatherCode);
-          const weekdayFormatter = getDateFormatter(config.locale, {weekday: 'short'});
+          const weekdayFormatter = getDateFormatter(getLocale(), {weekday: 'short'});
           const weekday = removeDots(weekdayFormatter.format(new Date(t)));
           return `<div class="forecast-day">
             <div class="day-name">${weekday}</div>
@@ -377,14 +415,19 @@ async function loadICS() {
 
     console.log('Upcoming events:', upcoming.length);
 
-    const fmtWithTime = getDateFormatter(config.locale, {
+    const locale = getLocale();
+    const fmtWithTime = getDateFormatter(locale, {
       weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
+      day: 'numeric',
+      month: 'long',
       hour: '2-digit',
       minute: '2-digit'
     });
-    const fmtDateOnly = getShortDateFormatter(config.locale);
+    const fmtDateOnly = getDateFormatter(locale, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'long'
+    });
     if (upcoming.length === 0) {
       cal.innerHTML = '<p>No upcoming events</p>';
     } else {
@@ -419,29 +462,16 @@ function initDateTime() {
 
   function updateDateTime() {
     const now = new Date();
-    const locale = config.locale || 'en-US';
-
-    // Determine if locale uses 24h format (German and most European locales)
-    const use24Hour = locale.startsWith('de') ||
-                      locale.startsWith('fr') ||
-                      locale.startsWith('it') ||
-                      locale.startsWith('es') ||
-                      locale.startsWith('nl') ||
-                      locale.startsWith('pt') ||
-                      locale.startsWith('pl') ||
-                      locale.startsWith('ru') ||
-                      locale.startsWith('ja') ||
-                      locale.startsWith('zh');
+    const locale = getLocale();
 
     // Format time based on locale
     const timeFormat = new Intl.DateTimeFormat(locale, {
       hour: '2-digit',
-      minute: '2-digit',
-      hour12: !use24Hour
+      minute: '2-digit'
     });
 
     // Format date - use centralized short date formatter
-    const dateFormat = getShortDateFormatter(locale);
+    const dateFormat = getClockDateFormatter(locale);
 
     timeEl.textContent = timeFormat.format(now);
     dateEl.textContent = removeDots(dateFormat.format(now));
@@ -530,6 +560,7 @@ function promptFullscreen() {
   // Yes button - direct user interaction
   dialog.querySelector('.btn-yes').addEventListener('click', async () => {
     closeDialog();
+    const fullscreenLabels = getFullscreenButtonLabels();
 
     const elem = document.documentElement;
     try {
@@ -543,7 +574,7 @@ function promptFullscreen() {
       if (btn) {
         btn.textContent = '⤢';
         btn.classList.add('in-fullscreen');
-        btn.title = 'Vollbild beenden';
+        btn.title = fullscreenLabels.exit;
       }
     } catch (err) {
       console.error('Fullscreen error:', err);
@@ -555,10 +586,20 @@ function promptFullscreen() {
   overlay.addEventListener('click', closeDialog);
 }
 
+function getFullscreenButtonLabels() {
+  const body = document.body;
+
+  return {
+    enter: config.i18n?.fullscreenButtonEnter || body?.dataset?.fullscreenTitleEnter || 'Fullscreen',
+    exit: config.i18n?.fullscreenButtonExit || body?.dataset?.fullscreenTitleExit || 'Exit fullscreen'
+  };
+}
+
 // Fullscreen functionality
 function initFullscreenButton() {
   const btn = document.getElementById('fullscreen-btn');
   if (!btn) return;
+  const fullscreenLabels = getFullscreenButtonLabels();
 
   let hideTimeout;
 
@@ -593,7 +634,7 @@ function initFullscreenButton() {
         }
         btn.textContent = '⤢';
         btn.classList.add('in-fullscreen');
-        btn.title = 'Vollbild beenden';
+        btn.title = fullscreenLabels.exit;
       } else {
         if (document.exitFullscreen) {
           await document.exitFullscreen();
@@ -602,7 +643,7 @@ function initFullscreenButton() {
         }
         btn.textContent = '⛶';
         btn.classList.remove('in-fullscreen');
-        btn.title = 'Vollbild';
+        btn.title = fullscreenLabels.enter;
       }
     } catch (error) {
       console.error('Fullscreen toggle error:', error);
@@ -615,11 +656,11 @@ function initFullscreenButton() {
     if (!isFullscreen) {
       btn.textContent = '⛶';
       btn.classList.remove('in-fullscreen');
-      btn.title = 'Vollbild';
+      btn.title = fullscreenLabels.enter;
     } else {
       btn.textContent = '⤢';
       btn.classList.add('in-fullscreen');
-      btn.title = 'Vollbild beenden';
+      btn.title = fullscreenLabels.exit;
     }
   };
 

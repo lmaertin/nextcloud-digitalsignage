@@ -21,6 +21,21 @@ class PublicApiController extends Controller {
     private $displayConfigService;
     private $l10nFactory;
 
+    private function resolveAppLanguage(?string $language, ?string $locale = null): string {
+        if (is_string($language) && $language !== '' && $this->l10nFactory->languageExists('digitalsignage', $language)) {
+            return $language;
+        }
+
+        if (is_string($locale) && $locale !== '') {
+            $localeLanguage = $this->l10nFactory->findLanguageFromLocale('digitalsignage', str_replace('-', '_', $locale));
+            if (is_string($localeLanguage) && $localeLanguage !== '') {
+                return $localeLanguage;
+            }
+        }
+
+        return 'en';
+    }
+
     public function __construct(
         string $AppName,
         IRequest $request,
@@ -99,26 +114,17 @@ class PublicApiController extends Controller {
     }
 
     private function getTranslation(string $key, string $userId): string {
-        // Get user's language from Nextcloud
         $userLang = $this->config->getUserValue($userId, 'core', 'lang', 'en');
+        $userLocale = $this->config->getUserValue($userId, 'core', 'locale', null);
+        $appLanguage = $this->resolveAppLanguage($userLang, $userLocale);
+        $l10n = $this->l10nFactory->get('digitalsignage', $appLanguage, $userLocale);
 
-        // Extract base language code (de_DE -> de, en_US -> en)
-        $lang = strtolower(substr($userLang, 0, 2));
-
-        $translations = [
-            'de' => [
-                'fullscreenPromptTitle' => 'Vollbildmodus aktivieren?',
-                'fullscreenPromptYes' => 'Ja',
-                'fullscreenPromptNo' => 'Nein'
-            ],
-            'en' => [
-                'fullscreenPromptTitle' => 'Activate fullscreen mode?',
-                'fullscreenPromptYes' => 'Yes',
-                'fullscreenPromptNo' => 'No'
-            ]
-        ];
-
-        return $translations[$lang][$key] ?? $translations['en'][$key] ?? $key;
+        return match ($key) {
+            'fullscreenPromptTitle' => $l10n->t('Activate fullscreen mode?'),
+            'fullscreenPromptYes' => $l10n->t('Yes'),
+            'fullscreenPromptNo' => $l10n->t('No'),
+            default => $key,
+        };
     }
 
     /**
