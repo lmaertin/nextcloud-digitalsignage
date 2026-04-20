@@ -7,6 +7,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.6] - 2026-04-20
+
+### Changed
+
+- Display name visibility setting moved from global app config to per-preset configuration
+- Each preset can now independently control whether to show or hide the display name
+
+### Added
+
+- German formal variant (de_DE) for formal "Sie" address form alongside informal "du" variant (de)
+
+### Fixed
+
+- Fixed null pointer errors in fullscreen slideshow mode when weather or calendar elements are not present in the DOM
+- Fullscreen slideshow mode no longer throws JavaScript errors when weather or calendar data fails to load
+
 ## [0.5.4] - 2026-04-15
 
 ### Fixed

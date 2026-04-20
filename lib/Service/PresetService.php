@@ -37,6 +37,7 @@ class PresetService {
         $preset->setImageFitMode($this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'));
         $preset->setImageOrderMode($this->normalizeImageOrderMode($this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle')));
         $preset->setFullscreenSlideshow($this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0'));
+        $preset->setShowDisplayName($this->config->getAppValue('digitalsignage', 'show_display_name', '1'));
         $preset->setSlideInterval((int)$this->config->getAppValue('digitalsignage', 'slide_interval', '10'));
         $preset->setCreatedAt($now);
         $preset->setUpdatedAt($now);
@@ -54,6 +55,7 @@ class PresetService {
             'imageFitMode' => $preset->getImageFitMode(),
             'imageOrderMode' => $imageOrderMode,
             'fullscreenSlideshow' => $preset->getFullscreenSlideshow() === '1',
+            'showDisplayName' => $preset->getShowDisplayName() === '1',
             'slideInterval' => $preset->getSlideInterval(),
             'createdAt' => $preset->getCreatedAt(),
             'updatedAt' => $preset->getUpdatedAt(),

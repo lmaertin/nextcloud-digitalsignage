@@ -25,7 +25,6 @@ class SettingsController extends Controller {
      */
     public function saveUser(
         string $display_name = '',
-        string $show_display_name = '1',
         string $auto_fullscreen_prompt = '0',
         string $content_split_ratio = '50',
         string $weather_latitude = '52.52',
@@ -54,7 +53,6 @@ class SettingsController extends Controller {
         $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
 
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
-        $this->config->setAppValue('digitalsignage', 'show_display_name', $show_display_name);
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
         $this->config->deleteAppValue('digitalsignage', 'left_column_split_ratio');
@@ -90,7 +88,6 @@ class SettingsController extends Controller {
      */
     public function getUser(): JSONResponse {
         $display_name = $this->config->getAppValue('digitalsignage', 'display_name', '');
-        $show_display_name = $this->config->getAppValue('digitalsignage', 'show_display_name', '1');
         $auto_fullscreen_prompt = $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0');
         $content_split_ratio = $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50');
         $weather_latitude = $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52');
@@ -111,7 +108,6 @@ class SettingsController extends Controller {
 
         return new JSONResponse([
             'display_name' => $display_name,
-            'show_display_name' => $show_display_name,
             'auto_fullscreen_prompt' => $auto_fullscreen_prompt,
             'content_split_ratio' => $content_split_ratio,
             'weather_latitude' => $weather_latitude,

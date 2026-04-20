@@ -53,7 +53,7 @@ class DisplayConfigService {
     public function getEffectiveConfig(Token $display): array {
         $effective = [
             'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
-            'showDisplayName' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
+            'showDisplayName' => '1',
             'locale' => $this->resolveLocale($display),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
@@ -86,6 +86,7 @@ class DisplayConfigService {
                 $effective['imageOrderMode'] = $preset->getImageOrderMode() === 'filename' ? 'filename' : 'shuffle';
                 $effective['slideInterval'] = $preset->getSlideInterval();
                 $effective['fullscreenSlideshow'] = $preset->getFullscreenSlideshow() === '1';
+                $effective['showDisplayName'] = $preset->getShowDisplayName() ?? '1';
                 $effective['activePresetName'] = $preset->getName();
             }
         }

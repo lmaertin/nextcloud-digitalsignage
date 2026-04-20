@@ -18,13 +18,13 @@ Features:
 
 Supported languages:
 - English (en)
-- Deutsch (de)
+- Deutsch (de, de_DE)
 - Français (fr)
 - Nederlands (nl)
 - Español (es)
 - Italiano (it)
 ]]></description>
-    <version>0.5.4</version>
+    <version>0.5.6</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

@@ -65,6 +65,7 @@ class PresetController extends Controller {
         string $image_fit_mode = 'cover',
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
+        string $show_display_name = '1',
         int $slide_interval = 10
     ): JSONResponse {
         try {
@@ -81,6 +82,7 @@ class PresetController extends Controller {
             $preset->setImageFitMode($image_fit_mode);
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
+            $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setCreatedAt($now);
             $preset->setUpdatedAt($now);
@@ -103,6 +105,7 @@ class PresetController extends Controller {
         string $image_fit_mode = 'cover',
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
+        string $show_display_name = '1',
         int $slide_interval = 10
     ): JSONResponse {
         try {
@@ -117,6 +120,7 @@ class PresetController extends Controller {
             $preset->setImageFitMode($image_fit_mode);
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
+            $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setUpdatedAt(time());
 

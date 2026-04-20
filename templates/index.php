@@ -18,11 +18,8 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
           <div class="ds-form-grid">
             <div class="ds-form-group">
               <label for="display_name" class="ds-label"><?php p($l->t('Display Name')); ?></label>
-              <div class="ds-input-row">
-                <input type="checkbox" id="show_display_name" name="show_display_name" value="1" <?php if (!isset($_['show_display_name']) || $_['show_display_name'] === '1') print 'checked'; ?> />
-                <input type="text" id="display_name" name="display_name" value="<?php p($_['display_name'] ?? $l->t('Digital Signage')); ?>" placeholder="<?php p($l->t('Digital Signage')); ?>" class="ds-input" />
-              </div>
-              <span class="ds-hint"><?php p($l->t('Global name shown on all displays. Uncheck to hide.')); ?></span>
+              <input type="text" id="display_name" name="display_name" value="<?php p($_['display_name'] ?? $l->t('Digital Signage')); ?>" placeholder="<?php p($l->t('Digital Signage')); ?>" class="ds-input" />
+              <span class="ds-hint"><?php p($l->t('Name shown on displays (visibility controlled per preset)')); ?></span>
             </div>
           </div>
           <div class="ds-form-grid">
@@ -220,6 +217,14 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
                 <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
               </div>
               <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
+            </div>
+
+            <div class="ds-form-group">
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-show-display-name" value="1" checked />
+                <label for="preset-show-display-name" class="ds-label"><?php p($l->t('Show display name in header')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Display the configured display name at the top of the screen')); ?></span>
             </div>
           </div>
           <div class="ds-inline-actions">

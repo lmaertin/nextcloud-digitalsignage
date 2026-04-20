@@ -65,7 +65,8 @@ function getPresetFormData() {
     image_order_mode: document.getElementById('preset-image-order-mode').value,
     imageOrderMode: document.getElementById('preset-image-order-mode').value,
     slide_interval: parseInt(document.getElementById('preset-slide-interval').value, 10) || 10,
-    fullscreen_slideshow: document.getElementById('preset-fullscreen-slideshow').checked ? '1' : '0'
+    fullscreen_slideshow: document.getElementById('preset-fullscreen-slideshow').checked ? '1' : '0',
+    show_display_name: document.getElementById('preset-show-display-name').checked ? '1' : '0'
   };
 }
 
@@ -77,6 +78,7 @@ function resetPresetForm() {
   document.getElementById('preset-image-order-mode').value = 'shuffle';
   document.getElementById('preset-slide-interval').value = '10';
   document.getElementById('preset-fullscreen-slideshow').checked = false;
+  document.getElementById('preset-show-display-name').checked = true;
   document.getElementById('save-preset-btn').textContent = translate('Save preset');
   document.getElementById('cancel-preset-edit-btn').style.display = 'none';
 }
@@ -96,6 +98,7 @@ function fillPresetForm(preset) {
   document.getElementById('preset-image-order-mode').value = preset.imageOrderMode || 'shuffle';
   document.getElementById('preset-slide-interval').value = String(preset.slideInterval);
   document.getElementById('preset-fullscreen-slideshow').checked = Boolean(preset.fullscreenSlideshow);
+  document.getElementById('preset-show-display-name').checked = preset.showDisplayName !== false;
   document.getElementById('save-preset-btn').textContent = translate('Update preset');
   document.getElementById('cancel-preset-edit-btn').style.display = 'inline-flex';
 }
@@ -110,8 +113,11 @@ function renderPresetSummary(preset) {
   const fullscreen = preset.fullscreenSlideshow
     ? translate('Fullscreen slideshow mode')
     : translate('Standard layout');
+  const displayName = preset.showDisplayName
+    ? translate('Display name on')
+    : translate('Display name off');
 
-  return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(fullscreen)} | ${preset.slideInterval}s`;
+  return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(fullscreen)} | ${escapeHtml(displayName)} | ${preset.slideInterval}s`;
 }
 
 function renderPresetList() {

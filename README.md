@@ -10,15 +10,15 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 ## Features
 
 - **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
-- **Preset-based slideshow control**: Switch image folder, crop mode, playback order, interval and fullscreen slideshow mode via presets
+- **Preset-based slideshow control**: Switch image folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
 - **Image slideshow**: Automated slideshow from a Nextcloud folder with shuffle or filename order
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
-- **Flexible layout and appearance**: Configure slideshow width, colors, display title visibility and per-text-class font sizes
+- **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
 - **Weather information**: Real-time weather data via Open-Meteo API
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
-- **Multi-language support**: English, German, French, Dutch, Spanish and Italian translations
+- **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
 - **Configurable settings**: Global display settings plus per-display preset assignment through the UI
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
@@ -52,8 +52,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 2. Configure the following settings (via UI, no file edits needed):
 
    **Global Display Settings:**
-      - **Display Name**: Global title shown at the top of all displays
-      - **Display Name visibility**: Checkbox next to the title field to show or hide the global display title on screen
+      - **Display Name**: Global title shown at the top of displays (visibility controlled per preset)
       - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
@@ -85,6 +84,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    - **Playback Order**: Shuffle images or play them in ascending filename order
    - **Slide Interval (seconds)**: Duration per image in slideshow
    - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show images only
+   - **Show display name in header**: Control whether the configured display name appears at the top of the screen for this preset
 
    **Displays:**
    - **Create new display** creates a dedicated screen entry with its own public view token and control token
@@ -135,7 +135,7 @@ In the default layout, the slideshow and the calendar/weather area share the scr
 
 - **Global settings** define shared display behavior such as title, colors, calendars, weather, and text scaling.
 - **Layout settings** define how much horizontal space the image area gets in the standard split view.
-- **Presets** define image and slideshow behavior such as folder, crop mode, playback order, interval, and fullscreen slideshow mode.
+- **Presets** define image and slideshow behavior such as folder, crop mode, playback order, interval, fullscreen slideshow mode, and display name visibility.
 - **Displays** combine a public view URL, a control token, and one active preset.
 
 This separation makes it possible to keep common settings global while switching display modes remotely.

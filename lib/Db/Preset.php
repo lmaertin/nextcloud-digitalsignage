@@ -19,6 +19,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setImageOrderMode(string $imageOrderMode)
  * @method string getFullscreenSlideshow()
  * @method void setFullscreenSlideshow(string $fullscreenSlideshow)
+ * @method string getShowDisplayName()
+ * @method void setShowDisplayName(string $showDisplayName)
  * @method int getSlideInterval()
  * @method void setSlideInterval(int $slideInterval)
  * @method int getCreatedAt()
@@ -33,6 +35,7 @@ class Preset extends Entity {
     protected $imageFitMode;
     protected $imageOrderMode;
     protected $fullscreenSlideshow;
+    protected $showDisplayName;
     protected $slideInterval;
     protected $createdAt;
     protected $updatedAt;
@@ -44,6 +47,7 @@ class Preset extends Entity {
         $this->addType('imageFitMode', 'string');
         $this->addType('imageOrderMode', 'string');
         $this->addType('fullscreenSlideshow', 'string');
+        $this->addType('showDisplayName', 'string');
         $this->addType('slideInterval', 'integer');
         $this->addType('createdAt', 'integer');
         $this->addType('updatedAt', 'integer');
