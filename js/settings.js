@@ -474,7 +474,6 @@ async function saveSettings() {
     const selectedCalendars = Array.from(calendarSelect.selectedOptions).map((option) => option.value);
     const data = {
       display_name: document.getElementById('display_name').value,
-      show_display_name: document.getElementById('show_display_name').checked ? '1' : '0',
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
       calendar_names: JSON.stringify(selectedCalendars),
