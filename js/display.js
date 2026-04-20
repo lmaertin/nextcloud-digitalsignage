@@ -340,11 +340,13 @@ async function loadWeather() {
       </div>`;
   } catch (error) {
     console.error('Error loading weather:', error);
-    weatherEl.innerHTML = `
-      <div class="weather-error">
-        <span class="error-icon">⚠️</span>
-        <p>Weather error: ${error.message}</p>
-      </div>`;
+    if (weatherEl) {
+      weatherEl.innerHTML = `
+        <div class="weather-error">
+          <span class="error-icon">⚠️</span>
+          <p>Weather error: ${error.message}</p>
+        </div>`;
+    }
   }
 }
 
@@ -449,7 +451,9 @@ async function loadICS() {
     }
   } catch (error) {
     console.error('Error loading calendar:', error);
-    cal.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
+    if (cal) {
+      cal.innerHTML = `<p>Error loading calendar: ${error.message}</p>`;
+    }
   }
 }
 
