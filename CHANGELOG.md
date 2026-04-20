@@ -18,8 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed info.xml structure: `<repair-steps>` with `<step>` tags instead of deprecated `<repair><steps><migration>` structure
 - Modernized app store description with emojis and better formatting
+
+### Fixed
+
+- Removed incorrect `<repair-steps>` from info.xml (database migrations are auto-detected, not repair steps)
 
 ## [0.5.6] - 2026-04-20
 

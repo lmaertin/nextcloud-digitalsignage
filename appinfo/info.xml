@@ -52,12 +52,4 @@ Reception screens, meeting room displays, office dashboards, school information 
             <icon>app.svg</icon>
         </navigation>
     </navigations>
-    <repair-steps>
-        <post-migration>
-            <step>OCA\DigitalSignage\Migration\Version1000Date20260120000000</step>
-            <step>OCA\DigitalSignage\Migration\Version1100Date20260406000000</step>
-            <step>OCA\DigitalSignage\Migration\Version1200Date20260406010000</step>
-            <step>OCA\DigitalSignage\Migration\Version1300Date20260420000000</step>
-        </post-migration>
-    </repair-steps>
 </info>
