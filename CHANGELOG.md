@@ -7,16 +7,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.7] - 2026-04-20
+
+### Added
+
+- German formal variant (de_DE) for formal "Sie" address form alongside informal "du" variant (de)
+- Screenshot URLs in info.xml for proper App Store presentation
+- Documentation links in info.xml for user and admin guides
+- Enhanced app description with feature highlights and use cases
+
+### Changed
+
+- Fixed info.xml structure: `<repair-steps>` with `<step>` tags instead of deprecated `<repair><steps><migration>` structure
+- Modernized app store description with emojis and better formatting
+
 ## [0.5.6] - 2026-04-20
 
 ### Changed
 
 - Display name visibility setting moved from global app config to per-preset configuration
 - Each preset can now independently control whether to show or hide the display name
-
-### Added
-
-- German formal variant (de_DE) for formal "Sie" address form alongside informal "du" variant (de)
 
 ### Fixed
 

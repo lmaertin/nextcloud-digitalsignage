@@ -4,35 +4,43 @@
     <id>digitalsignage</id>
     <name>Digital Signage</name>
     <summary>Display calendars, weather and image slideshows on public screens</summary>
-    <description><![CDATA[Digital Signage turns Nextcloud into a simple information screen solution for offices, schools and shared spaces.
+    <description><![CDATA[**📺 Transform Nextcloud into a professional digital signage solution**
 
-Show calendar events, weather information and images on public displays without requiring a login. Use presets for slideshow behavior, assign them per display and switch them remotely through the control API.
+Display calendar events, weather information and image slideshows on public screens without requiring login. Perfect for offices, schools, shared spaces and reception areas.
 
-Features:
-- Calendar events from your Nextcloud calendar
-- Image slideshow from a Nextcloud folder
-- Weather information (external API)
-- Per-display presets and remote preset switching
-- Configurable layout, colors and text sizes
-- Public share for display without login
+**Key Features:**
 
-Supported languages:
-- English (en)
-- Deutsch (de, de_DE)
-- Français (fr)
-- Nederlands (nl)
-- Español (es)
-- Italiano (it)
+- 📅 **Calendar Integration** – Display upcoming events from multiple Nextcloud calendars
+- 🖼️ **Image Slideshows** – Automated playback from Nextcloud folders with shuffle or filename order
+- 🌤️ **Weather Information** – Real-time weather data via Open-Meteo API
+- 🎨 **Customizable Appearance** – Configure layout, colors and font sizes per text class
+- 🔄 **Preset System** – Switch image folders, crop modes, intervals and display settings remotely
+- 🎯 **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
+- 🖥️ **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
+- 📡 **Remote Control** – Change presets through the control API without UI access
+- 🌐 **Public Access** – Dedicated view tokens for displays without login requirement
+- 🌍 **Multi-Language** – Available in English, German (formal/informal), French, Dutch, Spanish, Italian
+
+**Perfect for:**
+Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.5.6</version>
+    <version>0.5.7</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
+    <documentation>
+        <user>https://github.com/lmaertin/nextcloud-digitalsignage#readme</user>
+        <admin>https://github.com/lmaertin/nextcloud-digitalsignage#configuration</admin>
+    </documentation>
     <category>multimedia</category>
     <category>tools</category>
     <website>https://github.com/lmaertin/nextcloud-digitalsignage</website>
     <bugs>https://github.com/lmaertin/nextcloud-digitalsignage/issues</bugs>
     <repository type="git">https://github.com/lmaertin/nextcloud-digitalsignage.git</repository>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-display.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-1.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-2.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-3.png</screenshot>
     <dependencies>
         <nextcloud min-version="24" max-version="32"/>
         <php min-version="7.4"/>
@@ -44,24 +52,12 @@ Supported languages:
             <icon>app.svg</icon>
         </navigation>
     </navigations>
-    <repair>
-        <steps>
-            <post-migration>
-                <migration>OCA\DigitalSignage\Migration\Version1000Date20260120000000</migration>
-            </post-migration>
-            <post-migration>
-                <migration>OCA\DigitalSignage\Migration\Version1100Date20260406000000</migration>
-            </post-migration>
-            <post-migration>
-                <migration>OCA\DigitalSignage\Migration\Version1200Date20260406010000</migration>
-            </post-migration>
-        </steps>
-    </repair>
-    <screenshots>
-        <screenshot small-thumbnail="https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-display-thumb.png">https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-display.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-1.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-2.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-3.png</screenshot>
-        <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-tokens.png</screenshot>
-    </screenshots>
+    <repair-steps>
+        <post-migration>
+            <step>OCA\DigitalSignage\Migration\Version1000Date20260120000000</step>
+            <step>OCA\DigitalSignage\Migration\Version1100Date20260406000000</step>
+            <step>OCA\DigitalSignage\Migration\Version1200Date20260406010000</step>
+            <step>OCA\DigitalSignage\Migration\Version1300Date20260420000000</step>
+        </post-migration>
+    </repair-steps>
 </info>
