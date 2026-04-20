@@ -183,6 +183,8 @@ async function initSlideshow() {
     const playbackMode = config.imageOrderMode === 'filename' ? 'filename' : 'shuffle';
     let playbackImages = playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images);
     let currentIndex = 0;
+    let currentVideoElement = null;
+    let slideTimer = null;
 
     function getNextImage() {
       if (playbackImages.length === 0) {
@@ -201,39 +203,77 @@ async function initSlideshow() {
     }
 
     function show() {
-      const img = getNextImage();
-      if (!img) {
+      const item = getNextImage();
+      if (!item) {
         throw new Error('No images found');
       }
 
-      const imageUrl = API_BASE + '/image?id=' + img.id;
-      console.log('Showing image:', img.name);
+      const itemUrl = API_BASE + '/image?id=' + item.id;
+      const isVideo = item.type === 'video';
+      console.log(`Showing ${isVideo ? 'video' : 'image'}:`, item.name);
 
       // Fade out
       el.style.opacity = '0';
 
+      // Clear any existing slide timer
+      if (slideTimer) {
+        clearTimeout(slideTimer);
+        slideTimer = null;
+      }
+
       setTimeout(() => {
-        // Change image while invisible
-        // Apply image fit mode from config
+        // Change content while invisible
         const fitMode = config.imageFitMode || 'cover';
         el.className = `slideshow fit-${fitMode}`;
         el.innerHTML = '';
-        el.style.backgroundImage = `url('${imageUrl}')`;
+        el.style.backgroundImage = '';
+
+        if (isVideo) {
+          // Create video element
+          const video = document.createElement('video');
+          video.autoplay = true;
+          video.muted = true;
+          video.playsInline = true;
+          video.style.width = '100%';
+          video.style.height = '100%';
+          video.style.objectFit = fitMode;
+          video.src = itemUrl;
+
+          // Auto-advance when video ends
+          video.addEventListener('ended', () => {
+            console.log('Video ended, advancing to next...');
+            show();
+          });
+
+          // Error handling
+          video.addEventListener('error', (e) => {
+            console.error('Video load error:', e);
+            // Skip to next item on error
+            show();
+          });
+
+          el.appendChild(video);
+          currentVideoElement = video;
+        } else {
+          // Show image as background
+          el.style.backgroundImage = `url('${itemUrl}')`;
+          currentVideoElement = null;
+
+          // Schedule next image
+          slideTimer = setTimeout(show, config.slideInterval * 1000);
+        }
 
         // Fade in
         el.style.opacity = '1';
       }, 300); // Wait for fade out to complete
 
-      console.log('Image set with smooth transition');
+      console.log(`${isVideo ? 'Video' : 'Image'} set with smooth transition`);
     }
 
-    // Show first image immediately
+    // Show first item immediately
     show();
 
-    // Then switch every X seconds
-    setInterval(show, config.slideInterval * 1000);
-
-    console.log('Slideshow started successfully');
+    console.log('Slideshow started successfully (supports images and videos)');
   } catch (error) {
     console.error('Error loading slideshow:', error);
     el.className = 'slideshow';

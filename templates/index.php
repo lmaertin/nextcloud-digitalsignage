@@ -173,17 +173,17 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
         </div>
 
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🖼️ <?php p($l->t('Images / Slideshow presets')); ?></h4>
-          <span class="ds-hint" style="display: block; margin-bottom: 1rem;"><?php p($l->t('Manage image folders, crop mode, fullscreen slideshow and interval per preset.')); ?></span>
+          <h4 class="ds-subsection-title">🎬 <?php p($l->t('Media / Slideshow presets')); ?></h4>
+          <span class="ds-hint" style="display: block; margin-bottom: 1rem;"><?php p($l->t('Manage media folders (images & videos), crop mode, fullscreen slideshow and interval per preset.')); ?></span>
           <div class="ds-form-grid">
             <input type="hidden" id="preset-id" value="" />
             <div class="ds-form-group">
               <label for="preset-name" class="ds-label"><?php p($l->t('Preset name')); ?></label>
-              <input type="text" id="preset-name" placeholder="<?php p($l->t('Images / Slideshow preset name')); ?>" class="ds-input" />
+              <input type="text" id="preset-name" placeholder="<?php p($l->t('Media / Slideshow preset name')); ?>" class="ds-input" />
             </div>
 
             <div class="ds-form-group">
-              <label for="preset-image-folder" class="ds-label"><?php p($l->t('Image folder')); ?></label>
+              <label for="preset-image-folder" class="ds-label"><?php p($l->t('Media folder')); ?></label>
               <select id="preset-image-folder" class="ds-input">
                 <option value=""><?php p($l->t('Folders are loading...')); ?></option>
               </select>
@@ -203,12 +203,13 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
                 <option value="shuffle"><?php p($l->t('Shuffle')); ?></option>
                 <option value="filename"><?php p($l->t('By filename')); ?></option>
               </select>
-              <span class="ds-hint"><?php p($l->t('Shuffle mixes images, By filename uses ascending filename order.')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Shuffle mixes media files, By filename uses ascending filename order.')); ?></span>
             </div>
 
             <div class="ds-form-group">
               <label for="preset-slide-interval" class="ds-label"><?php p($l->t('Slide interval (seconds)')); ?></label>
               <input type="number" id="preset-slide-interval" value="10" min="5" max="300" class="ds-input" />
+              <span class="ds-hint"><?php p($l->t('Duration per image. Videos play to completion automatically.')); ?></span>
             </div>
 
             <div class="ds-form-group">
@@ -216,7 +217,7 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
                 <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
                 <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
               </div>
-              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only images in fullscreen')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only media in fullscreen')); ?></span>
             </div>
 
             <div class="ds-form-group">

@@ -215,7 +215,8 @@ class PublicApiController extends Controller {
             }
 
             $images = [];
-            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'mkv'];
+            $videoExtensions = ['mp4', 'webm', 'mov', 'mkv'];
 
             foreach ($folder->getDirectoryListing() as $file) {
                 if ($file->getType() === \OCP\Files\FileInfo::TYPE_FILE) {
@@ -226,7 +227,8 @@ class PublicApiController extends Controller {
                             'name' => $file->getName(),
                             'path' => $file->getPath(),
                             'size' => $file->getSize(),
-                            'mtime' => $file->getMTime()
+                            'mtime' => $file->getMTime(),
+                            'type' => in_array($extension, $videoExtensions) ? 'video' : 'image'
                         ];
                     }
                 }

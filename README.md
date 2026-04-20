@@ -1,17 +1,18 @@
 
 # Digital Signage for Nextcloud
 
-A Nextcloud app for displaying digital info monitors with calendar events and image slideshows.
+A Nextcloud app for displaying digital info monitors with calendar events and media slideshows.
 
-Short App Store summary: Public information screens for Nextcloud with calendars, weather, image slideshows, presets and remote switching.
+Short App Store summary: Public information screens for Nextcloud with calendars, weather, media slideshows (images & videos), presets and remote switching.
 
 ![Digital Signage Display](img/screenshot-display.png)
 
 ## Features
 
 - **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
-- **Preset-based slideshow control**: Switch image folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
-- **Image slideshow**: Automated slideshow from a Nextcloud folder with shuffle or filename order
+- **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
+- **Media slideshow**: Automated slideshow from a Nextcloud folder with images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
+- **Video playback**: Native HTML5 video support with muted autoplay and auto-advance to next item after video ends
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
@@ -27,7 +28,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
 ### Requirements
 
-- Nextcloud 24–32
+- Nextcloud 24–34
 - PHP 7.4 or higher
 
 ### Installing in Nextcloud
@@ -77,13 +78,14 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    **Weather:**
    - **Weather Coordinates**: Latitude and longitude for Open-Meteo API
 
-   **Images / Slideshow Presets:**
+   **Media / Slideshow Presets:**
    - **Preset Name**: Administrative name for the preset
-   - **Image Folder**: Select folder from your Nextcloud file tree (for example `/Photos/Info-Monitor`)
-   - **Crop Mode**: Choose whether images fill the area or are fully contained with background
-   - **Playback Order**: Shuffle images or play them in ascending filename order
-   - **Slide Interval (seconds)**: Duration per image in slideshow
-   - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show images only
+   - **Media Folder**: Select folder from your Nextcloud file tree (for example `/Photos/Info-Monitor` or `/Media/Signage`)
+   - Supports images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
+   - **Crop Mode**: Choose whether media fills the area or is fully contained with background
+   - **Playback Order**: Shuffle media files or play them in ascending filename order
+   - **Slide Interval (seconds)**: Duration per image in slideshow (videos play to completion automatically)
+   - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show media only
    - **Show display name in header**: Control whether the configured display name appears at the top of the screen for this preset
 
    **Displays:**
@@ -143,9 +145,9 @@ This separation makes it possible to keep common settings global while switching
 ## App Store Meta
 
 - Name: Digital Signage
-- Summary: Public information screens for Nextcloud with calendars, weather, image slideshows, presets and remote switching.
+- Summary: Public information screens for Nextcloud with calendars, weather, media slideshows, presets and remote switching.
 - Highlights:
-   Calendar events, weather and images on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
+   Calendar events, weather and media (images & videos) on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
 
 ## Development
 

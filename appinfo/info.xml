@@ -3,28 +3,29 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>digitalsignage</id>
     <name>Digital Signage</name>
-    <summary>Display calendars, weather and image slideshows on public screens</summary>
-    <description><![CDATA[**📺 Transform Nextcloud into a professional digital signage solution**
+    <summary>Display calendars, weather and media slideshows on public screens</summary>
+    <description><![CDATA[Transform Nextcloud into a professional digital signage solution
 
-Display calendar events, weather information and image slideshows on public screens without requiring login. Perfect for offices, schools, shared spaces and reception areas.
+Display calendar events, weather information and media slideshows (images and videos) on public screens without requiring login. Perfect for offices, schools, shared spaces and reception areas.
 
 **Key Features:**
 
-- 📅 **Calendar Integration** – Display upcoming events from multiple Nextcloud calendars
-- 🖼️ **Image Slideshows** – Automated playback from Nextcloud folders with shuffle or filename order
-- 🌤️ **Weather Information** – Real-time weather data via Open-Meteo API
-- 🎨 **Customizable Appearance** – Configure layout, colors and font sizes per text class
-- 🔄 **Preset System** – Switch image folders, crop modes, intervals and display settings remotely
-- 🎯 **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
-- 🖥️ **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
-- 📡 **Remote Control** – Change presets through the control API without UI access
-- 🌐 **Public Access** – Dedicated view tokens for displays without login requirement
-- 🌍 **Multi-Language** – Available in English, German (formal/informal), French, Dutch, Spanish, Italian
+- **Calendar Integration** – Display upcoming events from multiple Nextcloud calendars
+- **Media Slideshows** – Automated playback of images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV) from Nextcloud folders
+- **Video Support** – Native HTML5 video playback with muted autoplay and automatic transitions
+- **Weather Information** – Real-time weather data via Open-Meteo API
+- **Customizable Appearance** – Configure layout, colors and font sizes per text class
+- **Preset System** – Switch media folders, crop modes, intervals and display settings remotely
+- **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
+- **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
+- **Remote Control** – Change presets through the control API without UI access
+- **Public Access** – Dedicated view tokens for displays without login requirement
+- **Multi-Language** – Available in English, German (formal/informal), French, Dutch, Spanish, Italian
 
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.5.8</version>
+    <version>0.6.0</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
@@ -42,7 +43,7 @@ Reception screens, meeting room displays, office dashboards, school information 
     <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-2.png</screenshot>
     <screenshot>https://raw.githubusercontent.com/lmaertin/nextcloud-digitalsignage/main/img/screenshot-settings-3.png</screenshot>
     <dependencies>
-        <nextcloud min-version="24" max-version="32"/>
+        <nextcloud min-version="24" max-version="34"/>
         <php min-version="7.4"/>
     </dependencies>
     <navigations>

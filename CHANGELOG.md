@@ -7,6 +7,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-04-21
+
+### Added
+
+- **Video support**: Display MP4, WebM, MOV, and MKV video files in slideshows
+  - Videos play automatically and advance to the next item when finished
+  - Mix images and videos in the same folder seamlessly
+  - Native HTML5 video playback with muted autoplay
+  - Videos respect crop mode settings (fill/fit) using CSS object-fit
+  - Supported video formats: `.mp4`, `.webm`, `.mov`, `.mkv`
+- **Nextcloud 34 compatibility**: Extended maximum supported version to Nextcloud 34
+
+### Changed
+
+- **UI terminology update**: Replaced "Images" with "Media" throughout the interface to reflect video support
+
+### Technical
+
+- Enhanced `PublicApiController::getImages()` to detect video file extensions and return `type` field (`image` or `video`)
+- Rewritten `display.js` slideshow engine:
+  - Dynamic element creation (video elements vs. background images)
+  - Event-driven auto-advance for videos (`ended`, `error` events)
+  - Separate timing logic for images (interval-based) and videos (self-timed)
+  - Proper cleanup of video elements and timers on transition
+- Added error handling to skip to next item if video fails to load
+- Supported image formats (unchanged): `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`
+
 ## [0.5.8] - 2026-04-20
 
 ### Added
