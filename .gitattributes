@@ -1,0 +1,10 @@
+# Exclude development files from releases (git archive)
+/tests export-ignore
+/scripts export-ignore
+/.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+phpunit.xml export-ignore
+composer.json export-ignore
+composer.lock export-ignore
+.php-cs-fixer.php export-ignore
