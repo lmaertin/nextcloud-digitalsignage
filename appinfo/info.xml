@@ -24,7 +24,7 @@ Display calendar events, weather information and image slideshows on public scre
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.5.7</version>
+    <version>0.5.8</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
