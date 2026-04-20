@@ -25,7 +25,7 @@ Display calendar events, weather information and media slideshows (images and vi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
