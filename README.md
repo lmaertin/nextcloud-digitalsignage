@@ -311,6 +311,9 @@ curl -X POST \
    "https://example.com/index.php/apps/digitalsignage/api/control/<control-token>/activate-preset"
 ```
 
+## Example: Remote Control via IR with a Raspberry
+See [IRCONTROL.md](IRCONTROL.md) for instructions how to setup a profile switcher via a IR remote on a Raspberry Pi.
+
 ## Security
 
 ### Token Security
