@@ -185,6 +185,8 @@ async function initSlideshow() {
     let currentIndex = 0;
     let currentVideoElement = null;
     let slideTimer = null;
+    let prefetchedImage = null;
+    let prefetchedImageUrl = null;
 
     function getNextImage() {
       if (playbackImages.length === 0) {
@@ -200,6 +202,28 @@ async function initSlideshow() {
       currentIndex += 1;
 
       return nextImage;
+    }
+
+    function prefetchNextImage() {
+      if (playbackImages.length === 0) {
+        return;
+      }
+
+      const nextItem = playbackImages[currentIndex];
+      if (!nextItem || nextItem.type === 'video') {
+        return;
+      }
+
+      const nextImageUrl = API_BASE + '/image?id=' + nextItem.id;
+      if (prefetchedImageUrl === nextImageUrl) {
+        return;
+      }
+
+      prefetchedImage = new Image();
+      prefetchedImageUrl = nextImageUrl;
+      prefetchedImage.src = nextImageUrl;
+
+      console.log('Prefetching next image:', nextItem.name);
     }
 
     function show() {
@@ -258,6 +282,9 @@ async function initSlideshow() {
           // Show image as background
           el.style.backgroundImage = `url('${itemUrl}')`;
           currentVideoElement = null;
+
+          // Prefetch the next image to avoid flickering
+          prefetchNextImage();
 
           // Schedule next image
           slideTimer = setTimeout(show, config.slideInterval * 1000);
