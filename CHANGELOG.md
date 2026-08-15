@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Widget selection**: Configure slideshow, weather, and calendar visibility independently per preset.
-- **Event descriptions per preset**: Choose independently for each preset whether calendar descriptions are displayed.
+- **Widget selection** ([#6](https://github.com/lmaertin/nextcloud-digitalsignage/issues/6)): Configure slideshow, weather, and calendar visibility independently per preset.
+- **Event descriptions per preset** ([#7](https://github.com/lmaertin/nextcloud-digitalsignage/issues/7)): Choose independently for each preset whether calendar descriptions are displayed.
 - **Header title source**: Choose the global display name, the preset name or no title per preset.
+- **Image prefetching**: The next slideshow image is loaded in the background to reduce flickering and visible image buildup during transitions.
 - **Adaptive layouts**: The public display adjusts its layout to the selected widgets, including asymmetric weather columns and full-height single-widget layouts.
 - **Backward-compatible preset migration**: Existing presets receive all three widgets enabled by default.
 - **Calendar event descriptions**: Added an opt-in setting to show sanitized event descriptions below calendar details.
@@ -30,13 +31,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added preset fields `show_slideshow`, `show_weather` and `show_calendar`.
 - Added preset field `header_title_source` with backward-compatible `global`, `preset` and `none` values.
 - Added database migration `Version1400Date20260815000000`.
+- Added database migration `Version1500Date20260815000000` for per-preset event descriptions.
+- Added database migration `Version1600Date20260815000000` for per-preset header title sources.
 - Added widget-aware layout combinations for desktop and portrait/mobile displays.
+- Thanks to [@FahrJo](https://github.com/FahrJo) for the first contribution to the project in [PR #5](https://github.com/lmaertin/nextcloud-digitalsignage/pull/5), which introduced image prefetching for smoother slideshow transitions.
 
 ### Fixed
 
-- **Nextcloud 34 compatibility**: Replaced deprecated global server lookups with injected public APIs.
+- **Nextcloud 34 compatibility** ([#8](https://github.com/lmaertin/nextcloud-digitalsignage/issues/8)): Replaced deprecated global server lookups with injected public APIs.
 - **Controller user ID injection**: Renamed the deprecated `UserId` service alias to `userId`.
 - **Public display security values**: Use Nextcloud-provided request tokens and CSP nonces in templates.
+- **Preset update state**: Widget selections remain unchanged when an existing preset is updated.
+- **Hidden widget placeholders**: Disabled widgets no longer show their initial loading messages.
+- **Responsive overflow**: Prevented calendar content and mobile layouts from creating an oversized lower page margin.
 
 ## [0.6.1] - 2026-04-21
 
