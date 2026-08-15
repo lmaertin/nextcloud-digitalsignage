@@ -539,6 +539,17 @@ body {
   color: var(--primary-blue);
 }
 
+.event-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin-top: 0.35rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+}
+
 .calendar p {
   text-align: center;
   color: var(--text-light);

@@ -3,13 +3,14 @@
 
 A Nextcloud app for displaying digital info monitors with calendar events and media slideshows.
 
-Short App Store summary: Public information screens for Nextcloud with calendars, weather, media slideshows (images & videos), presets and remote switching.
+Short App Store summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows (images & videos), presets and remote switching.
 
 ![Digital Signage Display](img/screenshot-display.png)
 
 ## Features
 
 - **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
+- **Event descriptions**: Optionally show sanitized calendar descriptions below events, limited to three lines
 - **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
 - **Media slideshow**: Automated slideshow from a Nextcloud folder with images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
 - **Video playback**: Native HTML5 video support with muted autoplay and auto-advance to next item after video ends
@@ -58,6 +59,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
       - **Slideshow width in percent**: Controls how much width the image area uses in the standard split layout; the remaining space is used by calendar and weather
+      - **Show event descriptions**: Optionally show a sanitized event description below the calendar details; descriptions are limited to three visible lines
 
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -145,9 +147,9 @@ This separation makes it possible to keep common settings global while switching
 ## App Store Meta
 
 - Name: Digital Signage
-- Summary: Public information screens for Nextcloud with calendars, weather, media slideshows, presets and remote switching.
+- Summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows, presets and remote switching.
 - Highlights:
-   Calendar events, weather and media (images & videos) on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
+   Calendar events and optional descriptions, weather and media (images & videos) on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
 
 ## Development
 

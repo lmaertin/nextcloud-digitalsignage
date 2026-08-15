@@ -30,6 +30,13 @@ $l = $_['l10n'];
               </div>
               <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
             </div>
+            <div class="ds-form-group">
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="show_event_description" name="show_event_description" value="1" <?php if (($_['show_event_description'] ?? '0') === '1') print 'checked'; ?> />
+                <label for="show_event_description" class="ds-label"><?php p($l->t('Show event descriptions')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Show a short description below calendar events, limited to three lines')); ?></span>
+            </div>
           </div>
         </div>
 

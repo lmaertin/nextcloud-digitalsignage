@@ -115,6 +115,16 @@ function removeDots(text) {
   return text.replace(/^([\p{L}]{1,5})\./u, '$1');
 }
 
+function getCalendarText(value) {
+  if (!Array.isArray(value) || value.length === 0) {
+    return '';
+  }
+
+  const rawText = String(value[0] ?? '');
+  const parsedText = new DOMParser().parseFromString(rawText, 'text/html').body.textContent || '';
+  return parsedText.replace(/\s+/g, ' ').trim();
+}
+
 async function loadConfig() {
   try {
     const response = await fetch(API_BASE + '/config');
@@ -448,6 +458,7 @@ async function loadICS() {
           // Create a simple event object
           const event = {
             summary: obj.SUMMARY ? obj.SUMMARY[0] : 'Untitled Event',
+            description: getCalendarText(obj.DESCRIPTION),
             startDate: obj.DTSTART ? new Date(obj.DTSTART[0].date) : new Date(),
             endDate: obj.DTEND ? new Date(obj.DTEND[0].date) : new Date(),
             location: obj.LOCATION ? obj.LOCATION[0] : null,
@@ -500,21 +511,42 @@ async function loadICS() {
     if (upcoming.length === 0) {
       cal.innerHTML = '<p>No upcoming events</p>';
     } else {
-      cal.innerHTML = '<ul>' + upcoming.map(e => {
-        const eventDate = e.startDate;
-        const isAllDay = e.isAllDay;
+      const list = document.createElement('ul');
+      upcoming.forEach((event) => {
+        const listItem = document.createElement('li');
+        const eventDate = event.startDate;
+        const isAllDay = event.isAllDay;
         const timeStr = removeDots(isAllDay ? fmtDateOnly.format(eventDate) : fmtWithTime.format(eventDate));
-        const title = e.summary;
-        const location = e.location || null;
+        const title = document.createElement('div');
+        title.className = 'event-title';
+        title.textContent = event.summary;
+        listItem.appendChild(title);
 
-        return `<li>
-          <div class="event-title">${title}</div>
-          <div class="event-details">
-            <div class="event-time">${timeStr}</div>
-            ${location ? `<div class="event-location">${location}</div>` : ''}
-          </div>
-        </li>`;
-      }).join('') + '</ul>';
+        const details = document.createElement('div');
+        details.className = 'event-details';
+        const time = document.createElement('div');
+        time.className = 'event-time';
+        time.textContent = timeStr;
+        details.appendChild(time);
+
+        if (event.location) {
+          const location = document.createElement('div');
+          location.className = 'event-location';
+          location.textContent = event.location;
+          details.appendChild(location);
+        }
+        listItem.appendChild(details);
+
+        if (config.showEventDescription && event.description) {
+          const description = document.createElement('div');
+          description.className = 'event-description';
+          description.textContent = event.description;
+          listItem.appendChild(description);
+        }
+
+        list.appendChild(listItem);
+      });
+      cal.replaceChildren(list);
     }
   } catch (error) {
     console.error('Error loading calendar:', error);

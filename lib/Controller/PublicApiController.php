@@ -90,6 +90,7 @@ class PublicApiController extends Controller {
             ],
             'slideInterval' => $effectiveConfig['slideInterval'],
             'calendarExclude' => $effectiveConfig['calendarExclude'],
+            'showEventDescription' => $this->config->getAppValue('digitalsignage', 'show_event_description', '0') === '1',
             'autoFullscreenPrompt' => $effectiveConfig['autoFullscreenPrompt'],
             'imageFitMode' => $effectiveConfig['imageFitMode'],
             'imageOrderMode' => $effectiveConfig['imageOrderMode'],

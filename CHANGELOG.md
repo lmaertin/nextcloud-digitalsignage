@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-08-15
+
+### Added
+
+- **Calendar event descriptions**: Added an opt-in setting to show sanitized event descriptions below calendar details.
+- **Layout protection**: Event descriptions are limited to three visible lines to keep displays readable.
+
 ## [0.6.2] - 2026-08-15
 
 ### Fixed

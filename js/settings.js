@@ -475,6 +475,7 @@ async function saveSettings() {
     const data = {
       display_name: document.getElementById('display_name').value,
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
+      show_event_description: document.getElementById('show_event_description').checked ? '1' : '0',
       content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
       calendar_names: JSON.stringify(selectedCalendars),
       weather_latitude: document.getElementById('weather_latitude').value,

@@ -26,6 +26,7 @@ class SettingsController extends Controller {
     public function saveUser(
         string $display_name = '',
         string $auto_fullscreen_prompt = '0',
+        string $show_event_description = '0',
         string $content_split_ratio = '50',
         string $weather_latitude = '52.52',
         string $weather_longitude = '13.405',
@@ -54,6 +55,7 @@ class SettingsController extends Controller {
 
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
+        $this->config->setAppValue('digitalsignage', 'show_event_description', $show_event_description);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
         $this->config->deleteAppValue('digitalsignage', 'left_column_split_ratio');
         $this->config->setAppValue('digitalsignage', 'weather_latitude', $weather_latitude);
