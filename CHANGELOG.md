@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2] - 2026-08-15
+
+### Fixed
+
+- **Nextcloud 34 compatibility**: Replaced deprecated global server lookups with injected public APIs.
+- **Controller user ID injection**: Renamed the deprecated `UserId` service alias to `userId`.
+- **Public display security values**: Use Nextcloud-provided request tokens and CSP nonces in templates.
+
 ## [0.6.1] - 2026-04-21
 
 ### Fixed

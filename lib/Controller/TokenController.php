@@ -8,11 +8,13 @@ use OCA\DigitalSignage\Db\PresetMapper;
 use OCA\DigitalSignage\Db\Token;
 use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Service\PresetService;
+use OCP\IURLGenerator;
 
 class TokenController extends Controller {
     private $tokenMapper;
     private $presetMapper;
     private $presetService;
+    private $urlGenerator;
     private $userId;
 
     public function __construct(
@@ -21,13 +23,15 @@ class TokenController extends Controller {
         TokenMapper $tokenMapper,
         PresetMapper $presetMapper,
         PresetService $presetService,
-        ?string $UserId
+        IURLGenerator $urlGenerator,
+        ?string $userId
     ) {
         parent::__construct($AppName, $request);
         $this->tokenMapper = $tokenMapper;
         $this->presetMapper = $presetMapper;
         $this->presetService = $presetService;
-        $this->userId = $UserId;
+        $this->urlGenerator = $urlGenerator;
+        $this->userId = $userId;
     }
 
     private function generateApiToken(): string {
@@ -85,8 +89,8 @@ class TokenController extends Controller {
                 'token' => $token,
                 'controlToken' => $controlToken,
                 'name' => $name,
-                'url' => \OC::$server->getURLGenerator()->linkToRouteAbsolute('digitalsignage.public.display', ['token' => $token]),
-                'controlUrl' => \OC::$server->getURLGenerator()->linkToRouteAbsolute('digitalsignage.control.activatePreset', ['controlToken' => $controlToken]),
+                'url' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.public.display', ['token' => $token]),
+                'controlUrl' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.control.activatePreset', ['controlToken' => $controlToken]),
                 'activePresetId' => $defaultPreset->getId(),
             ]);
         } catch (\Exception $e) {
@@ -121,8 +125,8 @@ class TokenController extends Controller {
                     'revision' => $token->getRevision(),
                     'activePresetId' => $token->getActivePresetId(),
                     'activePresetName' => $presetName,
-                    'url' => \OC::$server->getURLGenerator()->linkToRouteAbsolute('digitalsignage.public.display', ['token' => $token->getToken()]),
-                    'controlUrl' => \OC::$server->getURLGenerator()->linkToRouteAbsolute('digitalsignage.control.activatePreset', ['controlToken' => (string)$token->getControlToken()])
+                    'url' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.public.display', ['token' => $token->getToken()]),
+                    'controlUrl' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.control.activatePreset', ['controlToken' => (string)$token->getControlToken()])
                 ];
             }, $tokens);
 

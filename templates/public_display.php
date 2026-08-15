@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital Signage</title>
   <?php
-    $urlGen = \OC::$server->getURLGenerator();
-    $nonce = \OC::$server->getContentSecurityPolicyNonceManager()->getNonce();
+    $urlGen = $_['url_generator'];
+    $nonce = $_['cspNonce'];
   ?>
   <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>">
   <style>
@@ -25,7 +25,7 @@
 </head>
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
-      data-base-url="<?php p(\OC::$server->getURLGenerator()->getAbsoluteURL('/index.php/')); ?>"
+      data-base-url="<?php p($urlGen->getAbsoluteURL('/index.php/')); ?>"
   data-fullscreen-title-enter="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>"
   data-fullscreen-title-exit="<?php p($_['fullscreen_title_exit'] ?? 'Exit fullscreen'); ?>"
       class="<?php

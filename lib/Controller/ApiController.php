@@ -60,14 +60,14 @@ class ApiController extends Controller {
         IRootFolder $rootFolder,
         ICalendarManager $calendarManager,
         IUserSession $userSession,
-        ?string $UserId
+        ?string $userId
     ) {
         parent::__construct($AppName, $request);
         $this->config = $config;
         $this->rootFolder = $rootFolder;
         $this->calendarManager = $calendarManager;
         $this->userSession = $userSession;
-        $this->userId = $UserId;
+        $this->userId = $userId;
     }
 
     /**

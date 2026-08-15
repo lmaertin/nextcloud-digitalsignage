@@ -14,12 +14,14 @@ use OCA\DigitalSignage\Service\DisplayConfigService;
 
 use OCP\IConfig;
 use OCP\L10N\IFactory;
+use OCP\IURLGenerator;
 
 class PublicController extends PublicShareController {
     private $tokenMapper;
     private $config;
     private $displayConfigService;
     private $l10nFactory;
+    private $urlGenerator;
 
     private function resolveAppLanguage(?string $language, ?string $locale = null): string {
         if (is_string($language) && $language !== '' && $this->l10nFactory->languageExists('digitalsignage', $language)) {
@@ -43,13 +45,15 @@ class PublicController extends PublicShareController {
         TokenMapper $tokenMapper,
         IConfig $config,
         DisplayConfigService $displayConfigService,
-        IFactory $l10nFactory
+        IFactory $l10nFactory,
+        IURLGenerator $urlGenerator
     ) {
         parent::__construct($AppName, $request, $session);
         $this->tokenMapper = $tokenMapper;
         $this->config = $config;
         $this->displayConfigService = $displayConfigService;
         $this->l10nFactory = $l10nFactory;
+        $this->urlGenerator = $urlGenerator;
     }
 
     protected function getPasswordHash(): ?string {
@@ -83,7 +87,9 @@ class PublicController extends PublicShareController {
      * @NoCSRFRequired
      */
     public function showAuthenticate(): TemplateResponse {
-        return new TemplateResponse('digitalsignage', 'public_display', [], 'blank');
+        return new TemplateResponse('digitalsignage', 'public_display', [
+            'url_generator' => $this->urlGenerator,
+        ], 'blank');
     }
 
     /**
@@ -142,7 +148,8 @@ class PublicController extends PublicShareController {
                     'content_split_ratio' => $contentSplitRatio,
                     'fullscreen_slideshow' => $fullscreenSlideshow,
                     'fullscreen_title_enter' => $l10n->t('Fullscreen'),
-                    'fullscreen_title_exit' => $l10n->t('Exit fullscreen')
+                    'fullscreen_title_exit' => $l10n->t('Exit fullscreen'),
+                    'url_generator' => $this->urlGenerator,
                 ],
                 'blank'
             );

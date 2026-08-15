@@ -7,23 +7,27 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\IConfig;
 use OCP\L10N\IFactory;
+use OCP\IURLGenerator;
 
 class PageController extends Controller {
     private $config;
     private $userId;
     private $l10nFactory;
+    private $urlGenerator;
 
     public function __construct(
         string $AppName,
         IRequest $request,
         IConfig $config,
         IFactory $l10nFactory,
-        ?string $UserId
+        IURLGenerator $urlGenerator,
+        ?string $userId
     ) {
         parent::__construct($AppName, $request);
         $this->config = $config;
         $this->l10nFactory = $l10nFactory;
-        $this->userId = $UserId;
+        $this->urlGenerator = $urlGenerator;
+        $this->userId = $userId;
     }
 
     private function resolveAppLanguage(?string $language, ?string $locale = null): string {
@@ -55,6 +59,8 @@ class PageController extends Controller {
 
         // Load current settings for display in the form
         $params = [
+            'l10n' => $this->l10nFactory->get('digitalsignage', $this->resolveAppLanguage($userLanguage, $userLocale)),
+            'url_generator' => $this->urlGenerator,
             'translation_lang' => $this->resolveAppLanguage($userLanguage, $userLocale),
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),

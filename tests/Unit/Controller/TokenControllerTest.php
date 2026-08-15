@@ -16,6 +16,7 @@ use OCA\DigitalSignage\Controller\TokenController;
 use OCA\DigitalSignage\Service\PresetService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\IURLGenerator;
 use PHPUnit\Framework\TestCase;
 
 class TokenControllerTest extends TestCase {
@@ -24,6 +25,7 @@ class TokenControllerTest extends TestCase {
     private PresetMapper $presetMapper;
     private PresetService $presetService;
     private IRequest $request;
+    private IURLGenerator $urlGenerator;
 
     protected function setUp(): void {
         parent::setUp();
@@ -32,6 +34,8 @@ class TokenControllerTest extends TestCase {
         $this->mapper = $this->createMock(TokenMapper::class);
         $this->presetMapper = $this->createMock(PresetMapper::class);
         $this->presetService = $this->createMock(PresetService::class);
+        $this->urlGenerator = $this->createMock(IURLGenerator::class);
+        $this->urlGenerator->method('linkToRouteAbsolute')->willReturn('https://example.test/display');
 
         $this->presetService->method('ensureDefaultPreset');
         $this->presetMapper->method('findForUser')->willReturn(null);
@@ -42,6 +46,7 @@ class TokenControllerTest extends TestCase {
             $this->mapper,
             $this->presetMapper,
             $this->presetService,
+            $this->urlGenerator,
             'testUser'
         );
     }

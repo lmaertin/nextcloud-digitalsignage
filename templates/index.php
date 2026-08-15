@@ -2,7 +2,7 @@
 <!-- Farbsynchronisation jetzt in settings.js ausgelagert (CSP-konform) -->
 <?php
 style('digitalsignage', 'settings');
-$l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
+$l = $_['l10n'];
 ?>
 
 <div id="app-content">
@@ -266,15 +266,15 @@ $l = \OC::$server->getL10N('digitalsignage', $_['translation_lang'] ?? 'en');
 
   <!-- Data attributes for JavaScript -->
   <div style="display:none;"
-       data-list-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.list')); ?>"
-       data-create-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.create')); ?>"
-      data-activate-preset-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.activatePreset', ['id' => 'DISPLAY_ID'])); ?>"
-       data-delete-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.token.delete', ['id' => 'TOKEN_ID'])); ?>"
-      data-preset-list-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.list')); ?>"
-      data-preset-create-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.create')); ?>"
-      data-preset-update-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.update', ['id' => 'PRESET_ID'])); ?>"
-      data-preset-delete-url="<?php p(\OC::$server->getURLGenerator()->linkToRoute('digitalsignage.preset.delete', ['id' => 'PRESET_ID'])); ?>"
-       data-csrf-token="<?php p(\OC::$server->getCSRFTokenManager()->getToken()->getEncryptedValue()); ?>">
+      data-list-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.list')); ?>"
+      data-create-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.create')); ?>"
+          data-activate-preset-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.activatePreset', ['id' => 'DISPLAY_ID'])); ?>"
+      data-delete-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.delete', ['id' => 'TOKEN_ID'])); ?>"
+          data-preset-list-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.list')); ?>"
+          data-preset-create-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.create')); ?>"
+          data-preset-update-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.update', ['id' => 'PRESET_ID'])); ?>"
+          data-preset-delete-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.delete', ['id' => 'PRESET_ID'])); ?>"
+      data-csrf-token="<?php p($_['requesttoken']); ?>">
   </div>
 
   <?php script('digitalsignage', 'settings'); ?>
