@@ -61,7 +61,6 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
       - **Slideshow width in percent**: Controls how much width the image area uses in the standard split layout; the remaining space is used by calendar and weather
-      - **Show event descriptions**: Optionally show a sanitized event description below the calendar details; descriptions are limited to three visible lines
 
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -92,6 +91,8 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show media only
    - **Show display name in header**: Control whether the configured display name appears at the top of the screen for this preset
    - **Widgets**: Choose whether the slideshow, weather and calendar are shown; at least one widget must remain enabled
+   - **Event descriptions**: Choose whether calendar event descriptions are shown for this preset; descriptions are limited to three visible lines
+   - **Header title**: Choose whether the global display name, the preset name or no title is shown in the display header
 
    **Displays:**
    - **Create new display** creates a dedicated screen entry with its own public view token and control token
@@ -298,6 +299,7 @@ Preset payload fields:
 - `show_slideshow`
 - `show_weather`
 - `show_calendar`
+- `header_title_source` with values `global`, `preset` or `none`
 
 The widget fields default to `1`. Existing presets are migrated with all three widgets enabled, preserving the previous display behavior.
 

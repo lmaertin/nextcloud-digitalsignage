@@ -30,13 +30,6 @@ $l = $_['l10n'];
               </div>
               <span class="ds-hint"><?php p($l->t('Automatically ask to enter fullscreen mode when opening the display')); ?></span>
             </div>
-            <div class="ds-form-group">
-              <div class="ds-checkbox-row">
-                <input type="checkbox" id="show_event_description" name="show_event_description" value="1" <?php if (($_['show_event_description'] ?? '0') === '1') print 'checked'; ?> />
-                <label for="show_event_description" class="ds-label"><?php p($l->t('Show event descriptions')); ?></label>
-              </div>
-              <span class="ds-hint"><?php p($l->t('Show a short description below calendar events, limited to three lines')); ?></span>
-            </div>
           </div>
         </div>
 
@@ -222,17 +215,27 @@ $l = $_['l10n'];
             <div class="ds-form-group">
               <div class="ds-checkbox-row">
                 <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
-                <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Fullscreen slideshow mode')); ?></label>
+                <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Media-only full-screen mode')); ?></label>
               </div>
-              <span class="ds-hint"><?php p($l->t('Hide time, weather and calendar - show only media in fullscreen')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Show only media in full-screen mode; weather and calendar are disabled for this preset')); ?></span>
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-header-title-source" class="ds-label"><?php p($l->t('Header title')); ?></label>
+              <select id="preset-header-title-source" class="ds-input">
+                <option value="global"><?php p($l->t('Display name')); ?></option>
+                <option value="preset"><?php p($l->t('Preset name')); ?></option>
+                <option value="none"><?php p($l->t('No title')); ?></option>
+              </select>
+              <span class="ds-hint"><?php p($l->t('Choose which title is shown in the display header for this preset')); ?></span>
             </div>
 
             <div class="ds-form-group">
               <div class="ds-checkbox-row">
-                <input type="checkbox" id="preset-show-display-name" value="1" checked />
-                <label for="preset-show-display-name" class="ds-label"><?php p($l->t('Show display name in header')); ?></label>
+                <input type="checkbox" id="preset-show-event-description" value="1" />
+                <label for="preset-show-event-description" class="ds-label"><?php p($l->t('Show event descriptions')); ?></label>
               </div>
-              <span class="ds-hint"><?php p($l->t('Display the configured display name at the top of the screen')); ?></span>
+              <span class="ds-hint"><?php p($l->t('Show a short description below calendar events, limited to three lines')); ?></span>
             </div>
 
             <div class="ds-form-group ds-form-group-full">

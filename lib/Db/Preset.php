@@ -21,12 +21,16 @@ use OCP\AppFramework\Db\Entity;
  * @method void setFullscreenSlideshow(string $fullscreenSlideshow)
  * @method string getShowDisplayName()
  * @method void setShowDisplayName(string $showDisplayName)
+ * @method string getHeaderTitleSource()
+ * @method void setHeaderTitleSource(string $headerTitleSource)
  * @method string getShowSlideshow()
  * @method void setShowSlideshow(string $showSlideshow)
  * @method string getShowWeather()
  * @method void setShowWeather(string $showWeather)
  * @method string getShowCalendar()
  * @method void setShowCalendar(string $showCalendar)
+ * @method string getShowEventDescription()
+ * @method void setShowEventDescription(string $showEventDescription)
  * @method int getSlideInterval()
  * @method void setSlideInterval(int $slideInterval)
  * @method int getCreatedAt()
@@ -42,9 +46,11 @@ class Preset extends Entity {
     protected $imageOrderMode;
     protected $fullscreenSlideshow;
     protected $showDisplayName;
+    protected $headerTitleSource;
     protected $showSlideshow;
     protected $showWeather;
     protected $showCalendar;
+    protected $showEventDescription;
     protected $slideInterval;
     protected $createdAt;
     protected $updatedAt;
@@ -57,9 +63,11 @@ class Preset extends Entity {
         $this->addType('imageOrderMode', 'string');
         $this->addType('fullscreenSlideshow', 'string');
         $this->addType('showDisplayName', 'string');
+        $this->addType('headerTitleSource', 'string');
         $this->addType('showSlideshow', 'string');
         $this->addType('showWeather', 'string');
         $this->addType('showCalendar', 'string');
+        $this->addType('showEventDescription', 'string');
         $this->addType('slideInterval', 'integer');
         $this->addType('createdAt', 'integer');
         $this->addType('updatedAt', 'integer');

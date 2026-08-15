@@ -66,9 +66,11 @@ class PresetController extends Controller {
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
         string $show_display_name = '1',
+        string $header_title_source = 'global',
         string $show_slideshow = '1',
         string $show_weather = '1',
         string $show_calendar = '1',
+        string $show_event_description = '0',
         int $slide_interval = 10
     ): JSONResponse {
         try {
@@ -89,9 +91,11 @@ class PresetController extends Controller {
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
+            $preset->setHeaderTitleSource($this->presetService->normalizeHeaderTitleSource($header_title_source));
             $preset->setShowSlideshow($show_slideshow === '1' ? '1' : '0');
             $preset->setShowWeather($show_weather === '1' ? '1' : '0');
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
+            $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setCreatedAt($now);
             $preset->setUpdatedAt($now);
@@ -115,9 +119,11 @@ class PresetController extends Controller {
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
         string $show_display_name = '1',
+        string $header_title_source = 'global',
         string $show_slideshow = '1',
         string $show_weather = '1',
         string $show_calendar = '1',
+        string $show_event_description = '0',
         int $slide_interval = 10
     ): JSONResponse {
         try {
@@ -136,9 +142,11 @@ class PresetController extends Controller {
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
+            $preset->setHeaderTitleSource($this->presetService->normalizeHeaderTitleSource($header_title_source));
             $preset->setShowSlideshow($show_slideshow === '1' ? '1' : '0');
             $preset->setShowWeather($show_weather === '1' ? '1' : '0');
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
+            $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setUpdatedAt(time());
 

@@ -64,7 +64,6 @@ class PageController extends Controller {
             'translation_lang' => $this->resolveAppLanguage($userLanguage, $userLocale),
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
-            'show_event_description' => $this->config->getAppValue('digitalsignage', 'show_event_description', '0'),
             'auto_fullscreen_prompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0'),
             'content_split_ratio' => $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'),
             'calendar_names' => $this->config->getAppValue('digitalsignage', 'calendar_names', '[]'),

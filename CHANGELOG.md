@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Widget selection**: Configure slideshow, weather, and calendar visibility independently per preset.
+- **Event descriptions per preset**: Choose independently for each preset whether calendar descriptions are displayed.
+- **Header title source**: Choose the global display name, the preset name or no title per preset.
 - **Adaptive layouts**: The public display adjusts its layout to the selected widgets, including asymmetric weather columns and full-height single-widget layouts.
 - **Backward-compatible preset migration**: Existing presets receive all three widgets enabled by default.
 - **Calendar event descriptions**: Added an opt-in setting to show sanitized event descriptions below calendar details.
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical
 
 - Added preset fields `show_slideshow`, `show_weather` and `show_calendar`.
+- Added preset field `header_title_source` with backward-compatible `global`, `preset` and `none` values.
 - Added database migration `Version1400Date20260815000000`.
 - Added widget-aware layout combinations for desktop and portrait/mobile displays.
 

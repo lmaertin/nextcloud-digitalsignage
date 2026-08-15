@@ -83,7 +83,6 @@ class ApiController extends Controller {
             ],
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
-            'showEventDescription' => $this->config->getAppValue('digitalsignage', 'show_event_description', '0') === '1',
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'imageOrderMode' => $this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle'),
             'textSizes' => TextSizeConfig::getConfiguredSizes($this->config),

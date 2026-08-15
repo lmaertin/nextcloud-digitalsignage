@@ -54,6 +54,7 @@ class DisplayConfigService {
         $effective = [
             'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'showDisplayName' => '1',
+            'headerTitleSource' => 'global',
             'locale' => $this->resolveLocale($display),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
@@ -70,6 +71,7 @@ class DisplayConfigService {
             'showSlideshow' => true,
             'showWeather' => true,
             'showCalendar' => true,
+            'showEventDescription' => $this->config->getAppValue('digitalsignage', 'show_event_description', '0') === '1',
             'colorPrimary' => $this->config->getAppValue('digitalsignage', 'color_primary', '#0066cc'),
             'colorBg' => $this->config->getAppValue('digitalsignage', 'color_bg', '#f8f9fa'),
             'colorText' => $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50'),
@@ -90,9 +92,15 @@ class DisplayConfigService {
                 $effective['slideInterval'] = $preset->getSlideInterval();
                 $effective['fullscreenSlideshow'] = $preset->getFullscreenSlideshow() === '1';
                 $effective['showDisplayName'] = $preset->getShowDisplayName() ?? '1';
+                $effective['headerTitleSource'] = $this->normalizeHeaderTitleSource($preset->getHeaderTitleSource() ?? 'global');
+                $effective['showDisplayName'] = $effective['headerTitleSource'] !== 'none' ? '1' : '0';
+                if ($effective['headerTitleSource'] === 'preset') {
+                    $effective['displayName'] = $preset->getName();
+                }
                 $effective['showSlideshow'] = ($preset->getShowSlideshow() ?? '1') === '1';
                 $effective['showWeather'] = ($preset->getShowWeather() ?? '1') === '1';
                 $effective['showCalendar'] = ($preset->getShowCalendar() ?? '1') === '1';
+                $effective['showEventDescription'] = ($preset->getShowEventDescription() ?? '0') === '1';
                 $effective['activePresetName'] = $preset->getName();
             }
         }
@@ -104,5 +112,9 @@ class DisplayConfigService {
         }
 
         return $effective;
+    }
+
+    private function normalizeHeaderTitleSource(string $source): string {
+        return in_array($source, ['global', 'preset', 'none'], true) ? $source : 'global';
     }
 }
