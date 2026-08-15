@@ -66,7 +66,10 @@ function getPresetFormData() {
     imageOrderMode: document.getElementById('preset-image-order-mode').value,
     slide_interval: parseInt(document.getElementById('preset-slide-interval').value, 10) || 10,
     fullscreen_slideshow: document.getElementById('preset-fullscreen-slideshow').checked ? '1' : '0',
-    show_display_name: document.getElementById('preset-show-display-name').checked ? '1' : '0'
+    show_display_name: document.getElementById('preset-show-display-name').checked ? '1' : '0',
+    show_slideshow: document.getElementById('preset-show-slideshow').checked ? '1' : '0',
+    show_weather: document.getElementById('preset-show-weather').checked ? '1' : '0',
+    show_calendar: document.getElementById('preset-show-calendar').checked ? '1' : '0'
   };
 }
 
@@ -79,6 +82,9 @@ function resetPresetForm() {
   document.getElementById('preset-slide-interval').value = '10';
   document.getElementById('preset-fullscreen-slideshow').checked = false;
   document.getElementById('preset-show-display-name').checked = true;
+  document.getElementById('preset-show-slideshow').checked = true;
+  document.getElementById('preset-show-weather').checked = true;
+  document.getElementById('preset-show-calendar').checked = true;
   document.getElementById('save-preset-btn').textContent = translate('Save preset');
   document.getElementById('cancel-preset-edit-btn').style.display = 'none';
 }
@@ -99,6 +105,9 @@ function fillPresetForm(preset) {
   document.getElementById('preset-slide-interval').value = String(preset.slideInterval);
   document.getElementById('preset-fullscreen-slideshow').checked = Boolean(preset.fullscreenSlideshow);
   document.getElementById('preset-show-display-name').checked = preset.showDisplayName !== false;
+  document.getElementById('preset-show-slideshow').checked = preset.showSlideshow !== false;
+  document.getElementById('preset-show-weather').checked = preset.showWeather !== false;
+  document.getElementById('preset-show-calendar').checked = preset.showCalendar !== false;
   document.getElementById('save-preset-btn').textContent = translate('Update preset');
   document.getElementById('cancel-preset-edit-btn').style.display = 'inline-flex';
 }
@@ -116,8 +125,19 @@ function renderPresetSummary(preset) {
   const displayName = preset.showDisplayName
     ? translate('Display name on')
     : translate('Display name off');
+  const widgets = [];
+  if (preset.showSlideshow !== false) {
+    widgets.push(translate('Images / Slideshow'));
+  }
+  if (preset.showWeather !== false) {
+    widgets.push(translate('Weather'));
+  }
+  if (preset.showCalendar !== false) {
+    widgets.push(translate('Calendar'));
+  }
+  const widgetSummary = `${translate('Widgets')}: ${widgets.join(', ')}`;
 
-  return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(fullscreen)} | ${escapeHtml(displayName)} | ${preset.slideInterval}s`;
+  return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(fullscreen)} | ${escapeHtml(displayName)} | ${escapeHtml(widgetSummary)} | ${preset.slideInterval}s`;
 }
 
 function renderPresetList() {
@@ -196,6 +216,11 @@ async function savePreset() {
     return;
   }
 
+  if (data.show_slideshow === '0' && data.show_weather === '0' && data.show_calendar === '0') {
+    alert(translate('Enable at least one widget'));
+    return;
+  }
+
   try {
     const isUpdate = presetId !== '';
     const url = isUpdate
@@ -213,7 +238,9 @@ async function savePreset() {
       throw new Error(result.error || translate('Error saving preset'));
     }
 
-    resetPresetForm();
+    if (!isUpdate) {
+      resetPresetForm();
+    }
     await loadPresets();
     await loadTokens();
   } catch (error) {

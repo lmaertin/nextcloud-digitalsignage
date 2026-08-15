@@ -66,11 +66,17 @@ class PresetController extends Controller {
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
         string $show_display_name = '1',
+        string $show_slideshow = '1',
+        string $show_weather = '1',
+        string $show_calendar = '1',
         int $slide_interval = 10
     ): JSONResponse {
         try {
             if (trim($name) === '') {
                 return new JSONResponse(['error' => 'Missing preset name'], 400);
+            }
+            if ($show_slideshow !== '1' && $show_weather !== '1' && $show_calendar !== '1') {
+                return new JSONResponse(['error' => 'At least one widget must be enabled'], 400);
             }
 
             $imageOrderMode = $this->readImageOrderMode($image_order_mode);
@@ -83,6 +89,9 @@ class PresetController extends Controller {
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
+            $preset->setShowSlideshow($show_slideshow === '1' ? '1' : '0');
+            $preset->setShowWeather($show_weather === '1' ? '1' : '0');
+            $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setCreatedAt($now);
             $preset->setUpdatedAt($now);
@@ -106,12 +115,18 @@ class PresetController extends Controller {
         string $image_order_mode = 'shuffle',
         string $fullscreen_slideshow = '0',
         string $show_display_name = '1',
+        string $show_slideshow = '1',
+        string $show_weather = '1',
+        string $show_calendar = '1',
         int $slide_interval = 10
     ): JSONResponse {
         try {
             $preset = $this->presetMapper->findForUser($id, (string)$this->userId);
             if ($preset === null) {
                 return new JSONResponse(['error' => 'Preset not found'], 404);
+            }
+            if ($show_slideshow !== '1' && $show_weather !== '1' && $show_calendar !== '1') {
+                return new JSONResponse(['error' => 'At least one widget must be enabled'], 400);
             }
 
             $imageOrderMode = $this->readImageOrderMode($image_order_mode);
@@ -121,6 +136,9 @@ class PresetController extends Controller {
             $preset->setImageOrderMode($imageOrderMode);
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
+            $preset->setShowSlideshow($show_slideshow === '1' ? '1' : '0');
+            $preset->setShowWeather($show_weather === '1' ? '1' : '0');
+            $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setUpdatedAt(time());
 

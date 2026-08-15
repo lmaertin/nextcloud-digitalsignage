@@ -234,6 +234,23 @@ $l = $_['l10n'];
               </div>
               <span class="ds-hint"><?php p($l->t('Display the configured display name at the top of the screen')); ?></span>
             </div>
+
+            <div class="ds-form-group ds-form-group-full">
+              <span class="ds-label"><?php p($l->t('Widgets')); ?></span>
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-show-slideshow" value="1" checked />
+                <label for="preset-show-slideshow" class="ds-label"><?php p($l->t('Show slideshow')); ?></label>
+              </div>
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-show-weather" value="1" checked />
+                <label for="preset-show-weather" class="ds-label"><?php p($l->t('Show weather')); ?></label>
+              </div>
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-show-calendar" value="1" checked />
+                <label for="preset-show-calendar" class="ds-label"><?php p($l->t('Show calendar')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Enable at least one widget for this preset')); ?></span>
+            </div>
           </div>
           <div class="ds-inline-actions">
             <button class="button primary" id="save-preset-btn"><?php p($l->t('Save preset')); ?></button>
@@ -284,4 +301,5 @@ $l = $_['l10n'];
       data-csrf-token="<?php p($_['requesttoken']); ?>">
   </div>
 
-  <?php script('digitalsignage', 'settings'); ?>
+  <?php \OCP\Util::addTranslations('digitalsignage'); ?>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.0.1"></script>

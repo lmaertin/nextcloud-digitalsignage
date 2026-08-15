@@ -3,10 +3,10 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>digitalsignage</id>
     <name>Digital Signage</name>
-    <summary>Display calendars, event descriptions, weather and media slideshows on public screens</summary>
+    <summary>Display selectable calendars, weather and media widgets on public screens</summary>
     <description><![CDATA[Transform Nextcloud into a professional digital signage solution
 
-Display calendar events, weather information and media slideshows (images and videos) on public screens without requiring login. Perfect for offices, schools, shared spaces and reception areas.
+Display calendar events with optional descriptions, weather information and media slideshows (images and videos) on public screens without requiring login. Choose the visible widgets independently for each display preset and let the layout adapt automatically. Perfect for offices, schools, shared spaces and reception areas.
 
 **Key Features:**
 
@@ -16,7 +16,8 @@ Display calendar events, weather information and media slideshows (images and vi
 - **Video Support** – Native HTML5 video playback with muted autoplay and automatic transitions
 - **Weather Information** – Real-time weather data via Open-Meteo API
 - **Customizable Appearance** – Configure layout, colors and font sizes per text class
-- **Preset System** – Switch media folders, crop modes, intervals and display settings remotely
+- **Preset System** – Switch media folders, crop modes, intervals, display settings and visible widgets remotely
+- **Widget Selection** – Enable or disable the slideshow, weather and calendar independently per preset
 - **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
 - **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
 - **Remote Control** – Change presets through the control API without UI access
@@ -26,7 +27,7 @@ Display calendar events, weather information and media slideshows (images and vi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.6.3</version>
+    <version>0.7.0</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

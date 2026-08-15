@@ -67,6 +67,9 @@ class DisplayConfigService {
             'imageOrderMode' => $this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle'),
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '10'),
             'fullscreenSlideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0') === '1',
+            'showSlideshow' => true,
+            'showWeather' => true,
+            'showCalendar' => true,
             'colorPrimary' => $this->config->getAppValue('digitalsignage', 'color_primary', '#0066cc'),
             'colorBg' => $this->config->getAppValue('digitalsignage', 'color_bg', '#f8f9fa'),
             'colorText' => $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50'),
@@ -87,8 +90,17 @@ class DisplayConfigService {
                 $effective['slideInterval'] = $preset->getSlideInterval();
                 $effective['fullscreenSlideshow'] = $preset->getFullscreenSlideshow() === '1';
                 $effective['showDisplayName'] = $preset->getShowDisplayName() ?? '1';
+                $effective['showSlideshow'] = ($preset->getShowSlideshow() ?? '1') === '1';
+                $effective['showWeather'] = ($preset->getShowWeather() ?? '1') === '1';
+                $effective['showCalendar'] = ($preset->getShowCalendar() ?? '1') === '1';
                 $effective['activePresetName'] = $preset->getName();
             }
+        }
+
+        if ($effective['fullscreenSlideshow']) {
+            $effective['showSlideshow'] = true;
+            $effective['showWeather'] = false;
+            $effective['showCalendar'] = false;
         }
 
         return $effective;

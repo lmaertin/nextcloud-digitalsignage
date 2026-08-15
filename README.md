@@ -12,6 +12,8 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
 - **Event descriptions**: Optionally show sanitized calendar descriptions below events, limited to three lines
 - **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
+- **Preset widget selection**: Enable or disable the slideshow, weather and calendar independently for each preset
+- **Adaptive widget layouts**: Automatically give the remaining widgets the available space; weather is displayed in a narrow vertical column when paired with the slideshow or calendar
 - **Media slideshow**: Automated slideshow from a Nextcloud folder with images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
 - **Video playback**: Native HTML5 video support with muted autoplay and auto-advance to next item after video ends
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
@@ -89,6 +91,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    - **Slide Interval (seconds)**: Duration per image in slideshow (videos play to completion automatically)
    - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show media only
    - **Show display name in header**: Control whether the configured display name appears at the top of the screen for this preset
+   - **Widgets**: Choose whether the slideshow, weather and calendar are shown; at least one widget must remain enabled
 
    **Displays:**
    - **Create new display** creates a dedicated screen entry with its own public view token and control token
@@ -122,6 +125,17 @@ The public display URL opens a full-screen view without login. This can be opene
 
 In the default layout, the slideshow and the calendar/weather area share the screen using the configured slideshow width percentage. Changes to the active preset or the display layout config are picked up automatically by connected displays.
 
+When widgets are disabled in a preset, the public display adapts automatically:
+
+- **Slideshow only**: Uses the full available height and width
+- **Weather only or calendar only**: Uses the full available display area
+- **Slideshow and weather**: Slideshow uses the larger area and weather is shown in a narrow vertical column
+- **Slideshow and calendar**: Uses a two-column layout
+- **Weather and calendar**: Weather uses a narrow vertical column and calendar receives the remaining space
+- **All widgets**: Uses the standard slideshow, weather and calendar layout
+
+On small or portrait displays, the layout falls back to a vertical arrangement with internal scrolling where necessary.
+
 **Fullscreen Features:**
 
 - **Manual Toggle**: Click the fullscreen button (⛶) in the top-right corner of the header to enter/exit fullscreen mode
@@ -139,7 +153,7 @@ In the default layout, the slideshow and the calendar/weather area share the scr
 
 - **Global settings** define shared display behavior such as title, colors, calendars, weather, and text scaling.
 - **Layout settings** define how much horizontal space the image area gets in the standard split view.
-- **Presets** define image and slideshow behavior such as folder, crop mode, playback order, interval, fullscreen slideshow mode, and display name visibility.
+- **Presets** define image and widget behavior such as folder, crop mode, playback order, interval, fullscreen slideshow mode, display name visibility, and widget selection.
 - **Displays** combine a public view URL, a control token, and one active preset.
 
 This separation makes it possible to keep common settings global while switching display modes remotely.
@@ -147,9 +161,9 @@ This separation makes it possible to keep common settings global while switching
 ## App Store Meta
 
 - Name: Digital Signage
-- Summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows, presets and remote switching.
+- Summary: Public information screens for Nextcloud with selectable calendars, weather, media slideshows, presets and remote switching.
 - Highlights:
-   Calendar events and optional descriptions, weather and media (images & videos) on public displays without login; presets for slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
+   Selectable calendar, weather and slideshow widgets on public displays without login; presets for widget and slideshow behavior; per-display view and control tokens; configurable layout, colors and text sizes.
 
 ## Development
 
@@ -192,7 +206,8 @@ git commit --no-verify
 ### Database Schema
 
 - No manual database setup required.
-- When enabling the app, Nextcloud automatically runs migrations and creates the token and preset tables required for display and preset management.
+- When enabling or updating the app, Nextcloud automatically runs migrations and creates or updates the token and preset tables required for display and preset management.
+- Version `0.7.0` adds the `show_slideshow`, `show_weather` and `show_calendar` preset fields. Existing presets receive `1` for all three fields, so the existing layout remains unchanged after upgrading.
 
 ## Architecture (overview)
 
@@ -280,11 +295,16 @@ Preset payload fields:
 - `image_order_mode` with values `shuffle` or `filename`
 - `slide_interval`
 - `fullscreen_slideshow`
+- `show_slideshow`
+- `show_weather`
+- `show_calendar`
+
+The widget fields default to `1`. Existing presets are migrated with all three widgets enabled, preserving the previous display behavior.
 
 ### Public Display APIs (View token required)
 
 - `GET /apps/digitalsignage/api/public/{token}/config`
-   Returns the effective config for the display, including active preset, revision and slideshow settings.
+   Returns the effective config for the display, including active preset, revision, slideshow settings and widget visibility.
 - `GET /apps/digitalsignage/api/public/{token}/calendar`
    Returns calendar data for the public display.
 - `GET /apps/digitalsignage/api/public/{token}/images`
@@ -314,6 +334,7 @@ curl -X POST \
 ```
 
 ## Example: Remote Control via IR with a Raspberry
+
 See [IRCONTROL.md](IRCONTROL.md) for instructions how to setup a profile switcher via a IR remote on a Raspberry Pi.
 
 ## Security

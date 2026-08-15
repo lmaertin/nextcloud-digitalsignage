@@ -8,7 +8,7 @@
     $urlGen = $_['url_generator'];
     $nonce = $_['cspNonce'];
   ?>
-  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>">
+  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.7.0.3">
   <style>
     :root {
       --primary-blue: <?php p($_['color_primary'] ?? '#0066cc'); ?>;
@@ -35,6 +35,15 @@
         }
         if (!isset($_['show_display_name']) || $_['show_display_name'] === '1') {
           $bodyClasses[] = 'has-display-header';
+        }
+        if (isset($_['show_slideshow']) && $_['show_slideshow'] !== true) {
+          $bodyClasses[] = 'widget-hidden-slideshow';
+        }
+        if (isset($_['show_weather']) && $_['show_weather'] !== true) {
+          $bodyClasses[] = 'widget-hidden-weather';
+        }
+        if (isset($_['show_calendar']) && $_['show_calendar'] !== true) {
+          $bodyClasses[] = 'widget-hidden-calendar';
         }
         p(implode(' ', $bodyClasses));
       ?>"><?php if (isset($_['fullscreen_slideshow']) && $_['fullscreen_slideshow'] === '1'): ?>

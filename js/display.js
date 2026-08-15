@@ -34,6 +34,35 @@ function applyRuntimeConfig() {
       }
     });
   }
+
+  const showSlideshow = config.showSlideshow !== false;
+  const showWeather = config.showWeather !== false;
+  const showCalendar = config.showCalendar !== false;
+  const visibleWidgets = [showSlideshow, showWeather, showCalendar].filter(Boolean).length;
+  const combination = showSlideshow && showWeather && showCalendar
+    ? 'all'
+    : showSlideshow && showWeather
+      ? 'slideshow-weather'
+      : showSlideshow && showCalendar
+        ? 'slideshow-calendar'
+        : showWeather && showCalendar
+          ? 'weather-calendar'
+          : showSlideshow
+            ? 'slideshow'
+            : showWeather
+              ? 'weather'
+              : 'calendar';
+  const layout = visibleWidgets === 1
+    ? 'single'
+    : showSlideshow && showWeather && showCalendar
+      ? 'all'
+      : 'partial';
+
+  document.body.classList.toggle('widget-hidden-slideshow', !showSlideshow);
+  document.body.classList.toggle('widget-hidden-weather', !showWeather);
+  document.body.classList.toggle('widget-hidden-calendar', !showCalendar);
+  document.body.dataset.widgetLayout = layout;
+  document.body.dataset.widgetCombination = combination;
 }
 
 function sortImagesByFilename(images) {
@@ -595,18 +624,28 @@ async function init() {
     await loadConfig();
     console.log('Config loaded:', config);
 
-    console.log('Starting slideshow...');
-    await initSlideshow();
+    if (config.showSlideshow !== false) {
+      console.log('Starting slideshow...');
+      await initSlideshow();
+    }
 
-    console.log('Loading weather...');
-    await loadWeather();
+    if (config.showWeather !== false) {
+      console.log('Loading weather...');
+      await loadWeather();
+    }
 
-    console.log('Loading calendar...');
-    await loadICS();
+    if (config.showCalendar !== false) {
+      console.log('Loading calendar...');
+      await loadICS();
+    }
 
     // Set up intervals
-    setInterval(loadWeather, 3600000); // 1 hour
-    setInterval(loadICS, 600000); // 10 minutes
+    if (config.showWeather !== false) {
+      setInterval(loadWeather, 3600000); // 1 hour
+    }
+    if (config.showCalendar !== false) {
+      setInterval(loadICS, 600000); // 10 minutes
+    }
     setInterval(pollConfigChanges, 15000); // 15 seconds
 
     // Initialize date and time display

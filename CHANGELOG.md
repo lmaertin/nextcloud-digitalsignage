@@ -7,14 +7,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.3] - 2026-08-15
+## [0.7.0] - 2026-08-15
 
 ### Added
 
+- **Widget selection**: Configure slideshow, weather, and calendar visibility independently per preset.
+- **Adaptive layouts**: The public display adjusts its layout to the selected widgets, including asymmetric weather columns and full-height single-widget layouts.
+- **Backward-compatible preset migration**: Existing presets receive all three widgets enabled by default.
 - **Calendar event descriptions**: Added an opt-in setting to show sanitized event descriptions below calendar details.
-- **Layout protection**: Event descriptions are limited to three visible lines to keep displays readable.
 
-## [0.6.2] - 2026-08-15
+### Changed
+
+- **Responsive public display**: Hidden widgets no longer leave loading placeholders or consume layout space.
+- **Preset summaries**: The settings UI now shows which widgets are active for each preset.
+- **Asset cache handling**: Updated display and settings assets are loaded with release cache-busting while preserving Nextcloud translations.
+- **Calendar layout protection**: Event descriptions are limited to three visible lines to keep displays readable.
+
+### Technical
+
+- Added preset fields `show_slideshow`, `show_weather` and `show_calendar`.
+- Added database migration `Version1400Date20260815000000`.
+- Added widget-aware layout combinations for desktop and portrait/mobile displays.
 
 ### Fixed
 

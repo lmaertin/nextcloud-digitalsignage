@@ -21,6 +21,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setFullscreenSlideshow(string $fullscreenSlideshow)
  * @method string getShowDisplayName()
  * @method void setShowDisplayName(string $showDisplayName)
+ * @method string getShowSlideshow()
+ * @method void setShowSlideshow(string $showSlideshow)
+ * @method string getShowWeather()
+ * @method void setShowWeather(string $showWeather)
+ * @method string getShowCalendar()
+ * @method void setShowCalendar(string $showCalendar)
  * @method int getSlideInterval()
  * @method void setSlideInterval(int $slideInterval)
  * @method int getCreatedAt()
@@ -36,6 +42,9 @@ class Preset extends Entity {
     protected $imageOrderMode;
     protected $fullscreenSlideshow;
     protected $showDisplayName;
+    protected $showSlideshow;
+    protected $showWeather;
+    protected $showCalendar;
     protected $slideInterval;
     protected $createdAt;
     protected $updatedAt;
@@ -48,6 +57,9 @@ class Preset extends Entity {
         $this->addType('imageOrderMode', 'string');
         $this->addType('fullscreenSlideshow', 'string');
         $this->addType('showDisplayName', 'string');
+        $this->addType('showSlideshow', 'string');
+        $this->addType('showWeather', 'string');
+        $this->addType('showCalendar', 'string');
         $this->addType('slideInterval', 'integer');
         $this->addType('createdAt', 'integer');
         $this->addType('updatedAt', 'integer');
