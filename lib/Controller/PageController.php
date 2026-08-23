@@ -61,6 +61,7 @@ class PageController extends Controller {
         $params = [
             'l10n' => $this->l10nFactory->get('digitalsignage', $this->resolveAppLanguage($userLanguage, $userLocale)),
             'url_generator' => $this->urlGenerator,
+            'weather_dashboard_url' => $this->urlGenerator->linkToRouteAbsolute('dashboard.dashboard.index'),
             'translation_lang' => $this->resolveAppLanguage($userLanguage, $userLocale),
             'display_name' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
             'show_display_name' => $this->config->getAppValue('digitalsignage', 'show_display_name', '1'),
@@ -73,8 +74,6 @@ class PageController extends Controller {
             'text_sizes' => TextSizeConfig::getConfiguredSizes($this->config),
             'text_size_fields' => TextSizeConfig::getFieldDefinitions($this->config),
             'fullscreen_slideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0'),
-            'weather_latitude' => $this->config->getAppValue('digitalsignage', 'weather_latitude', '52.52'),
-            'weather_longitude' => $this->config->getAppValue('digitalsignage', 'weather_longitude', '13.405'),
             'calendar_exclude' => $this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'),
             'color_primary' => $this->config->getAppValue('digitalsignage', 'color_primary', '#0066cc'),
             'color_bg' => $this->config->getAppValue('digitalsignage', 'color_bg', '#f8f9fa'),

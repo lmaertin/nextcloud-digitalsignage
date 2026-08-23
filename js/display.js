@@ -360,42 +360,11 @@ async function loadWeather() {
   }
 
   try {
-    const { latitude, longitude } = config.weather;
-    const res = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
-      `&daily=temperature_2m_max,temperature_2m_min,weather_code&current_weather=true&timezone=Europe/Berlin`
-    );
-    const d = await res.json();
-    const cw = d.current_weather;
-    const daily = d.daily;
-
-    // Weather code to icon mapping
-    function getWeatherIcon(weatherCode) {
-      if (weatherCode <= 1) return '☀️'; // Sunny
-      if (weatherCode <= 3) return '⛅'; // Partly cloudy
-      if (weatherCode <= 48) return '☁️'; // Cloudy
-      if (weatherCode <= 67) return '🌧️'; // Rain
-      if (weatherCode <= 77) return '🌨️'; // Snow
-      if (weatherCode <= 82) return '🌦️'; // Showers
-      if (weatherCode <= 99) return '⛈️'; // Thunderstorm
-      return '🌤️'; // Default
-    }
-
-    // Temperature to icon mapping
-    function getTemperatureIcon(temp) {
-      if (temp >= 25) return '🔥';
-      if (temp >= 20) return '🌡️';
-      if (temp >= 15) return '😊';
-      if (temp >= 10) return '🧥';
-      if (temp >= 5) return '🧣';
-      if (temp >= 0) return '❄️';
-      return '🥶';
-    }
-
-    // Temperature formatting based on locale
-    function formatTemperature(temp) {
-      const locale = normalizeLocale(getLocale());
-      const value = Number(temp);
+    const locale = normalizeLocale(getLocale());
+    const useFahrenheit = ['en', 'en-us', 'en-mh', 'en-fm', 'en-pw', 'en-ky', 'en-lr'].includes(locale.toLowerCase());
+    const localizeTemperature = (temp) => useFahrenheit ? (Number(temp) * 9 / 5) + 32 : Number(temp);
+    const formatLocalizedTemperature = (temp) => {
+      const value = localizeTemperature(temp);
       const hasFraction = Math.abs(value % 1) > Number.EPSILON;
       try {
         return new Intl.NumberFormat(locale, {
@@ -405,52 +374,68 @@ async function loadWeather() {
       } catch (error) {
         return String(value);
       }
+    };
+
+    const weatherStatusResponse = await fetch(API_BASE + '/weather');
+    const weatherStatus = await weatherStatusResponse.json();
+    if (!weatherStatusResponse.ok || !Array.isArray(weatherStatus.forecast)) {
+      throw new Error(weatherStatus.error || `HTTP ${weatherStatusResponse.status}`);
     }
 
-    // Get localized "Today" label from Intl instead of manual locale mapping
-    function getTodayText() {
-      const locale = normalizeLocale(getLocale());
-      if (typeof Intl.RelativeTimeFormat === 'function') {
-        try {
-          return new Intl.RelativeTimeFormat(locale, {numeric: 'auto'}).format(0, 'day');
-        } catch (error) {
-          return 'Today';
+    const formatter = new Intl.DateTimeFormat(locale, {
+      weekday: 'short'
+    });
+    const today = new Date().toISOString().slice(0, 10);
+    const getDayName = (date) => {
+      const dateText = String(date || '');
+      try {
+        const dateParts = dateText.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!dateParts) {
+          return dateText;
         }
+        const dayDate = new Date(Date.UTC(
+          Number(dateParts[1]),
+          Number(dateParts[2]) - 1,
+          Number(dateParts[3]),
+          12
+        ));
+        if (Number.isNaN(dayDate.getTime())) {
+          return dateText;
+        }
+        if (dateText === today && typeof Intl.RelativeTimeFormat === 'function') {
+          return new Intl.RelativeTimeFormat(locale, {numeric: 'auto'}).format(0, 'day');
+        }
+        return formatter.format(dayDate);
+      } catch (error) {
+        return dateText;
       }
-      return 'Today';
-    }
-
-    const currentIcon = getWeatherIcon(cw.weathercode);
-    const tempIcon = getTemperatureIcon(cw.temperature);
-
+    };
+    const forecastCards = await Promise.all(weatherStatus.forecast.map(async (entry) => {
+      const iconResponse = await fetch(`${API_BASE}/weather-icon?icon=${encodeURIComponent(entry.iconCode)}`);
+      const iconSvg = iconResponse.ok ? await iconResponse.text() : '';
+      return `
+          <div class="forecast-day">
+            <div class="day-name">${getDayName(entry.date)}</div>
+            <div class="day-icon">${iconSvg}</div>
+            <div class="day-temp">${formatLocalizedTemperature(entry.minTemperature)}°–${formatLocalizedTemperature(entry.maxTemperature)}°</div>
+          </div>`;
+    }));
     weatherEl.innerHTML = `
       <div class="forecast-grid">
-        <div class="forecast-day current-day">
-          <div class="day-name">${getTodayText()}</div>
-          <div class="day-icon">${currentIcon}</div>
-          <div class="day-temp">${formatTemperature(daily.temperature_2m_min[0])}°–${formatTemperature(daily.temperature_2m_max[0])}°</div>
-        </div>
-        ${daily.time.slice(1,4).map((t,i) => {
-          const min = daily.temperature_2m_min[i+1];
-          const max = daily.temperature_2m_max[i+1];
-          const weatherCode = daily.weather_code ? daily.weather_code[i+1] : 1;
-          const dayIcon = getWeatherIcon(weatherCode);
-          const weekdayFormatter = getDateFormatter(getLocale(), {weekday: 'short'});
-          const weekday = removeDots(weekdayFormatter.format(new Date(t)));
-          return `<div class="forecast-day">
-            <div class="day-name">${weekday}</div>
-            <div class="day-icon">${dayIcon}</div>
-            <div class="day-temp">${formatTemperature(min)}°–${formatTemperature(max)}°</div>
-          </div>`;
-        }).join('')}
+        ${forecastCards.join('')}
       </div>`;
   } catch (error) {
     console.error('Error loading weather:', error);
     if (weatherEl) {
+      const weatherI18n = config?.i18n || {};
+      const locationMissing = error.message === 'Weather location is not configured';
+      const message = locationMissing
+        ? (weatherI18n.weatherLocationRequired || 'Weather location not configured')
+        : (weatherI18n.weatherUnavailable || 'Weather forecast unavailable');
       weatherEl.innerHTML = `
         <div class="weather-error">
           <span class="error-icon">⚠️</span>
-          <p>Weather error: ${error.message}</p>
+          <p>${message}</p>
         </div>`;
     }
   }
@@ -605,7 +590,25 @@ function initDateTime() {
     // Format date - use centralized short date formatter
     const dateFormat = getClockDateFormatter(locale);
 
-    timeEl.textContent = timeFormat.format(now);
+    if (typeof timeFormat.formatToParts === 'function') {
+      const timeParts = timeFormat.formatToParts(now);
+      timeEl.replaceChildren(...timeParts.map((part, index) => {
+        if (part.type === 'literal' && /^\s+$/.test(part.value) && timeParts[index + 1]?.type === 'dayPeriod') {
+          return document.createTextNode('');
+        }
+
+        if (part.type !== 'dayPeriod') {
+          return document.createTextNode(part.value);
+        }
+
+        const dayPeriod = document.createElement('span');
+        dayPeriod.className = 'time-day-period';
+        dayPeriod.textContent = part.value;
+        return dayPeriod;
+      }));
+    } else {
+      timeEl.textContent = timeFormat.format(now);
+    }
     dateEl.textContent = removeDots(dateFormat.format(now));
   }
 

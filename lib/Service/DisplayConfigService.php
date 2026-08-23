@@ -57,8 +57,6 @@ class DisplayConfigService {
             'headerTitleSource' => 'global',
             'locale' => $this->resolveLocale($display),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
-            'weatherLatitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
-            'weatherLongitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true) ?: [],
             'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
             'textSizes' => TextSizeConfig::getConfiguredSizes($this->config),

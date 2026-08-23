@@ -14,7 +14,7 @@ Display calendar events with optional descriptions, weather information and medi
 - **Event Descriptions** – Optionally show sanitized calendar descriptions below events, limited to three lines
 - **Media Slideshows** – Automated playback of images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV) from Nextcloud folders
 - **Video Support** – Native HTML5 video playback with muted autoplay and automatic transitions
-- **Weather Information** – Real-time weather data via Open-Meteo API
+- **Weather Information** – Real-time weather data and icons from Nextcloud Weather Status
 - **Customizable Appearance** – Configure layout, colors and font sizes per text class
 - **Preset System** – Switch media folders, crop modes, intervals, display settings and visible widgets remotely
 - **Widget Selection** – Enable or disable the slideshow, weather and calendar independently per preset
@@ -27,7 +27,7 @@ Display calendar events with optional descriptions, weather information and medi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.7.0</version>
+    <version>0.7.5</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

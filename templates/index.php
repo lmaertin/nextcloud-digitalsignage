@@ -62,6 +62,16 @@ $l = $_['l10n'];
         </div>
 
         <div class="ds-subsection">
+          <h4 class="ds-subsection-title">🌦️ <?php p($l->t('Weather')); ?></h4>
+          <span class="ds-hint"><?php p($l->t('Set a location in the Nextcloud Dashboard to show the forecast on displays.')); ?></span>
+          <div class="ds-subsection-actions">
+            <a class="button" href="<?php p($_['weather_dashboard_url']); ?>" target="_blank" rel="noopener">
+              <?php p($l->t('Nextcloud Dashboard')); ?>
+            </a>
+          </div>
+        </div>
+
+        <div class="ds-subsection">
           <h4 class="ds-subsection-title">🎨 <?php p($l->t('Stylesheet')); ?></h4>
 
           <div class="ds-settings-group">
@@ -144,31 +154,6 @@ $l = $_['l10n'];
                 <?php p($l->t('Reset to defaults')); ?>
               </button>
             </div>
-          </div>
-        </div>
-
-        <!-- Weather -->
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🌦️ <?php p($l->t('Weather')); ?></h4>
-          <span class="ds-hint" style="display: block; margin-bottom: 1rem;"><?php p($l->t('Coordinates for weather display (uses Open-Meteo API)')); ?></span>
-          <div class="ds-form-grid">
-            <div class="ds-form-group">
-              <label for="weather_latitude" class="ds-label"><?php p($l->t('Latitude')); ?></label>
-              <input type="text" id="weather_latitude" name="weather_latitude" value="<?php p($_['weather_latitude'] ?? '52.3758'); ?>" placeholder="52.3758" class="ds-input" />
-            </div>
-
-            <div class="ds-form-group">
-              <label for="weather_longitude" class="ds-label"><?php p($l->t('Longitude')); ?></label>
-              <input type="text" id="weather_longitude" name="weather_longitude" value="<?php p($_['weather_longitude'] ?? '9.9747'); ?>" placeholder="9.9747" class="ds-input" />
-            </div>
-          </div>
-
-          <div class="ds-form-group ds-form-group-full">
-            <label class="ds-label"><?php p($l->t('Control link')); ?></label>
-            <a id="weather-map-link" class="button" href="https://www.openstreetmap.org/?mlat=<?php p($_['weather_latitude'] ?? '52.3758'); ?>&mlon=<?php p($_['weather_longitude'] ?? '9.9747'); ?>&zoom=14" target="_blank" rel="noopener">
-              <?php p($l->t('Open OpenStreetMap with these coordinates')); ?>
-            </a>
-            <span class="ds-hint"><?php p($l->t('Opens in new tab.')); ?></span>
           </div>
         </div>
 
