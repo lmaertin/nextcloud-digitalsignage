@@ -157,9 +157,7 @@ class PublicController extends PublicShareController {
                 'blank'
             );
 
-            // Set CSP to allow open-meteo API
             $policy = new ContentSecurityPolicy();
-            $policy->addAllowedConnectDomain('https://api.open-meteo.com');
             $policy->addAllowedScriptDomain('https://cdnjs.cloudflare.com');
             $response->setContentSecurityPolicy($policy);
 

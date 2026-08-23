@@ -77,10 +77,6 @@ class ApiController extends Controller {
         $response = new JSONResponse([
             'locale' => $this->resolveLocale(),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
-            'weather' => [
-                'latitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_latitude', '52.3758'),
-                'longitude' => (float)$this->config->getAppValue('digitalsignage', 'weather_longitude', '9.9747')
-            ],
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '60'),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true),
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
@@ -91,7 +87,6 @@ class ApiController extends Controller {
         ]);
 
         $policy = new ContentSecurityPolicy();
-        $policy->addAllowedConnectDomain('https://api.open-meteo.com');
         $response->setContentSecurityPolicy($policy);
 
         return $response;

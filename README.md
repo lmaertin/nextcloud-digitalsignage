@@ -19,7 +19,7 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
-- **Weather information**: Real-time weather data via Open-Meteo API
+- **Weather information**: Real-time weather data and icons from Nextcloud Weather Status
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
 - **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
@@ -79,7 +79,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
    - Add multiple exclusion terms as tags
 
    **Weather:**
-   - **Weather Coordinates**: Latitude and longitude for Open-Meteo API
+   - Weather location and temperature unit are taken from the user's Nextcloud Weather Status settings
 
    **Media / Slideshow Presets:**
    - **Preset Name**: Administrative name for the preset
@@ -356,7 +356,6 @@ See [IRCONTROL.md](IRCONTROL.md) for instructions how to setup a profile switche
 - Public control API requires a valid control token
 - CSRF tokens are validated on all state-changing operations
 - Content Security Policy restricts external API access to whitelisted domains
-- External weather API (Open-Meteo) is HTTPS-only
 
 ### Best Practices
 
@@ -377,7 +376,6 @@ See [IRCONTROL.md](IRCONTROL.md) for instructions how to setup a profile switche
 ### Weather not loading
 
 - Verify latitude/longitude are set correctly
-- Check internet connection for Open-Meteo API access
 - Weather API requires HTTPS connection
 
 ### Images not loading

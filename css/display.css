@@ -438,6 +438,16 @@ body[data-widget-combination='slideshow'] .slideshow {
   margin-bottom: 0.2rem;
 }
 
+.time-day-period {
+  display: inline-block;
+  margin-left: 0.08em;
+  font-size: 0.45em;
+  font-weight: 600;
+  letter-spacing: 0;
+  vertical-align: -0.08em;
+  opacity: 0.8;
+}
+
 .date-display {
   font-size: var(--font-size-clock-date);
   font-weight: 500;
@@ -454,31 +464,6 @@ body[data-widget-combination='slideshow'] .slideshow {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
-.weather-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.7rem;
-}
-
-.current-weather {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.weather-icon {
-  font-size: 3.2rem;
-  line-height: 1;
-}
-
-.temperature {
-  font-size: var(--font-size-weather-temperature);
-  font-weight: 600;
-  color: var(--primary-blue);
-  text-shadow: var(--text-shadow-light);
-}
-
 .location {
   font-size: var(--font-size-weather-day);
   color: var(--text-secondary);
@@ -492,7 +477,7 @@ body[data-widget-combination='slideshow'] .slideshow {
 .forecast-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.4rem;
+  gap: 0.2rem;
 }
 
 .forecast-day {
@@ -500,10 +485,11 @@ body[data-widget-combination='slideshow'] .slideshow {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  min-width: 0;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(8px);
   border-radius: 8px;
-  padding: 0.3rem 0.3rem;
+  padding: 0.3rem 0.15rem;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
@@ -527,11 +513,17 @@ body[data-widget-combination='slideshow'] .slideshow {
   margin-bottom: 0.2rem;
 }
 
+.day-icon svg {
+  width: 3rem;
+  height: 3rem;
+}
+
 .day-temp {
   font-size: var(--font-size-weather-temperature);
   font-weight: 500;
   color: var(--text-secondary);
   text-shadow: var(--text-shadow-light);
+  white-space: nowrap;
 }
 
 /* Aktueller Tag - kein Highlighting für einheitliches Design */
@@ -718,11 +710,11 @@ body[data-widget-combination='slideshow'] .slideshow {
 
   .forecast-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 0.2rem;
   }
 
   .forecast-day {
-    padding: 0.5rem 0.3rem;
+    padding: 0.3rem 0.15rem;
   }
 
   .day-icon {

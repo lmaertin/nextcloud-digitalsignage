@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.3] - 2026-08-23
+
+### Changed
+
+- **Nextcloud Weather integration** ([#10](https://github.com/lmaertin/nextcloud-digitalsignage/issues/10)): Removed the redundant manual weather implementation and use the official Nextcloud Weather Status infrastructure and its weather API data and icons instead.
+- **Location configuration**: Weather locations and temperature units are taken from the Nextcloud Weather Status settings. For displays that need a specific location, use a dedicated Nextcloud dashboard user with that location configured.
+- **Weather display**: Show a compact daily forecast with official Weather Status icons, daily minimum and maximum temperatures, and locale-based Fahrenheit conversion.
+- **Clock layout**: Refined the clock layout, including compact alignment of the AM/PM indicator to preserve space for the weather and calendar widgets.
+- **Code cleanup**: Removed obsolete weather configuration, provider fallbacks, UI fields, translation entries and unused styling.
+
 ## [0.7.0] - 2026-08-15
 
 ### Added

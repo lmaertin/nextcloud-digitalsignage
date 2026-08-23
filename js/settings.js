@@ -507,8 +507,6 @@ async function saveSettings() {
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
       calendar_names: JSON.stringify(selectedCalendars),
-      weather_latitude: document.getElementById('weather_latitude').value,
-      weather_longitude: document.getElementById('weather_longitude').value,
       calendar_exclude: document.getElementById('calendar_exclude').value,
       color_primary: document.getElementById('color_primary').value,
       color_bg: document.getElementById('color_bg').value,
@@ -540,19 +538,6 @@ async function saveSettings() {
     msgSpan.textContent = translate('Error saving settings');
     msgSpan.style.color = 'red';
   }
-}
-
-function updateWeatherLink() {
-  const link = document.getElementById('weather-map-link');
-  const latInput = document.getElementById('weather_latitude');
-  const lonInput = document.getElementById('weather_longitude');
-  if (!link || !latInput || !lonInput) {
-    return;
-  }
-
-  const lat = parseFloat(latInput.value) || 0;
-  const lon = parseFloat(lonInput.value) || 0;
-  link.href = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}&zoom=14`;
 }
 
 function initExcludeTags() {
@@ -704,16 +689,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendarSelect.addEventListener('change', loadEventTitles);
   }
 
-  const latInput = document.getElementById('weather_latitude');
-  const lonInput = document.getElementById('weather_longitude');
-  [latInput, lonInput].forEach((input) => {
-    input?.addEventListener('change', updateWeatherLink);
-    input?.addEventListener('input', updateWeatherLink);
-  });
-
   initExcludeTags();
   syncColorPickers();
-  updateWeatherLink();
   resetPresetForm();
 
   await Promise.all([loadCalendars(), loadFolders()]);

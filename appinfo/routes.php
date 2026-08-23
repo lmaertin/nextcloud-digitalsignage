@@ -22,6 +22,8 @@ return [
 
         // Public API routes (with token)
         ['name' => 'publicApi#getConfig', 'url' => '/api/public/{token}/config', 'verb' => 'GET'],
+        ['name' => 'publicApi#getWeather', 'url' => '/api/public/{token}/weather', 'verb' => 'GET'],
+        ['name' => 'publicApi#getWeatherIcon', 'url' => '/api/public/{token}/weather-icon', 'verb' => 'GET'],
         ['name' => 'publicApi#getCalendar', 'url' => '/api/public/{token}/calendar', 'verb' => 'GET'],
         ['name' => 'publicApi#getImages', 'url' => '/api/public/{token}/images', 'verb' => 'GET'],
         ['name' => 'publicApi#getImage', 'url' => '/api/public/{token}/image', 'verb' => 'GET'],
