@@ -88,6 +88,6 @@
   </div>
   <?php endif; ?>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
-  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=0.7.0.9" defer></script>
+  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=0.7.5" defer></script>
 </body>
 </html>

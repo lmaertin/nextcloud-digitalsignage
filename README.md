@@ -61,6 +61,7 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
       - **Slideshow width in percent**: Controls how much width the image area uses in the standard split layout; the remaining space is used by calendar and weather
+      - **Media refresh interval (minutes)**: How often the display checks the media folder for changes; use `0` to disable this check
 
    **Color Customization:**
    - **Primary Color**: Main accent color for UI elements
@@ -209,6 +210,7 @@ git commit --no-verify
 - No manual database setup required.
 - When enabling or updating the app, Nextcloud automatically runs migrations and creates or updates the token and preset tables required for display and preset management.
 - Version `0.7.0` adds the `show_slideshow`, `show_weather` and `show_calendar` preset fields. Existing presets receive `1` for all three fields, so the existing layout remains unchanged after upgrading.
+- Version `0.7.5` stores the media refresh interval in minutes. Existing values in seconds are migrated automatically during the app update.
 
 ## Architecture (overview)
 

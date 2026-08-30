@@ -1,3 +1,5 @@
+const DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES = 15;
+
 // Configuration variables - read from body data attributes
 const bodyEl = document.body;
 const IS_PUBLIC = bodyEl.getAttribute('data-is-public') === 'true';
@@ -115,6 +117,25 @@ function getLocale() {
   return normalizeLocale(navigator.language || 'en-US');
 }
 
+function getI18nText(key, fallback) {
+  const value = config?.i18n?.[key];
+  return typeof value === 'string' && value.trim() ? value : fallback;
+}
+
+function getSlideshowRefreshIntervalMs() {
+  let configuredMinutes = Number(config?.imageRefreshIntervalMinutes ?? DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES);
+
+  if (!Number.isFinite(configuredMinutes) || configuredMinutes < 0) {
+    configuredMinutes = DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES;
+  }
+
+  if (configuredMinutes === 0) {
+    return 0; // Polling disabled
+  }
+
+  return Math.max(1000, configuredMinutes * 60 * 1000);
+}
+
 function getDateFormatter(locale, options) {
   try {
     return new Intl.DateTimeFormat(normalizeLocale(locale || getLocale()), options);
@@ -199,6 +220,61 @@ async function pollConfigChanges() {
   }
 }
 
+let slideshowState = null;
+
+function getImageSignature(images) {
+  if (!Array.isArray(images)) {
+    return '';
+  }
+
+  return images.map((image) => `${image.id}:${image.name}:${image.mtime ?? 0}:${image.path ?? ''}`).join('|');
+}
+
+async function pollImageChanges() {
+  if (!slideshowState || !config) {
+    return;
+  }
+
+  try {
+    const response = await fetch(API_BASE + '/images');
+    if (!response.ok) {
+      return;
+    }
+
+    const data = await response.json();
+    if (data.error || !Array.isArray(data.images)) {
+      return;
+    }
+
+    const nextImages = data.images;
+    const nextSignature = getImageSignature(nextImages);
+
+    if (nextSignature === slideshowState.signature) {
+      return;
+    }
+
+    const playbackMode = config.imageOrderMode === 'filename' ? 'filename' : 'shuffle';
+    slideshowState.images = nextImages;
+    slideshowState.signature = nextSignature;
+    slideshowState.playbackMode = playbackMode;
+    slideshowState.playbackImages = playbackMode === 'filename'
+      ? sortImagesByFilename(nextImages)
+      : shuffleImages(nextImages);
+    slideshowState.currentIndex = 0;
+
+    console.log('Slideshow image list changed, refreshing queue:', nextImages.length);
+
+    if (slideshowState.slideTimer) {
+      clearTimeout(slideshowState.slideTimer);
+      slideshowState.slideTimer = null;
+    }
+
+    slideshowState.show();
+  } catch (error) {
+    console.warn(getI18nText('slideshowRefreshFailed', 'Slideshow image refresh failed:') + ' ', error);
+  }
+}
+
 async function initSlideshow() {
   const el = document.getElementById('slideshow');
 
@@ -220,47 +296,56 @@ async function initSlideshow() {
     }
 
     const playbackMode = config.imageOrderMode === 'filename' ? 'filename' : 'shuffle';
-    let playbackImages = playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images);
-    let currentIndex = 0;
-    let currentVideoElement = null;
-    let slideTimer = null;
-    let prefetchedImage = null;
-    let prefetchedImageUrl = null;
+    const state = {
+      images,
+      signature: getImageSignature(images),
+      playbackMode,
+      playbackImages: playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images),
+      currentIndex: 0,
+      currentVideoElement: null,
+      slideTimer: null,
+      prefetchedImage: null,
+      prefetchedImageUrl: null,
+      show: null,
+    };
+    slideshowState = state;
 
     function getNextImage() {
-      if (playbackImages.length === 0) {
+      if (state.playbackImages.length === 0) {
         return null;
       }
 
-      if (currentIndex >= playbackImages.length) {
-        playbackImages = playbackMode === 'filename' ? sortImagesByFilename(images) : shuffleImages(images);
-        currentIndex = 0;
+      if (state.currentIndex >= state.playbackImages.length) {
+        state.playbackImages = state.playbackMode === 'filename'
+          ? sortImagesByFilename(state.images)
+          : shuffleImages(state.images);
+        state.currentIndex = 0;
       }
 
-      const nextImage = playbackImages[currentIndex];
-      currentIndex += 1;
+      const nextImage = state.playbackImages[state.currentIndex];
+      state.currentIndex += 1;
 
       return nextImage;
     }
 
     function prefetchNextImage() {
-      if (playbackImages.length === 0) {
+      if (state.playbackImages.length === 0) {
         return;
       }
 
-      const nextItem = playbackImages[currentIndex];
+      const nextItem = state.playbackImages[state.currentIndex];
       if (!nextItem || nextItem.type === 'video') {
         return;
       }
 
       const nextImageUrl = API_BASE + '/image?id=' + nextItem.id;
-      if (prefetchedImageUrl === nextImageUrl) {
+      if (state.prefetchedImageUrl === nextImageUrl) {
         return;
       }
 
-      prefetchedImage = new Image();
-      prefetchedImageUrl = nextImageUrl;
-      prefetchedImage.src = nextImageUrl;
+      state.prefetchedImage = new Image();
+      state.prefetchedImageUrl = nextImageUrl;
+      state.prefetchedImage.src = nextImageUrl;
 
       console.log('Prefetching next image:', nextItem.name);
     }
@@ -275,24 +360,20 @@ async function initSlideshow() {
       const isVideo = item.type === 'video';
       console.log(`Showing ${isVideo ? 'video' : 'image'}:`, item.name);
 
-      // Fade out
       el.style.opacity = '0';
 
-      // Clear any existing slide timer
-      if (slideTimer) {
-        clearTimeout(slideTimer);
-        slideTimer = null;
+      if (state.slideTimer) {
+        clearTimeout(state.slideTimer);
+        state.slideTimer = null;
       }
 
       setTimeout(() => {
-        // Change content while invisible
         const fitMode = config.imageFitMode || 'cover';
         el.className = `slideshow fit-${fitMode}`;
         el.innerHTML = '';
         el.style.backgroundImage = '';
 
         if (isVideo) {
-          // Create video element
           const video = document.createElement('video');
           video.autoplay = true;
           video.muted = true;
@@ -302,52 +383,44 @@ async function initSlideshow() {
           video.style.objectFit = fitMode;
           video.src = itemUrl;
 
-          // Auto-advance when video ends
           video.addEventListener('ended', () => {
             console.log('Video ended, advancing to next...');
-            show();
+            state.show();
           });
 
-          // Error handling
-          video.addEventListener('error', (e) => {
-            console.error('Video load error:', e);
-            // Skip to next item on error
-            show();
+          video.addEventListener('error', (error) => {
+            console.error('Video load error:', error);
+            state.show();
           });
 
           el.appendChild(video);
-          currentVideoElement = video;
+          state.currentVideoElement = video;
         } else {
-          // Show image as background
           el.style.backgroundImage = `url('${itemUrl}')`;
-          currentVideoElement = null;
-
-          // Prefetch the next image to avoid flickering
+          state.currentVideoElement = null;
           prefetchNextImage();
-
-          // Schedule next image
-          slideTimer = setTimeout(show, config.slideInterval * 1000);
+          state.slideTimer = setTimeout(state.show, config.slideInterval * 1000);
         }
 
-        // Fade in
         el.style.opacity = '1';
-      }, 300); // Wait for fade out to complete
+      }, 300);
 
       console.log(`${isVideo ? 'Video' : 'Image'} set with smooth transition`);
     }
 
-    // Show first item immediately
+    state.show = show;
+
     show();
 
     console.log('Slideshow started successfully (supports images and videos)');
   } catch (error) {
-    console.error('Error loading slideshow:', error);
+    console.error(getI18nText('slideshowError', 'Slideshow Error') + ':', error);
     el.className = 'slideshow';
     el.innerHTML = `<div class="error-message">
       <div>
-        <h3>Slideshow Error</h3>
+        <h3>${getI18nText('slideshowError', 'Slideshow Error')}</h3>
         <p>${error.message}</p>
-        <p style="font-size: 0.9rem; margin-top: 1rem;">Check console for details</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem;">${getI18nText('slideshowCheckConsole', 'Check console for details')}</p>
       </div>
     </div>`;
   }
@@ -650,6 +723,11 @@ async function init() {
       setInterval(loadICS, 600000); // 10 minutes
     }
     setInterval(pollConfigChanges, 15000); // 15 seconds
+
+    const imageRefreshIntervalMs = getSlideshowRefreshIntervalMs();
+    if (imageRefreshIntervalMs > 0) {
+      setInterval(pollImageChanges, imageRefreshIntervalMs);
+    }
 
     // Initialize date and time display
     initDateTime();

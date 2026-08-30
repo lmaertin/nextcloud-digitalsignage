@@ -214,6 +214,7 @@ class PublicApiController extends Controller {
             'locale' => $effectiveConfig['locale'],
             'contentSplitRatio' => $effectiveConfig['contentSplitRatio'],
             'slideInterval' => $effectiveConfig['slideInterval'],
+            'imageRefreshIntervalMinutes' => $effectiveConfig['imageRefreshIntervalMinutes'],
             'calendarExclude' => $effectiveConfig['calendarExclude'],
             'showEventDescription' => $effectiveConfig['showEventDescription'],
             'autoFullscreenPrompt' => $effectiveConfig['autoFullscreenPrompt'],
@@ -235,6 +236,9 @@ class PublicApiController extends Controller {
                 'fullscreenPromptNo' => $this->getTranslation('fullscreenPromptNo', $userId),
                 'weatherLocationRequired' => $this->getTranslation('weatherLocationRequired', $userId),
                 'weatherUnavailable' => $this->getTranslation('weatherUnavailable', $userId),
+                'slideshowRefreshFailed' => $this->getTranslation('slideshowRefreshFailed', $userId),
+                'slideshowError' => $this->getTranslation('slideshowError', $userId),
+                'slideshowCheckConsole' => $this->getTranslation('slideshowCheckConsole', $userId),
             ]
         ]);
 
@@ -256,6 +260,9 @@ class PublicApiController extends Controller {
             'fullscreenPromptNo' => $l10n->t('No'),
             'weatherLocationRequired' => $l10n->t('Weather location not configured'),
             'weatherUnavailable' => $l10n->t('Weather forecast unavailable'),
+            'slideshowRefreshFailed' => $l10n->t('Slideshow image refresh failed'),
+            'slideshowError' => $l10n->t('Slideshow Error'),
+            'slideshowCheckConsole' => $l10n->t('Check console for details'),
             default => $key,
         };
     }

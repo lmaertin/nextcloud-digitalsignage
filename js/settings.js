@@ -1,3 +1,5 @@
+const DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES = 15;
+
 const translate = (text, params = []) => {
   if (typeof OC !== 'undefined' && OC.L10N && typeof OC.L10N.translate === 'function') {
     return OC.L10N.translate('digitalsignage', text, params);
@@ -502,10 +504,12 @@ async function saveSettings() {
     const calendarSelect = document.getElementById('calendar_names');
     const contentSplitRatioInput = document.getElementById('content_split_ratio');
     const selectedCalendars = Array.from(calendarSelect.selectedOptions).map((option) => option.value);
+    const imageRefreshIntervalInput = document.getElementById('image_refresh_interval_minutes');
     const data = {
       display_name: document.getElementById('display_name').value,
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
+      image_refresh_interval_minutes: parseFloat(imageRefreshIntervalInput?.value || String(DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES)),
       calendar_names: JSON.stringify(selectedCalendars),
       calendar_exclude: document.getElementById('calendar_exclude').value,
       color_primary: document.getElementById('color_primary').value,

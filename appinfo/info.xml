@@ -13,6 +13,7 @@ Display calendar events with optional descriptions, weather information and medi
 - **Calendar Integration** – Display upcoming events from multiple Nextcloud calendars
 - **Event Descriptions** – Optionally show sanitized calendar descriptions below events, limited to three lines
 - **Media Slideshows** – Automated playback of images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV) from Nextcloud folders
+- **Media Refresh Interval** – Configure how often displays check media folders for changes, in minutes
 - **Video Support** – Native HTML5 video playback with muted autoplay and automatic transitions
 - **Weather Information** – Real-time weather data and icons from Nextcloud Weather Status
 - **Customizable Appearance** – Configure layout, colors and font sizes per text class
@@ -27,7 +28,7 @@ Display calendar events with optional descriptions, weather information and medi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.7.3</version>
+    <version>0.7.5</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>
