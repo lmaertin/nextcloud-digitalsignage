@@ -183,12 +183,12 @@ class ApiController extends Controller {
                 return new JSONResponse(['error' => 'Calendar not found: ' . $calendarName], 404);
             }
 
-            // Get events for next 30 days
+            // Ensure recurring events are expanded into their future instances.
             $start = new \DateTime();
             $end = new \DateTime();
             $end->modify('+30 days');
 
-            $searchResult = $targetCalendar->search('', [], [], null, null);
+            $searchResult = $targetCalendar->search('', [], ['timerange' => ['start' => $start, 'end' => $end]], null, null);
             $events = [];
 
             foreach ($searchResult as $eventData) {
@@ -236,7 +236,11 @@ class ApiController extends Controller {
                     continue;
                 }
 
-                $searchResult = $targetCalendar->search('', [], [], null, null);
+                $start = new \DateTime();
+                $end = new \DateTime();
+                $end->modify('+30 days');
+
+                $searchResult = $targetCalendar->search('', [], ['timerange' => ['start' => $start, 'end' => $end]], null, null);
 
                 foreach ($searchResult as $eventData) {
                     $title = null;

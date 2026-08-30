@@ -299,7 +299,11 @@ class PublicApiController extends Controller {
                     continue;
                 }
 
-                $searchResult = $targetCalendar->search('', [], [], null, null);
+                $start = new \DateTime();
+                $end = new \DateTime();
+                $end->modify('+30 days');
+
+                $searchResult = $targetCalendar->search('', [], ['timerange' => ['start' => $start, 'end' => $end]], null, null);
 
                 foreach ($searchResult as $eventData) {
                     $allEvents[] = $eventData;
