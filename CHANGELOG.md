@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.5] - 2026-08-30
+
+- **Fixed [#14](https://github.com/lmaertin/nextcloud-digitalsignage/issues/14)**: Recurring calendar entries are now included in the display.
+- **Fixed [#15](https://github.com/lmaertin/nextcloud-digitalsignage/issues/15)**: Displays refresh their media list when files are added, removed, or changed; the interval is configurable in minutes.
+- **Upgrade note**: Existing second-based values migrate automatically to minutes. API consumers must use `imageRefreshIntervalMinutes`.
+
 ## [0.7.3] - 2026-08-23
 
 ### Changed
