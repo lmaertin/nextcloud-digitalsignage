@@ -32,7 +32,7 @@ $l = $_['l10n'];
             </div>
             <div class="ds-form-group">
               <label for="image_refresh_interval_minutes" class="ds-label"><?php p($l->t('Image refresh interval (minutes)')); ?></label>
-              <input type="number" id="image_refresh_interval_minutes" name="image_refresh_interval_minutes" value="<?php p($_['image_refresh_interval_minutes'] ?? '15'); ?>" min="0" step="0.25" class="ds-input" />
+              <input type="number" id="image_refresh_interval_minutes" name="image_refresh_interval_minutes" value="<?php p($_['image_refresh_interval_minutes'] ?? '15'); ?>" min="0" step="1" class="ds-input" />
               <span class="ds-hint"><?php p($l->t('Refreshes the slideshow when the media folder changes. Set 0 to disable polling.')); ?></span>
             </div>
           </div>
@@ -295,4 +295,4 @@ $l = $_['l10n'];
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.5"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.6"></script>

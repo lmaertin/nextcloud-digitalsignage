@@ -52,7 +52,7 @@ class SettingsController extends Controller {
         string $fullscreen_slideshow = '0'
     ): JSONResponse {
         $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
-        $imageRefreshValue = (float)$image_refresh_interval_minutes;
+        $imageRefreshValue = (int)$image_refresh_interval_minutes;
         $normalizedImageRefreshInterval = (string)($imageRefreshValue >= 0 ? $imageRefreshValue : self::DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES);
 
         $this->config->setAppValue('digitalsignage', 'display_name', $display_name);

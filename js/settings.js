@@ -509,7 +509,7 @@ async function saveSettings() {
       display_name: document.getElementById('display_name').value,
       auto_fullscreen_prompt: document.getElementById('auto_fullscreen_prompt').checked ? '1' : '0',
       content_split_ratio: contentSplitRatioInput ? contentSplitRatioInput.value : '50',
-      image_refresh_interval_minutes: parseFloat(imageRefreshIntervalInput?.value || String(DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES)),
+      image_refresh_interval_minutes: String(parseInt(imageRefreshIntervalInput?.value || String(DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES), 10)),
       calendar_names: JSON.stringify(selectedCalendars),
       calendar_exclude: document.getElementById('calendar_exclude').value,
       color_primary: document.getElementById('color_primary').value,

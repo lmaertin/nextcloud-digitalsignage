@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.6] - 2026-09-03
+
+- **Fixed**: Saving settings failed with a 400 error because the refresh interval was sent as a number instead of a string.
+- **Changed**: The media refresh interval field now only accepts whole minutes.
+
 ## [0.7.5] - 2026-08-30
 
 - **Fixed [#14](https://github.com/lmaertin/nextcloud-digitalsignage/issues/14)**: Recurring calendar entries are now included in the display.
