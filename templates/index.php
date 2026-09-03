@@ -295,4 +295,4 @@ $l = $_['l10n'];
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.6"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.7"></script>

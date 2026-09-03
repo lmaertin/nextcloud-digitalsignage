@@ -15,6 +15,7 @@ use OCP\IUserManager;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Service\DisplayConfigService;
+use OCA\DigitalSignage\Util\CalendarEventNormalizer;
 use OCP\L10N\IFactory;
 use OCP\IURLGenerator;
 
@@ -313,7 +314,7 @@ class PublicApiController extends Controller {
                 $searchResult = $targetCalendar->search('', [], ['timerange' => ['start' => $start, 'end' => $end]], null, null);
 
                 foreach ($searchResult as $eventData) {
-                    $allEvents[] = $eventData;
+                    $allEvents[] = CalendarEventNormalizer::normalize($eventData);
                 }
             }
 

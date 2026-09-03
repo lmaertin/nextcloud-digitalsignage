@@ -7,6 +7,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.7] - 2026-09-03
+
+- **Fixed [#14](https://github.com/lmaertin/nextcloud-digitalsignage/issues/14)**: Recurring event times were off by several hours because the timezone of expanded occurrences was ignored; times are now converted to unambiguous instants before reaching the display.
+
 ## [0.7.6] - 2026-09-03
 
 - **Fixed**: Saving settings failed with a 400 error because the refresh interval was sent as a number instead of a string.
