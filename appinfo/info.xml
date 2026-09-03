@@ -28,7 +28,7 @@ Display calendar events with optional descriptions, weather information and medi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.7.6</version>
+    <version>0.7.7</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

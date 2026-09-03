@@ -1,6 +1,7 @@
 <?php
 namespace OCA\DigitalSignage\Controller;
 
+use OCA\DigitalSignage\Util\CalendarEventNormalizer;
 use OCA\DigitalSignage\Util\TextSizeConfig;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
@@ -192,7 +193,7 @@ class ApiController extends Controller {
             $events = [];
 
             foreach ($searchResult as $eventData) {
-                $events[] = $eventData;
+                $events[] = CalendarEventNormalizer::normalize($eventData);
             }
 
             // Return raw calendar data
