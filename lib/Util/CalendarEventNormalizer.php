@@ -12,36 +12,18 @@ namespace OCA\DigitalSignage\Util;
  */
 class CalendarEventNormalizer {
     public static function normalize(array $eventData): array {
-        if (!isset($eventData['objects'][0]) || !is_array($eventData['objects'][0])) {
-            return $eventData;
-        }
-
         foreach (['DTSTART', 'DTEND'] as $property) {
-            if (!isset($eventData['objects'][0][$property][0]['date'])) {
+            $dateTime = $eventData['objects'][0][$property][0] ?? null;
+            if (!$dateTime instanceof \DateTimeInterface) {
                 continue;
             }
 
             $isDateOnly = ($eventData['objects'][0][$property][1]['VALUE'] ?? null) === 'DATE';
-            $eventData['objects'][0][$property][0]['date'] = self::toIsoString(
-                $eventData['objects'][0][$property][0],
-                $isDateOnly
-            );
+            $eventData['objects'][0][$property][0] = [
+                'date' => $dateTime->format($isDateOnly ? 'Y-m-d' : DATE_ATOM),
+            ];
         }
 
         return $eventData;
-    }
-
-    private static function toIsoString(array $dateTimeData, bool $isDateOnly): string {
-        if ($isDateOnly) {
-            return substr($dateTimeData['date'], 0, 10);
-        }
-
-        try {
-            $timezone = new \DateTimeZone($dateTimeData['timezone'] ?? 'UTC');
-            $dateTime = new \DateTimeImmutable($dateTimeData['date'], $timezone);
-            return $dateTime->format(\DateTimeInterface::ATOM);
-        } catch (\Exception $e) {
-            return $dateTimeData['date'];
-        }
     }
 }

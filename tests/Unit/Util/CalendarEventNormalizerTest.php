@@ -9,10 +9,10 @@ use PHPUnit\Framework\TestCase;
 
 class CalendarEventNormalizerTest extends TestCase {
     public function testTimedEventKeepsWallClockTimeWithExplicitOffset(): void {
-        $dateTime = new \DateTime('2026-09-03 09:00:00', new \DateTimeZone('America/New_York'));
+        $dateTime = new \DateTimeImmutable('2026-09-03 09:00:00', new \DateTimeZone('America/New_York'));
         $eventData = [
             'objects' => [[
-                'DTSTART' => [json_decode(json_encode($dateTime), true), ['VALUE' => 'DATE-TIME']],
+                'DTSTART' => [$dateTime, ['VALUE' => 'DATE-TIME']],
             ]],
         ];
 
@@ -22,10 +22,10 @@ class CalendarEventNormalizerTest extends TestCase {
     }
 
     public function testAllDayEventKeepsPlainDateWithoutTimezoneShift(): void {
-        $dateTime = new \DateTime('2026-09-03', new \DateTimeZone('UTC'));
+        $dateTime = new \DateTimeImmutable('2026-09-03', new \DateTimeZone('UTC'));
         $eventData = [
             'objects' => [[
-                'DTSTART' => [json_decode(json_encode($dateTime), true), ['VALUE' => 'DATE']],
+                'DTSTART' => [$dateTime, ['VALUE' => 'DATE']],
             ]],
         ];
 
