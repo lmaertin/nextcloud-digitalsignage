@@ -22,6 +22,7 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Weather information**: Real-time weather data and icons from Nextcloud Weather Status
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
+- **Instant display messages**: Show short-lived overlay messages per display via API without interrupting slideshow, weather or calendar widgets
 - **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
 - **Configurable settings**: Global display settings plus per-display preset assignment through the UI
 
@@ -315,11 +316,15 @@ The widget fields default to `1`. Existing presets are migrated with all three w
    Returns image metadata from the preset's image folder.
 - `GET /apps/digitalsignage/api/public/{token}/image?id=<file_id>`
    Streams a single image for the public display.
+- `GET /apps/digitalsignage/api/public/{token}/messages?since=<message-id>`
+   Returns unexpired instant messages for the addressed display. Messages are rendered as non-blocking text overlays and automatically disappear after their configured duration.
 
 ### Public Control API (Control token required)
 
 - `POST /apps/digitalsignage/api/control/{controlToken}/activate-preset`
    Activates a preset remotely and increments the display revision so the public display reloads automatically.
+- `POST /apps/digitalsignage/api/control/{controlToken}/message`
+   Sends an instant overlay message to exactly one display (the one identified by the control token). Multi-display delivery is done by repeating the request for each display control token.
 
 Request body:
 
@@ -335,6 +340,15 @@ curl -X POST \
    -H "Content-Type: application/json" \
    -d '{"presetName":"Slides"}' \
    "https://example.com/index.php/apps/digitalsignage/api/control/<control-token>/activate-preset"
+```
+
+Instant message example:
+
+```bash
+curl -X POST \
+   -H "Content-Type: application/json" \
+   -d '{"message":"The meeting room is reserved until 16:00.","duration":15}' \
+   "https://example.com/index.php/apps/digitalsignage/api/control/<control-token>/message"
 ```
 
 ## Example: Remote Control via IR with a Raspberry

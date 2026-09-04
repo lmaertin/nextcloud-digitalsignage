@@ -11,6 +11,8 @@ const API_BASE = IS_PUBLIC
 
 let config = null;
 let configRevision = null;
+let latestInstantMessageId = null;
+let instantMessageHideTimer = null;
 
 function applyRuntimeConfig() {
   if (!config) {
@@ -217,6 +219,84 @@ async function pollConfigChanges() {
     applyRuntimeConfig();
   } catch (error) {
     console.error('Config polling error:', error);
+  }
+}
+
+function getInstantMessageOverlay() {
+  let overlay = document.getElementById('instant-message-overlay');
+  if (overlay) {
+    return overlay;
+  }
+
+  overlay = document.createElement('div');
+  overlay.id = 'instant-message-overlay';
+  overlay.className = 'instant-message-overlay';
+
+  const content = document.createElement('div');
+  content.className = 'instant-message-content';
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+
+  return overlay;
+}
+
+function hideInstantMessage() {
+  const overlay = document.getElementById('instant-message-overlay');
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.remove('visible');
+}
+
+function showInstantMessage(message, duration) {
+  const overlay = getInstantMessageOverlay();
+  const content = overlay.querySelector('.instant-message-content');
+  if (!content) {
+    return;
+  }
+
+  content.textContent = message;
+  overlay.classList.add('visible');
+
+  if (instantMessageHideTimer) {
+    clearTimeout(instantMessageHideTimer);
+  }
+  instantMessageHideTimer = setTimeout(hideInstantMessage, Math.max(1, duration) * 1000);
+}
+
+async function pollInstantMessages() {
+  if (!IS_PUBLIC) {
+    return;
+  }
+
+  const messageUrl = latestInstantMessageId
+    ? `${API_BASE}/messages?since=${encodeURIComponent(latestInstantMessageId)}`
+    : `${API_BASE}/messages`;
+
+  try {
+    const response = await fetch(messageUrl);
+    if (!response.ok) {
+      return;
+    }
+
+    const data = await response.json();
+    if (!data || !Array.isArray(data.messages) || data.messages.length === 0) {
+      return;
+    }
+
+    const nextMessage = data.messages[0];
+    if (!nextMessage || typeof nextMessage.id !== 'string' || typeof nextMessage.message !== 'string') {
+      return;
+    }
+
+    const duration = Number.parseInt(nextMessage.duration, 10);
+    const safeDuration = Number.isFinite(duration) ? duration : 15;
+
+    latestInstantMessageId = nextMessage.id;
+    showInstantMessage(nextMessage.message, safeDuration);
+  } catch (error) {
+    console.warn('Instant message polling error:', error);
   }
 }
 
@@ -723,6 +803,7 @@ async function init() {
       setInterval(loadICS, 600000); // 10 minutes
     }
     setInterval(pollConfigChanges, 15000); // 15 seconds
+    setInterval(pollInstantMessages, 60000); // 60 seconds
 
     const imageRefreshIntervalMs = getSlideshowRefreshIntervalMs();
     if (imageRefreshIntervalMs > 0) {
@@ -731,6 +812,10 @@ async function init() {
 
     // Initialize date and time display
     initDateTime();
+
+    if (IS_PUBLIC) {
+      await pollInstantMessages();
+    }
 
     // Initialize fullscreen button
     initFullscreenButton();
