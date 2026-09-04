@@ -15,6 +15,7 @@ use OCP\IUserManager;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Service\DisplayConfigService;
+use OCA\DigitalSignage\Service\InstantMessageService;
 use OCA\DigitalSignage\Util\CalendarEventNormalizer;
 use OCP\L10N\IFactory;
 use OCP\IURLGenerator;
@@ -31,6 +32,7 @@ class PublicApiController extends Controller {
     private $userConfig;
     private $userManager;
     private $urlGenerator;
+    private $instantMessageService;
 
     private function resolveAppLanguage(?string $language, ?string $locale = null): string {
         if (is_string($language) && $language !== '' && $this->l10nFactory->languageExists('digitalsignage', $language)) {
@@ -60,7 +62,8 @@ class PublicApiController extends Controller {
         IClientService $clientService,
         IUserConfig $userConfig,
         IUserManager $userManager,
-        IURLGenerator $urlGenerator
+        IURLGenerator $urlGenerator,
+        InstantMessageService $instantMessageService
     ) {
         parent::__construct($AppName, $request);
         $this->config = $config;
@@ -74,6 +77,7 @@ class PublicApiController extends Controller {
         $this->userConfig = $userConfig;
         $this->userManager = $userManager;
         $this->urlGenerator = $urlGenerator;
+        $this->instantMessageService = $instantMessageService;
     }
 
     /**
@@ -247,6 +251,22 @@ class PublicApiController extends Controller {
         $response->setContentSecurityPolicy($policy);
 
         return $response;
+    }
+
+    /**
+     * @PublicPage
+     * @NoCSRFRequired
+     */
+    public function getMessages(string $token): JSONResponse {
+        $display = $this->validateToken($token);
+        if (!$display) {
+            return new JSONResponse(['error' => 'Invalid token'], 403);
+        }
+
+        $since = $this->request->getParam('since');
+        $cursor = is_string($since) ? $since : null;
+
+        return new JSONResponse($this->instantMessageService->pollMessages((int)$display->getId(), $cursor));
     }
 
     private function getTranslation(string $key, string $userId): string {

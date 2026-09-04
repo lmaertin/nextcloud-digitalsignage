@@ -181,6 +181,35 @@ body {
   background: #d0d0d0;
 }
 
+.instant-message-overlay {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translateX(-50%);
+  width: min(90vw, 900px);
+  z-index: 15000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.instant-message-overlay.visible {
+  opacity: 1;
+}
+
+.instant-message-content {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.82);
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.35);
+  white-space: pre-wrap;
+}
+
 .container {
   display: grid;
   grid-template-columns: minmax(0, var(--content-split-ratio)) minmax(0, calc(100% - var(--content-split-ratio)));

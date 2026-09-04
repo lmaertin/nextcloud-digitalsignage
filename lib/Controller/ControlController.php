@@ -6,6 +6,7 @@ namespace OCA\DigitalSignage\Controller;
 
 use OCA\DigitalSignage\Db\PresetMapper;
 use OCA\DigitalSignage\Db\TokenMapper;
+use OCA\DigitalSignage\Service\InstantMessageService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
@@ -13,16 +14,19 @@ use OCP\IRequest;
 class ControlController extends Controller {
     private TokenMapper $tokenMapper;
     private PresetMapper $presetMapper;
+    private InstantMessageService $instantMessageService;
 
     public function __construct(
         string $appName,
         IRequest $request,
         TokenMapper $tokenMapper,
-        PresetMapper $presetMapper
+        PresetMapper $presetMapper,
+        InstantMessageService $instantMessageService
     ) {
         parent::__construct($appName, $request);
         $this->tokenMapper = $tokenMapper;
         $this->presetMapper = $presetMapper;
+        $this->instantMessageService = $instantMessageService;
     }
 
     /**
@@ -61,6 +65,48 @@ class ControlController extends Controller {
             'presetId' => $preset->getId(),
             'presetName' => $preset->getName(),
             'revision' => $display->getRevision(),
+        ]);
+    }
+
+    /**
+     * @PublicPage
+     * @NoCSRFRequired
+     */
+    public function sendMessage(string $controlToken): JSONResponse {
+        $display = $this->tokenMapper->findByControlToken($controlToken);
+        if ($display === null) {
+            return new JSONResponse(['error' => 'Invalid control token'], 403);
+        }
+
+        $message = $this->request->getParam('message');
+        $durationParam = $this->request->getParam('duration');
+        $duration = 15;
+        if ($durationParam !== null && $durationParam !== '') {
+            if (is_int($durationParam)) {
+                $duration = $durationParam;
+            } elseif (is_string($durationParam) && preg_match('/^-?\d+$/', trim($durationParam)) === 1) {
+                $duration = (int)trim($durationParam);
+            } else {
+                return new JSONResponse(['error' => 'Duration must be an integer value in seconds'], 400);
+            }
+        }
+
+        if (!is_string($message)) {
+            return new JSONResponse(['error' => 'Message must be a string'], 400);
+        }
+
+        try {
+            $storedMessage = $this->instantMessageService->storeMessage((int)$display->getId(), $message, $duration);
+        } catch (\InvalidArgumentException $e) {
+            return new JSONResponse(['error' => $e->getMessage()], 400);
+        }
+
+        return new JSONResponse([
+            'success' => true,
+            'displayId' => $display->getId(),
+            'messageId' => $storedMessage['id'],
+            'duration' => $storedMessage['duration'],
+            'expiresAt' => $storedMessage['expiresAt'],
         ]);
     }
 }
