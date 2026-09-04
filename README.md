@@ -317,7 +317,7 @@ The widget fields default to `1`. Existing presets are migrated with all three w
 - `GET /apps/digitalsignage/api/public/{token}/image?id=<file_id>`
    Streams a single image for the public display.
 - `GET /apps/digitalsignage/api/public/{token}/messages?since=<message-id>`
-   Returns unexpired instant messages for the addressed display. Messages are rendered as non-blocking text overlays and automatically disappear after their configured duration.
+   Returns the current unexpired instant message for the addressed display (or an empty result when no message is pending). Messages are rendered as non-blocking text overlays and automatically disappear after their configured duration.
 
 ### Public Control API (Control token required)
 
@@ -325,6 +325,13 @@ The widget fields default to `1`. Existing presets are migrated with all three w
    Activates a preset remotely and increments the display revision so the public display reloads automatically.
 - `POST /apps/digitalsignage/api/control/{controlToken}/message`
    Sends an instant overlay message to exactly one display (the one identified by the control token). Multi-display delivery is done by repeating the request for each display control token.
+
+Request body:
+
+- `message` (string, required)
+   Plain-text message (max 500 characters).
+- `duration` (integer seconds, optional, default `15`)
+   Display duration. Allowed range: `5` to `300` seconds.
 
 Request body:
 

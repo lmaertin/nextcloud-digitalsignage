@@ -234,6 +234,9 @@ function getInstantMessageOverlay() {
 
   const content = document.createElement('div');
   content.className = 'instant-message-content';
+  content.setAttribute('role', 'status');
+  content.setAttribute('aria-live', 'polite');
+  content.setAttribute('aria-atomic', 'true');
   overlay.appendChild(content);
   document.body.appendChild(overlay);
 
@@ -281,6 +284,10 @@ async function pollInstantMessages() {
     }
 
     const data = await response.json();
+    if (typeof data?.nextSince === 'string' && data.nextSince.trim() !== '') {
+      latestInstantMessageId = data.nextSince;
+    }
+
     if (!data || !Array.isArray(data.messages) || data.messages.length === 0) {
       return;
     }
