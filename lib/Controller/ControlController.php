@@ -80,7 +80,16 @@ class ControlController extends Controller {
 
         $message = $this->request->getParam('message');
         $durationParam = $this->request->getParam('duration');
-        $duration = $durationParam === null || $durationParam === '' ? 15 : (int)$durationParam;
+        $duration = 15;
+        if ($durationParam !== null && $durationParam !== '') {
+            if (is_int($durationParam)) {
+                $duration = $durationParam;
+            } elseif (is_string($durationParam) && preg_match('/^-?\d+$/', trim($durationParam)) === 1) {
+                $duration = (int)trim($durationParam);
+            } else {
+                return new JSONResponse(['error' => 'Duration must be an integer value in seconds'], 400);
+            }
+        }
 
         if (!is_string($message)) {
             return new JSONResponse(['error' => 'Message must be a string'], 400);

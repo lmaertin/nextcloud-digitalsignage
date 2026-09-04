@@ -11,7 +11,7 @@ class InstantMessageService {
     private const CACHE_NAMESPACE = 'digitalsignage-instant-messages';
     private const CACHE_SAFETY_WINDOW_SECONDS = 60;
     private const DEFAULT_DURATION_SECONDS = 15;
-    private const MIN_DURATION_SECONDS = 1;
+    private const MIN_DURATION_SECONDS = 5;
     private const MAX_DURATION_SECONDS = 300;
     private const MAX_MESSAGE_LENGTH = 500;
 

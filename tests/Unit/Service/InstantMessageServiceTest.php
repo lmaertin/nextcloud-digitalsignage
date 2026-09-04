@@ -48,6 +48,17 @@ class InstantMessageServiceTest extends TestCase {
         $service->storeMessage(3, '<b>Unsafe</b>', 15);
     }
 
+    public function testStoreMessageRejectsTooShortDuration(): void {
+        $cache = $this->createMock(ICache::class);
+        $cacheFactory = $this->createMock(ICacheFactory::class);
+        $cacheFactory->method('create')->willReturn($cache);
+
+        $service = new InstantMessageService($cacheFactory);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $service->storeMessage(3, 'Valid text', 1);
+    }
+
     public function testPollMessagesSkipsAlreadySeenMessage(): void {
         $cache = $this->createMock(ICache::class);
         $cache->method('get')->with('display-2')->willReturn([
