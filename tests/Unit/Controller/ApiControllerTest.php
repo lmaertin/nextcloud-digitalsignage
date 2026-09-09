@@ -27,7 +27,8 @@ class ApiControllerTest extends TestCase {
                 $this->callback(static function (array $options): bool {
                     return isset($options['timerange']['start'], $options['timerange']['end'])
                         && $options['timerange']['start'] instanceof \DateTimeInterface
-                        && $options['timerange']['end'] instanceof \DateTimeInterface;
+                        && $options['timerange']['end'] instanceof \DateTimeInterface
+                        && $options['types'] === ['VEVENT'];
                 }),
                 null,
                 null

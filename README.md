@@ -9,7 +9,7 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 
 ## Features
 
-- **Calendar integration**: Display upcoming events from multiple Nextcloud calendars
+- **Calendar integration**: Display upcoming, currently running and multi-day events from multiple Nextcloud calendars, including recurring events and all-day events
 - **Event descriptions**: Optionally show sanitized calendar descriptions below events, limited to three lines
 - **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
 - **Preset widget selection**: Enable or disable the slideshow, weather and calendar independently for each preset
@@ -26,6 +26,10 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Configurable settings**: Global display settings plus per-display preset assignment through the UI
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
+
+### Calendar limitation
+
+The display requests calendar entries for the current time through the next 30 days. Currently running events are shown when the Nextcloud calendar backend returns entries that overlap this period. Some calendar backends may filter only by the event start time; in that case, an event that started before the requested period and is still running cannot be displayed because it is not returned by Nextcloud. Events that start within the requested period are not affected.
 
 ## Installation
 

@@ -9,6 +9,15 @@ const API_BASE = IS_PUBLIC
   ? BASE_URL + 'apps/digitalsignage/api/public/' + PUBLIC_TOKEN
   : BASE_URL + 'apps/digitalsignage/api';
 
+function parseCalendarDate(dateValue, isAllDay) {
+  if (isAllDay && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+    const [year, month, day] = dateValue.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  return new Date(dateValue);
+}
+
 let config = null;
 let configRevision = null;
 
@@ -541,15 +550,18 @@ async function loadICS() {
         // Extract event properties from the objects array
         if (eventData.objects && eventData.objects.length > 0) {
           const obj = eventData.objects[0];
+          const isAllDay = Boolean(obj.DTSTART && obj.DTSTART[1] && obj.DTSTART[1].VALUE === 'DATE');
+          const startDate = obj.DTSTART ? parseCalendarDate(obj.DTSTART[0].date, isAllDay) : new Date();
+          const endDate = obj.DTEND ? parseCalendarDate(obj.DTEND[0].date, isAllDay) : startDate;
 
           // Create a simple event object
           const event = {
             summary: obj.SUMMARY ? obj.SUMMARY[0] : 'Untitled Event',
             description: getCalendarText(obj.DESCRIPTION),
-            startDate: obj.DTSTART ? new Date(obj.DTSTART[0].date) : new Date(),
-            endDate: obj.DTEND ? new Date(obj.DTEND[0].date) : new Date(),
+            startDate,
+            endDate,
             location: obj.LOCATION ? obj.LOCATION[0] : null,
-            isAllDay: obj.DTSTART && obj.DTSTART[1] && obj.DTSTART[1].VALUE === 'DATE'
+            isAllDay
           };
 
           events.push(event);
@@ -565,7 +577,7 @@ async function loadICS() {
     console.log('Current date:', now);
 
     const upcoming = events.filter(e => {
-      const eventDate = e.startDate;
+      const eventDate = e.endDate;
       const eventTitle = e.summary.toLowerCase();
 
       // Check if event should be excluded (exact match)
@@ -573,10 +585,10 @@ async function loadICS() {
         eventTitle === excludeText.toLowerCase()
       );
 
-      const isFuture = eventDate >= now;
-      console.log('Event:', e.summary, 'Date:', eventDate, 'Is future:', isFuture, 'Excluded:', shouldExclude);
+      const isCurrentOrFuture = eventDate > now;
+      console.log('Event:', e.summary, 'End date:', eventDate, 'Is current or future:', isCurrentOrFuture, 'Excluded:', shouldExclude);
 
-      return isFuture && !shouldExclude;
+      return isCurrentOrFuture && !shouldExclude;
     }).sort((a,b) => a.startDate - b.startDate)
       .slice(0,10);
 
