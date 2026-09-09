@@ -261,6 +261,18 @@ function hideInstantMessage() {
   overlay.classList.remove('visible');
 }
 
+function positionInstantMessageOverlay(overlay) {
+  const header = document.querySelector('.display-header');
+  if (!header) {
+    overlay.style.top = '0.5rem';
+    overlay.style.transform = 'translateX(-50%)';
+    return;
+  }
+
+  overlay.style.top = `${header.getBoundingClientRect().height / 2}px`;
+  overlay.style.transform = 'translate(-50%, -50%)';
+}
+
 function showInstantMessage(message, duration) {
   const overlay = getInstantMessageOverlay();
   const content = overlay.querySelector('.instant-message-content');
@@ -268,6 +280,7 @@ function showInstantMessage(message, duration) {
     return;
   }
 
+  positionInstantMessageOverlay(overlay);
   content.textContent = message;
   overlay.classList.add('visible');
 

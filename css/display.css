@@ -184,8 +184,8 @@ body {
 .instant-message-overlay {
   position: fixed;
   left: 50%;
-  top: 0.25rem;
-  transform: translateX(-50%);
+  top: 0;
+  transform: translate(-50%, -50%);
   width: min(88vw, 720px);
   z-index: 15000;
   pointer-events: none;
@@ -203,7 +203,7 @@ body {
   background: rgba(32, 38, 48, 0.86);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  padding: 0.65rem 1rem;
+  padding: 0.58rem 1rem;
   color: rgba(255, 255, 255, 0.94);
   font-size: 1rem;
   line-height: 1.3;
