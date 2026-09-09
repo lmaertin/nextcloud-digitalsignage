@@ -7,6 +7,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.9] - 2026-09-09
+
+### Added
+
+- **Fixed [#11](https://github.com/lmaertin/nextcloud-digitalsignage/issues/11)**: Control-token clients can send a short-lived plain-text overlay to one display, while view-token clients can poll and receive it without interrupting the existing display content.
+- Instant messages support a configurable duration from 5 to 300 seconds, with a default of 15 seconds.
+
+### Changed
+
+- Only the latest pending message is retained for each display; a newer message replaces the previous one.
+- Instant messages are stored in the distributed cache and do not require a database migration.
+
+### Security
+
+- Messages are scoped to the display identified by the control or view token, reject HTML, and are rendered using `textContent`.
+
 ## [0.7.8] - 2026-09-09
 
 ### Fixed

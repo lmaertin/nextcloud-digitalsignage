@@ -22,13 +22,14 @@ Display calendar events with optional descriptions, weather information and medi
 - **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
 - **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
 - **Remote Control** – Change presets through the control API without UI access
+- **Instant Display Messages** – Send short-lived plain-text overlays to individual displays through their control tokens
 - **Public Access** – Dedicated view tokens for displays without login requirement
 - **Multi-Language** – Available in English, German (formal/informal), French, Dutch, Spanish, Italian
 
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.7.8</version>
+    <version>0.7.9</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

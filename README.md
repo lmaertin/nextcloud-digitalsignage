@@ -32,6 +32,8 @@ See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
 The display requests calendar entries for the current time through the next 30 days. Currently running events are shown when the Nextcloud calendar backend returns entries that overlap this period. Some calendar backends may filter only by the event start time; in that case, an event that started before the requested period and is still running cannot be displayed because it is not returned by Nextcloud. Events that start within the requested period are not affected.
 
+Instant messages are delivered to one display at a time. The control token is used to send a message, while the matching view token is used by the public display to poll it. Messages are plain text, are limited to 500 characters, and automatically expire after 5 to 300 seconds (15 seconds by default). Only the latest pending message per display is retained.
+
 ## Installation
 
 ### Requirements
