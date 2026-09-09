@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.8] - 2026-09-09
+
+### Fixed
+
+- **Fixed [#18](https://github.com/lmaertin/nextcloud-digitalsignage/issues/18)**: Calendar displays now include all-day events, currently running and multi-day events, and recurring event occurrences with the correct end time.
+- Calendar searches now ignore `VTODO` entries from calendars that also contain task lists.
+- Events using `DURATION` instead of `DTEND` are normalized before they reach the display.
+
+### Known limitation
+
+- A currently running event can only be displayed if Nextcloud returns it for the requested timerange. If the calendar backend filters solely by `DTSTART`, an event that started before the timerange begins may not be returned even though its `DTEND` is still in the future.
+
 ## [0.7.7] - 2026-09-03
 
 - **Fixed [#14](https://github.com/lmaertin/nextcloud-digitalsignage/issues/14)**: Recurring event times were off by several hours because the timezone of expanded occurrences was ignored; times are now converted to unambiguous instants before reaching the display.

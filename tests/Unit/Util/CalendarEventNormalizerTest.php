@@ -34,6 +34,34 @@ class CalendarEventNormalizerTest extends TestCase {
         $this->assertSame('2026-09-03', $result['objects'][0]['DTSTART'][0]['date']);
     }
 
+    public function testDurationIsNormalizedToEndDateTime(): void {
+        $startDate = new \DateTimeImmutable('2026-09-03 09:00:00', new \DateTimeZone('Europe/Berlin'));
+        $eventData = [
+            'objects' => [[
+                'DTSTART' => [$startDate, ['VALUE' => 'DATE-TIME']],
+                'DURATION' => ['PT2H'],
+            ]],
+        ];
+
+        $result = CalendarEventNormalizer::normalize($eventData);
+
+        $this->assertSame('2026-09-03T11:00:00+02:00', $result['objects'][0]['DTEND'][0]['date']);
+    }
+
+    public function testAllDayDurationIsNormalizedToEndDate(): void {
+        $startDate = new \DateTimeImmutable('2026-09-03', new \DateTimeZone('UTC'));
+        $eventData = [
+            'objects' => [[
+                'DTSTART' => [$startDate, ['VALUE' => 'DATE']],
+                'DURATION' => [new \DateInterval('P2D')],
+            ]],
+        ];
+
+        $result = CalendarEventNormalizer::normalize($eventData);
+
+        $this->assertSame('2026-09-05', $result['objects'][0]['DTEND'][0]['date']);
+    }
+
     public function testMissingObjectsAreReturnedUnchanged(): void {
         $eventData = ['objects' => []];
 

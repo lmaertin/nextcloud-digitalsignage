@@ -189,7 +189,10 @@ class ApiController extends Controller {
             $end = new \DateTime();
             $end->modify('+30 days');
 
-            $searchResult = $targetCalendar->search('', [], ['timerange' => ['start' => $start, 'end' => $end]], null, null);
+            $searchResult = $targetCalendar->search('', [], [
+                'timerange' => ['start' => $start, 'end' => $end],
+                'types' => ['VEVENT'],
+            ], null, null);
             $events = [];
 
             foreach ($searchResult as $eventData) {
