@@ -27,7 +27,9 @@ return [
         ['name' => 'publicApi#getCalendar', 'url' => '/api/public/{token}/calendar', 'verb' => 'GET'],
         ['name' => 'publicApi#getImages', 'url' => '/api/public/{token}/images', 'verb' => 'GET'],
         ['name' => 'publicApi#getImage', 'url' => '/api/public/{token}/image', 'verb' => 'GET'],
+        ['name' => 'publicApi#getMessages', 'url' => '/api/public/{token}/messages', 'verb' => 'GET'],
         ['name' => 'control#activatePreset', 'url' => '/api/control/{controlToken}/activate-preset', 'verb' => 'POST'],
+        ['name' => 'control#sendMessage', 'url' => '/api/control/{controlToken}/message', 'verb' => 'POST'],
 
         // Token management
         ['name' => 'token#create', 'url' => '/api/token/create', 'verb' => 'POST'],

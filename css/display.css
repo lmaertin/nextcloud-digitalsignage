@@ -181,6 +181,38 @@ body {
   background: #d0d0d0;
 }
 
+.instant-message-overlay {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);
+  width: min(88vw, 720px);
+  z-index: 15000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.instant-message-overlay.visible {
+  opacity: 1;
+}
+
+.instant-message-content {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(32, 38, 48, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 0.58rem 1rem;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 1rem;
+  line-height: 1.3;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  white-space: pre-wrap;
+}
+
 .container {
   display: grid;
   grid-template-columns: minmax(0, var(--content-split-ratio)) minmax(0, calc(100% - var(--content-split-ratio)));

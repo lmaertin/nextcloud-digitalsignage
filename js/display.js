@@ -20,6 +20,8 @@ function parseCalendarDate(dateValue, isAllDay) {
 
 let config = null;
 let configRevision = null;
+let latestInstantMessageId = null;
+let instantMessageHideTimer = null;
 
 function applyRuntimeConfig() {
   if (!config) {
@@ -226,6 +228,104 @@ async function pollConfigChanges() {
     applyRuntimeConfig();
   } catch (error) {
     console.error('Config polling error:', error);
+  }
+}
+
+function getInstantMessageOverlay() {
+  let overlay = document.getElementById('instant-message-overlay');
+  if (overlay) {
+    return overlay;
+  }
+
+  overlay = document.createElement('div');
+  overlay.id = 'instant-message-overlay';
+  overlay.className = 'instant-message-overlay';
+
+  const content = document.createElement('div');
+  content.className = 'instant-message-content';
+  content.setAttribute('role', 'status');
+  content.setAttribute('aria-live', 'polite');
+  content.setAttribute('aria-atomic', 'true');
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+
+  return overlay;
+}
+
+function hideInstantMessage() {
+  const overlay = document.getElementById('instant-message-overlay');
+  if (!overlay) {
+    return;
+  }
+
+  overlay.classList.remove('visible');
+}
+
+function positionInstantMessageOverlay(overlay) {
+  const header = document.querySelector('.display-header');
+  if (!header) {
+    overlay.style.top = '0.5rem';
+    overlay.style.transform = 'translateX(-50%)';
+    return;
+  }
+
+  overlay.style.top = `${header.getBoundingClientRect().height / 2}px`;
+  overlay.style.transform = 'translate(-50%, -50%)';
+}
+
+function showInstantMessage(message, duration) {
+  const overlay = getInstantMessageOverlay();
+  const content = overlay.querySelector('.instant-message-content');
+  if (!content) {
+    return;
+  }
+
+  positionInstantMessageOverlay(overlay);
+  content.textContent = message;
+  overlay.classList.add('visible');
+
+  if (instantMessageHideTimer) {
+    clearTimeout(instantMessageHideTimer);
+  }
+  instantMessageHideTimer = setTimeout(hideInstantMessage, Math.max(1, duration) * 1000);
+}
+
+async function pollInstantMessages() {
+  if (!IS_PUBLIC) {
+    return;
+  }
+
+  const messageUrl = latestInstantMessageId
+    ? `${API_BASE}/messages?since=${encodeURIComponent(latestInstantMessageId)}`
+    : `${API_BASE}/messages`;
+
+  try {
+    const response = await fetch(messageUrl);
+    if (!response.ok) {
+      return;
+    }
+
+    const data = await response.json();
+    if (typeof data?.nextSince === 'string' && data.nextSince.trim() !== '') {
+      latestInstantMessageId = data.nextSince;
+    }
+
+    if (!data || !Array.isArray(data.messages) || data.messages.length === 0) {
+      return;
+    }
+
+    const nextMessage = data.messages[0];
+    if (!nextMessage || typeof nextMessage.id !== 'string' || typeof nextMessage.message !== 'string') {
+      return;
+    }
+
+    const duration = Number.parseInt(nextMessage.duration, 10);
+    const safeDuration = Number.isFinite(duration) ? duration : 15;
+
+    latestInstantMessageId = nextMessage.id;
+    showInstantMessage(nextMessage.message, safeDuration);
+  } catch (error) {
+    console.warn('Instant message polling error:', error);
   }
 }
 
@@ -735,6 +835,7 @@ async function init() {
       setInterval(loadICS, 600000); // 10 minutes
     }
     setInterval(pollConfigChanges, 15000); // 15 seconds
+    setInterval(pollInstantMessages, 5000); // 5 seconds
 
     const imageRefreshIntervalMs = getSlideshowRefreshIntervalMs();
     if (imageRefreshIntervalMs > 0) {
@@ -743,6 +844,10 @@ async function init() {
 
     // Initialize date and time display
     initDateTime();
+
+    if (IS_PUBLIC) {
+      await pollInstantMessages();
+    }
 
     // Initialize fullscreen button
     initFullscreenButton();
