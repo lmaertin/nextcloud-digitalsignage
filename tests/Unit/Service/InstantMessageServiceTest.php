@@ -26,7 +26,7 @@ class InstantMessageServiceTest extends TestCase {
             );
 
         $cacheFactory = $this->createMock(ICacheFactory::class);
-        $cacheFactory->method('create')->with('digitalsignage-instant-messages')->willReturn($cache);
+        $cacheFactory->method('createDistributed')->with('digitalsignage-instant-messages')->willReturn($cache);
 
         $service = new InstantMessageService($cacheFactory);
         $result = $service->storeMessage(7, 'Maintenance starts now', 15);
@@ -40,7 +40,7 @@ class InstantMessageServiceTest extends TestCase {
     public function testStoreMessageRejectsHtml(): void {
         $cache = $this->createMock(ICache::class);
         $cacheFactory = $this->createMock(ICacheFactory::class);
-        $cacheFactory->method('create')->willReturn($cache);
+        $cacheFactory->method('createDistributed')->willReturn($cache);
 
         $service = new InstantMessageService($cacheFactory);
 
@@ -51,7 +51,7 @@ class InstantMessageServiceTest extends TestCase {
     public function testStoreMessageRejectsTooShortDuration(): void {
         $cache = $this->createMock(ICache::class);
         $cacheFactory = $this->createMock(ICacheFactory::class);
-        $cacheFactory->method('create')->willReturn($cache);
+        $cacheFactory->method('createDistributed')->willReturn($cache);
 
         $service = new InstantMessageService($cacheFactory);
 
@@ -69,12 +69,31 @@ class InstantMessageServiceTest extends TestCase {
         ]);
 
         $cacheFactory = $this->createMock(ICacheFactory::class);
-        $cacheFactory->method('create')->willReturn($cache);
+        $cacheFactory->method('createDistributed')->willReturn($cache);
 
         $service = new InstantMessageService($cacheFactory);
         $result = $service->pollMessages(2, 'abc123');
 
         $this->assertSame([], $result['messages']);
         $this->assertSame('abc123', $result['nextSince']);
+    }
+
+    public function testPollMessagesDoesNotExtendMessageLifetime(): void {
+        $cache = $this->createMock(ICache::class);
+        $cache->method('get')->with('display-4')->willReturn([
+            'id' => 'expiring-message',
+            'message' => 'Closing soon',
+            'duration' => 60,
+            'expiresAt' => time() + 2,
+        ]);
+
+        $cacheFactory = $this->createMock(ICacheFactory::class);
+        $cacheFactory->method('createDistributed')->willReturn($cache);
+
+        $service = new InstantMessageService($cacheFactory);
+        $result = $service->pollMessages(4, null);
+
+        $this->assertLessThanOrEqual(2, $result['messages'][0]['duration']);
+        $this->assertGreaterThanOrEqual(1, $result['messages'][0]['duration']);
     }
 }

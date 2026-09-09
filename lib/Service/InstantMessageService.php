@@ -18,7 +18,7 @@ class InstantMessageService {
     private ICache $cache;
 
     public function __construct(ICacheFactory $cacheFactory) {
-        $this->cache = $cacheFactory->create(self::CACHE_NAMESPACE);
+        $this->cache = $cacheFactory->createDistributed(self::CACHE_NAMESPACE);
     }
 
     public function storeMessage(int $displayId, string $message, int $duration): array {
@@ -75,11 +75,13 @@ class InstantMessageService {
             return ['messages' => [], 'nextSince' => $id];
         }
 
+        $remainingDuration = max(1, $expiresAt - time());
+
         return [
             'messages' => [[
                 'id' => $id,
                 'message' => $message,
-                'duration' => max(self::MIN_DURATION_SECONDS, min(self::MAX_DURATION_SECONDS, $duration)),
+                'duration' => min($remainingDuration, max(self::MIN_DURATION_SECONDS, min(self::MAX_DURATION_SECONDS, $duration))),
                 'expiresAt' => $expiresAt,
             ]],
             'nextSince' => $id,
