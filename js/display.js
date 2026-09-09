@@ -822,7 +822,7 @@ async function init() {
       setInterval(loadICS, 600000); // 10 minutes
     }
     setInterval(pollConfigChanges, 15000); // 15 seconds
-    setInterval(pollInstantMessages, 60000); // 60 seconds
+    setInterval(pollInstantMessages, 5000); // 5 seconds
 
     const imageRefreshIntervalMs = getSlideshowRefreshIntervalMs();
     if (imageRefreshIntervalMs > 0) {
