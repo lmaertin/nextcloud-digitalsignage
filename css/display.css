@@ -184,7 +184,7 @@ body {
 .instant-message-overlay {
   position: fixed;
   left: 50%;
-  bottom: 2rem;
+  top: 0.25rem;
   transform: translateX(-50%);
   width: min(90vw, 900px);
   z-index: 15000;

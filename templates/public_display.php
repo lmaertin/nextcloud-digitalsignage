@@ -8,7 +8,7 @@
     $urlGen = $_['url_generator'];
     $nonce = $_['cspNonce'];
   ?>
-  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.7.0.8">
+  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.7.8">
   <style>
     :root {
       --primary-blue: <?php p($_['color_primary'] ?? '#0066cc'); ?>;
