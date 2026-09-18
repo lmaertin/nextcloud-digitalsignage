@@ -145,6 +145,8 @@
         "Events containing these terms will be hidden": "Events containing these terms will be hidden",
         "Images / Slideshow": "Images / Slideshow",
         "Media folder": "Media folder",
+        "Include media from subfolders": "Include media from subfolders",
+        "Also search supported media files in subfolders of the selected media folder.": "Also search supported media files in subfolders of the selected media folder.",
         "Slide interval (seconds)": "Slide interval (seconds)",
         "Duration per image. Videos play to completion automatically.": "Duration per image. Videos play to completion automatically.",
         "Weather": "Weather",

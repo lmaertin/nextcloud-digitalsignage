@@ -8,7 +8,7 @@
     $urlGen = $_['url_generator'];
     $nonce = $_['cspNonce'];
   ?>
-  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.8.5">
+  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.8.6">
   <style>
     :root {
       --primary-blue: <?php p($_['color_primary'] ?? '#0066cc'); ?>;
@@ -90,6 +90,6 @@
   </div>
   <?php endif; ?>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
-  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=0.8.5" defer></script>
+  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=0.8.6" defer></script>
 </body>
 </html>

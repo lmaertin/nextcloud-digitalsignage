@@ -36,6 +36,7 @@ class PresetService {
         $preset->setImageFolder($this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'));
         $preset->setImageFitMode($this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'));
         $preset->setImageOrderMode($this->normalizeImageOrderMode($this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle')));
+        $preset->setRecursiveMedia('0');
         $preset->setFullscreenSlideshow($this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0'));
         $preset->setShowDisplayName($this->config->getAppValue('digitalsignage', 'show_display_name', '1'));
         $preset->setHeaderTitleSource($this->normalizeHeaderTitleSource(
@@ -63,6 +64,7 @@ class PresetService {
             'imageFolder' => $preset->getImageFolder(),
             'imageFitMode' => $preset->getImageFitMode(),
             'imageOrderMode' => $imageOrderMode,
+            'recursiveMedia' => $preset->getRecursiveMedia() === '1',
             'fullscreenSlideshow' => $preset->getFullscreenSlideshow() === '1',
             'showDisplayName' => $preset->getShowDisplayName() === '1',
             'headerTitleSource' => $this->normalizeHeaderTitleSource($preset->getHeaderTitleSource() ?? 'global'),

@@ -99,6 +99,7 @@ function getPresetFormData() {
     image_fit_mode: document.getElementById('preset-image-fit-mode').value,
     image_order_mode: document.getElementById('preset-image-order-mode').value,
     imageOrderMode: document.getElementById('preset-image-order-mode').value,
+    recursive_media: document.getElementById('preset-recursive-media').checked ? '1' : '0',
     slide_interval: parseInt(document.getElementById('preset-slide-interval').value, 10) || 10,
     header_title_source: document.getElementById('preset-header-title-source').value,
     show_slideshow: document.getElementById('preset-show-slideshow').checked ? '1' : '0',
@@ -116,6 +117,7 @@ function resetPresetForm() {
   document.getElementById('preset-image-folder').value = '';
   document.getElementById('preset-image-fit-mode').value = 'cover';
   document.getElementById('preset-image-order-mode').value = 'shuffle';
+  document.getElementById('preset-recursive-media').checked = false;
   document.getElementById('preset-slide-interval').value = '10';
   document.getElementById('preset-header-title-source').value = 'global';
   document.getElementById('preset-show-slideshow').checked = true;
@@ -171,6 +173,7 @@ function fillPresetForm(preset) {
   document.getElementById('preset-image-folder').value = preset.imageFolder;
   document.getElementById('preset-image-fit-mode').value = preset.imageFitMode;
   document.getElementById('preset-image-order-mode').value = preset.imageOrderMode || 'shuffle';
+  document.getElementById('preset-recursive-media').checked = preset.recursiveMedia === true;
   document.getElementById('preset-slide-interval').value = String(preset.slideInterval);
   document.getElementById('preset-header-title-source').value = preset.headerTitleSource || (preset.showDisplayName !== false ? 'global' : 'none');
   document.getElementById('preset-show-slideshow').checked = preset.showSlideshow !== false;

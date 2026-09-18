@@ -236,6 +236,7 @@ class PublicApiController extends Controller {
             'autoFullscreenPrompt' => $effectiveConfig['autoFullscreenPrompt'],
             'imageFitMode' => $effectiveConfig['imageFitMode'],
             'imageOrderMode' => $effectiveConfig['imageOrderMode'],
+            'recursiveMedia' => $effectiveConfig['recursiveMedia'],
             'textSizes' => $effectiveConfig['textSizes'],
             'textSizeCssVariables' => $effectiveConfig['textSizeCssVariables'],
             'fullscreenSlideshow' => $effectiveConfig['fullscreenSlideshow'],
@@ -396,26 +397,52 @@ class PublicApiController extends Controller {
             $images = [];
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'mkv'];
             $videoExtensions = ['mp4', 'webm', 'mov', 'mkv'];
-
-            foreach ($folder->getDirectoryListing() as $file) {
-                if ($file->getType() === \OCP\Files\FileInfo::TYPE_FILE) {
-                    $extension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
-                    if (in_array($extension, $allowedExtensions)) {
-                        $images[] = [
-                            'id' => $file->getId(),
-                            'name' => $file->getName(),
-                            'path' => $file->getPath(),
-                            'size' => $file->getSize(),
-                            'mtime' => $file->getMTime(),
-                            'type' => in_array($extension, $videoExtensions) ? 'video' : 'image'
-                        ];
-                    }
-                }
-            }
+            $this->collectMediaFiles(
+                $folder,
+                $effectiveConfig['recursiveMedia'] === true,
+                $allowedExtensions,
+                $videoExtensions,
+                $images
+            );
 
             return new JSONResponse(['images' => $images]);
         } catch (\Exception $e) {
             return new JSONResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    private function collectMediaFiles(
+        \OCP\Files\Folder $folder,
+        bool $recursive,
+        array $allowedExtensions,
+        array $videoExtensions,
+        array &$images
+    ): void {
+        foreach ($folder->getDirectoryListing() as $file) {
+            if ($file instanceof \OCP\Files\Folder) {
+                if ($recursive) {
+                    $this->collectMediaFiles($file, true, $allowedExtensions, $videoExtensions, $images);
+                }
+                continue;
+            }
+
+            if ($file->getType() !== \OCP\Files\FileInfo::TYPE_FILE) {
+                continue;
+            }
+
+            $extension = strtolower(pathinfo($file->getName(), PATHINFO_EXTENSION));
+            if (!in_array($extension, $allowedExtensions, true)) {
+                continue;
+            }
+
+            $images[] = [
+                'id' => $file->getId(),
+                'name' => $file->getName(),
+                'path' => $file->getPath(),
+                'size' => $file->getSize(),
+                'mtime' => $file->getMTime(),
+                'type' => in_array($extension, $videoExtensions, true) ? 'video' : 'image'
+            ];
         }
     }
 

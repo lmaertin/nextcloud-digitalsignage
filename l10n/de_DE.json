@@ -145,6 +145,8 @@
         "Events containing these terms will be hidden": "Termine mit diesen Begriffen werden ausgeblendet",
         "Images / Slideshow": "Medien & Slideshow",
         "Media folder": "Medienordner",
+        "Include media from subfolders": "Medien aus Unterordnern einbeziehen",
+        "Also search supported media files in subfolders of the selected media folder.": "Unterstützte Mediendateien auch in Unterordnern des ausgewählten Medienordners suchen.",
         "Folders are loading...": "Ordner werden geladen...",
         "Save": "Speichern",
         "Slide interval (seconds)": "Anzeigedauer (Sekunden)",

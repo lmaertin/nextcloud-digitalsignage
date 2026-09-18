@@ -79,6 +79,7 @@ class DisplayConfigService {
             'imageFolder' => $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos'),
             'imageFitMode' => $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover'),
             'imageOrderMode' => $this->config->getAppValue('digitalsignage', 'image_order_mode', 'shuffle'),
+            'recursiveMedia' => false,
             'slideInterval' => (int)$this->config->getAppValue('digitalsignage', 'slide_interval', '10'),
             'imageRefreshIntervalMinutes' => max(0, (float)$this->config->getAppValue('digitalsignage', 'image_refresh_interval_minutes', '15')),
             'fullscreenSlideshow' => $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0') === '1',
@@ -103,6 +104,7 @@ class DisplayConfigService {
                 $effective['imageFolder'] = $preset->getImageFolder();
                 $effective['imageFitMode'] = $preset->getImageFitMode();
                 $effective['imageOrderMode'] = $preset->getImageOrderMode() === 'filename' ? 'filename' : 'shuffle';
+                $effective['recursiveMedia'] = ($preset->getRecursiveMedia() ?? '0') === '1';
                 $effective['slideInterval'] = $preset->getSlideInterval();
                 $effective['fullscreenSlideshow'] = $preset->getFullscreenSlideshow() === '1';
                 $effective['showDisplayName'] = $preset->getShowDisplayName() ?? '1';

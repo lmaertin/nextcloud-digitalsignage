@@ -17,6 +17,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setImageFitMode(string $imageFitMode)
  * @method string getImageOrderMode()
  * @method void setImageOrderMode(string $imageOrderMode)
+ * @method string getRecursiveMedia()
+ * @method void setRecursiveMedia(string $recursiveMedia)
  * @method string getFullscreenSlideshow()
  * @method void setFullscreenSlideshow(string $fullscreenSlideshow)
  * @method string getShowDisplayName()
@@ -48,6 +50,7 @@ class Preset extends Entity {
     protected $imageFolder;
     protected $imageFitMode;
     protected $imageOrderMode;
+    protected $recursiveMedia;
     protected $fullscreenSlideshow;
     protected $showDisplayName;
     protected $headerTitleSource;
@@ -68,6 +71,7 @@ class Preset extends Entity {
         $this->addType('imageFolder', 'string');
         $this->addType('imageFitMode', 'string');
         $this->addType('imageOrderMode', 'string');
+        $this->addType('recursiveMedia', 'string');
         $this->addType('fullscreenSlideshow', 'string');
         $this->addType('showDisplayName', 'string');
         $this->addType('headerTitleSource', 'string');

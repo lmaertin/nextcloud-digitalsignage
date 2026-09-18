@@ -145,6 +145,8 @@
         "Events containing these terms will be hidden": "Les événements contenant ces termes seront masqués",
         "Images / Slideshow": "Médias / Diaporama",
         "Media folder": "Dossier de médias",
+        "Include media from subfolders": "Inclure les médias des sous-dossiers",
+        "Also search supported media files in subfolders of the selected media folder.": "Rechercher également les fichiers médias pris en charge dans les sous-dossiers du dossier sélectionné.",
         "Slide interval (seconds)": "Intervalle des diapositives (secondes)",
         "Duration per image. Videos play to completion automatically.": "Durée par image. Les vidéos se jouent automatiquement jusqu'à la fin.",
         "Weather": "Météo",

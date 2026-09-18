@@ -145,6 +145,8 @@
         "Events containing these terms will be hidden": "Evenementen met deze termen worden verborgen",
         "Images / Slideshow": "Media / Diavoorstelling",
         "Media folder": "Mediamap",
+        "Include media from subfolders": "Media uit submappen opnemen",
+        "Also search supported media files in subfolders of the selected media folder.": "Zoek ook naar ondersteunde mediabestanden in submappen van de geselecteerde mediamap.",
         "Slide interval (seconds)": "Dia-interval (seconden)",
         "Duration per image. Videos play to completion automatically.": "Duur per afbeelding. Video's worden automatisch tot het einde afgespeeld.",
         "Weather": "Weer",
