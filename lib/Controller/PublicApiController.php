@@ -96,14 +96,22 @@ class PublicApiController extends Controller {
             return new JSONResponse(['error' => 'Nextcloud Weather app is not enabled'], 503);
         }
 
-        $latitude = $this->userConfig->getValueFloat($userId, 'weather_status', 'lat');
-        $longitude = $this->userConfig->getValueFloat($userId, 'weather_status', 'lon');
+        $effectiveConfig = $this->displayConfigService->getEffectiveConfig($display);
+        $latitude = $effectiveConfig['weatherLatitude'] ?? null;
+        $longitude = $effectiveConfig['weatherLongitude'] ?? null;
+        if ($latitude === null || $longitude === null) {
+            $latitude = $this->userConfig->getValueFloat($userId, 'weather_status', 'lat');
+            $longitude = $this->userConfig->getValueFloat($userId, 'weather_status', 'lon');
+        }
         $altitude = $this->userConfig->getValueFloat($userId, 'weather_status', 'altitude');
         if ($latitude === 0.0 || $longitude === 0.0) {
             return new JSONResponse(['error' => 'Weather location is not configured'], 503);
         }
 
         try {
+            $timeZone = $effectiveConfig['timeZone'] !== ''
+                ? new \DateTimeZone($effectiveConfig['timeZone'])
+                : new \DateTimeZone('UTC');
             $client = $this->clientService->newClient();
             $response = $client->get('https://api.met.no/weatherapi/locationforecast/2.0/compact', [
                 'query' => [
@@ -127,7 +135,9 @@ class PublicApiController extends Controller {
                 $nextHour = $entry['data']['next_1_hours'] ?? $entry['data']['next_6_hours'] ?? [];
                 $symbol = $nextHour['summary']['symbol_code'] ?? 'fair_day';
                 if (isset($details['air_temperature']) && isset($entry['time'])) {
-                    $date = substr((string)$entry['time'], 0, 10);
+                    $date = (new \DateTimeImmutable((string)$entry['time']))
+                        ->setTimezone($timeZone)
+                        ->format('Y-m-d');
                     if (!isset($days[$date])) {
                         $days[$date] = [
                             'date' => $date,
@@ -217,6 +227,7 @@ class PublicApiController extends Controller {
         $response = new JSONResponse([
             'displayName' => $effectiveConfig['displayName'],
             'locale' => $effectiveConfig['locale'],
+            'timeZone' => $effectiveConfig['timeZone'],
             'contentSplitRatio' => $effectiveConfig['contentSplitRatio'],
             'slideInterval' => $effectiveConfig['slideInterval'],
             'imageRefreshIntervalMinutes' => $effectiveConfig['imageRefreshIntervalMinutes'],
@@ -301,8 +312,8 @@ class PublicApiController extends Controller {
         $userId = $display->getUserId();
 
         try {
-            $calendarNamesJson = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
-            $calendarNames = json_decode($calendarNamesJson, true);
+            $effectiveConfig = $this->displayConfigService->getEffectiveConfig($display);
+            $calendarNames = $effectiveConfig['calendarNames'];
 
             if (empty($calendarNames) || !is_array($calendarNames)) {
                 return new JSONResponse(['error' => 'No calendars configured'], 400);
@@ -327,7 +338,7 @@ class PublicApiController extends Controller {
                     continue;
                 }
 
-                $start = new \DateTime();
+                $start = new \DateTime('today');
                 $end = new \DateTime();
                 $end->modify('+30 days');
 

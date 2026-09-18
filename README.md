@@ -5,13 +5,15 @@ A Nextcloud app for displaying digital info monitors with calendar events and me
 
 Short App Store summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows (images & videos), presets and remote switching.
 
+Current release: **0.9.0**
+
 ![Digital Signage Display](img/screenshot-display.png)
 
 ## Features
 
 - **Calendar integration**: Display upcoming, currently running and multi-day events from multiple Nextcloud calendars, including recurring events and all-day events
 - **Event descriptions**: Optionally show sanitized calendar descriptions below events, limited to three lines
-- **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval, fullscreen slideshow mode and display name visibility via presets
+- **Preset-based slideshow control**: Switch media folder, crop mode, playback order, interval and display name visibility via presets
 - **Preset widget selection**: Enable or disable the slideshow, weather and calendar independently for each preset
 - **Adaptive widget layouts**: Automatically give the remaining widgets the available space; weather is displayed in a narrow vertical column when paired with the slideshow or calendar
 - **Media slideshow**: Automated slideshow from a Nextcloud folder with images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
@@ -19,12 +21,13 @@ Short App Store summary: Public information screens for Nextcloud with calendars
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
 - **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
-- **Weather information**: Real-time weather data and icons from Nextcloud Weather Status
+- **Weather information**: Real-time weather data and icons for a location configured per display
+- **Location search**: Search locations through OpenStreetMap; coordinates and the matching IANA timezone are filled automatically
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
 - **Instant display messages**: Show short-lived overlay messages per display via API without interrupting slideshow, weather or calendar widgets
 - **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
-- **Configurable settings**: Global display settings plus per-display preset assignment through the UI
+- **Per-display settings**: Configure the display name, timezone, weather location and active preset independently
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.
 
@@ -63,7 +66,6 @@ Instant messages are delivered to one display at a time. The control token is us
 2. Configure the following settings (via UI, no file edits needed):
 
    **Global Display Settings:**
-      - **Display Name**: Global title shown at the top of displays (visibility controlled per preset)
       - **Auto-prompt for fullscreen**: When enabled, displays an optional dialog asking users to activate fullscreen mode when opening the display
       - Useful for kiosk setups and dedicated display devices
       - Can be declined without affecting functionality
@@ -78,16 +80,14 @@ Instant messages are delivered to one display at a time. The control token is us
    - Colors can be reset to defaults with one click
 
    **Content Sources:**
-   - **Calendar Sources**: Select multiple calendars from your Nextcloud calendars
    - **Text Sizes**: Configure display, clock, weather and calendar typography per text class
 
-   **Event Filtering:**
-   - **Hide Events**: Exclude specific events by title using autocomplete suggestions
-   - Autocomplete shows actual event titles from your configured calendars
-   - Add multiple exclusion terms as tags
-
-   **Weather:**
-   - Weather location and temperature unit are taken from the user's Nextcloud Weather Status settings
+   **Displays:**
+   - **Display Name**: Name shown in the display header when the active preset uses the display title
+   - **Display timezone**: IANA timezone used by the display clock, date and timed calendar entries
+   - **Weather location**: Search for a location with OpenStreetMap; latitude, longitude and timezone are filled automatically
+   - **Nextcloud Weather fallback**: If no custom weather coordinates are configured, the user's Nextcloud Weather location is used
+   - **Active Preset**: Choose the preset that controls media and widget visibility for this display
 
    **Media / Slideshow Presets:**
    - **Preset Name**: Administrative name for the preset
@@ -96,13 +96,14 @@ Instant messages are delivered to one display at a time. The control token is us
    - **Crop Mode**: Choose whether media fills the area or is fully contained with background
    - **Playback Order**: Shuffle media files or play them in ascending filename order
    - **Slide Interval (seconds)**: Duration per image in slideshow (videos play to completion automatically)
-   - **Fullscreen Slideshow Mode**: Hide calendar, weather and clock and show media only
-   - **Show display name in header**: Control whether the configured display name appears at the top of the screen for this preset
    - **Widgets**: Choose whether the slideshow, weather and calendar are shown; at least one widget must remain enabled
    - **Event descriptions**: Choose whether calendar event descriptions are shown for this preset; descriptions are limited to three visible lines
-   - **Header title**: Choose whether the global display name, the preset name or no title is shown in the display header
+   - **Header title**: Choose whether the display name, the preset name or no title is shown in the display header
+   - **Calendar Sources**: Select the calendars shown while this preset is active
+   - **Hide Events**: Exclude specific events by title for this preset using autocomplete suggestions
+   - Add multiple exclusion terms as tags
 
-   **Displays:**
+   **Display tokens:**
    - **Create new display** creates a dedicated screen entry with its own public view token and control token
    - **Internal display label** is only used to distinguish displays in the admin UI
    - Each display has a **view token** for the public screen URL
@@ -160,10 +161,10 @@ On small or portrait displays, the layout falls back to a vertical arrangement w
 
 ### Presets and Displays
 
-- **Global settings** define shared display behavior such as title, colors, calendars, weather, and text scaling.
+- **Global settings** define shared behavior such as colors, layout and text scaling.
 - **Layout settings** define how much horizontal space the image area gets in the standard split view.
-- **Presets** define image and widget behavior such as folder, crop mode, playback order, interval, fullscreen slideshow mode, display name visibility, and widget selection.
-- **Displays** combine a public view URL, a control token, and one active preset.
+- **Presets** define media, widget and calendar behavior such as folder, crop mode, playback order, interval, fullscreen slideshow mode, widget selection and event filtering.
+- **Displays** own the public view URL, control token, display name, timezone, weather location and active preset.
 
 This separation makes it possible to keep common settings global while switching display modes remotely.
 

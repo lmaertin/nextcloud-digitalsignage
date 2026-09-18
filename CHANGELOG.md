@@ -7,6 +7,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2026-09-19
+
+### Added
+
+- Per-display names, IANA timezones and weather coordinates, including OpenStreetMap location search with automatic coordinate and timezone detection.
+- Per-preset calendar selection and event exclusion filters.
+- Preset and display cloning, with active-preset assignment per display.
+- A redesigned administration interface with shared editor patterns for presets and displays, responsive layouts and copy controls for public URLs and control tokens.
+
+### Changed
+
+- Display configuration is now separated from preset configuration: displays own identity, timezone and weather location, while presets own media, widgets, calendars and filters.
+- Weather resolution uses the display location and timezone, with Nextcloud Weather as the fallback when no custom location is configured.
+- Calendar handling includes all-day, multi-day, recurring and currently running events with corrected date-only and timezone treatment.
+- Translation catalogs were synchronized across English, German, French, Dutch, Spanish and Italian, and obsolete translation keys were removed.
+- Documentation, asset cache versions and app metadata were updated for the `0.9.0` release.
+
+### Fixed
+
+- Date-only calendar values no longer shift to the previous day in western timezones.
+- Hidden widgets no longer leave transient loading placeholders on public displays.
+- Preset and display editor actions now restore correctly after saving or cancelling.
+
 ## [0.7.9] - 2026-09-09
 
 ### Added

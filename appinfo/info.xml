@@ -15,12 +15,14 @@ Display calendar events with optional descriptions, weather information and medi
 - **Media Slideshows** – Automated playback of images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV) from Nextcloud folders
 - **Media Refresh Interval** – Configure how often displays check media folders for changes, in minutes
 - **Video Support** – Native HTML5 video playback with muted autoplay and automatic transitions
-- **Weather Information** – Real-time weather data and icons from Nextcloud Weather Status
+- **Weather Information** – Real-time weather data and icons with a location configurable per display
+- **Display Locations** – Search locations with OpenStreetMap, automatically set weather coordinates and the matching timezone
 - **Customizable Appearance** – Configure layout, colors and font sizes per text class
-- **Preset System** – Switch media folders, crop modes, intervals, display settings and visible widgets remotely
+- **Preset System** – Switch media folders, crop modes, intervals and visible widgets remotely
 - **Widget Selection** – Enable or disable the slideshow, weather and calendar independently per preset
 - **Smart Event Filtering** – Hide specific events with autocomplete-enabled exclusion
 - **Multi-Display Support** – Manage multiple displays with separate tokens and preset assignments
+- **Per-Display Settings** – Configure the display name, timezone and weather location independently for each display
 - **Remote Control** – Change presets through the control API without UI access
 - **Instant Display Messages** – Send short-lived plain-text overlays to individual displays through their control tokens
 - **Public Access** – Dedicated view tokens for displays without login requirement
@@ -29,7 +31,7 @@ Display calendar events with optional descriptions, weather information and medi
 **Perfect for:**
 Reception screens, meeting room displays, office dashboards, school information boards, team calendars, shared workspace displays.
 ]]></description>
-    <version>0.7.9</version>
+    <version>0.9.0</version>
     <licence>agpl</licence>
     <author>Lukas Märtin</author>
     <namespace>DigitalSignage</namespace>

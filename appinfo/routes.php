@@ -19,6 +19,7 @@ return [
         ['name' => 'preset#create', 'url' => '/api/presets', 'verb' => 'POST'],
         ['name' => 'preset#update', 'url' => '/api/presets/{id}', 'verb' => 'PUT'],
         ['name' => 'preset#delete', 'url' => '/api/presets/{id}', 'verb' => 'DELETE'],
+        ['name' => 'preset#clone', 'url' => '/api/presets/{id}/clone', 'verb' => 'POST'],
 
         // Public API routes (with token)
         ['name' => 'publicApi#getConfig', 'url' => '/api/public/{token}/config', 'verb' => 'GET'],
@@ -34,6 +35,8 @@ return [
         // Token management
         ['name' => 'token#create', 'url' => '/api/token/create', 'verb' => 'POST'],
         ['name' => 'token#list', 'url' => '/api/token/list', 'verb' => 'GET'],
+        ['name' => 'token#update', 'url' => '/api/token/{id}', 'verb' => 'PUT'],
+        ['name' => 'token#clone', 'url' => '/api/token/{id}/clone', 'verb' => 'POST'],
         ['name' => 'token#activatePreset', 'url' => '/api/token/{id}/activate-preset', 'verb' => 'POST'],
         ['name' => 'token#delete', 'url' => '/api/token/delete/{id}', 'verb' => 'DELETE'],
 

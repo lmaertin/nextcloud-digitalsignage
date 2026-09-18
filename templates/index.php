@@ -1,12 +1,47 @@
           <!-- Bereich 'Show title bar' entfernt, da durch Display-Name-Option ersetzt -->
 <!-- Farbsynchronisation jetzt in settings.js ausgelagert (CSP-konform) -->
 <?php
-style('digitalsignage', 'settings');
 $l = $_['l10n'];
 ?>
 
+<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=0.9.0" />
+
+<style nonce="<?php p($_['cspNonce']); ?>">
+  .ds-save-bar {
+    position: static !important;
+    margin-top: 24px;
+    padding: 14px 0 0;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-width: 1px 0 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .ds-displays-section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .ds-display-create-section:has(#display-create-editor:not([hidden])) > #new-display-btn {
+    display: none !important;
+  }
+
+  .ds-preset-editor .ds-editor-actions {
+    display: flex !important;
+    grid-column: 1 / -1 !important;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .ds-preset-widgets-field {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+</style>
+
 <div id="app-content">
-  <div id="app-content-wrapper" style="padding: 30px; max-width: 1400px; margin: 0 auto;">
+  <div id="app-content-wrapper" class="ds-page-shell">
     <div class="ds-stack">
       <div class="section ds-section">
         <h3 class="ds-section-title"><?php p($l->t('Digital Signage')); ?></h3>
@@ -14,14 +49,7 @@ $l = $_['l10n'];
 
         <!-- General Settings -->
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title">⚙️ <?php p($l->t('General')); ?></h4>
-          <div class="ds-form-grid">
-            <div class="ds-form-group">
-              <label for="display_name" class="ds-label"><?php p($l->t('Display Name')); ?></label>
-              <input type="text" id="display_name" name="display_name" value="<?php p($_['display_name'] ?? $l->t('Digital Signage')); ?>" placeholder="<?php p($l->t('Digital Signage')); ?>" class="ds-input" />
-              <span class="ds-hint"><?php p($l->t('Name shown on displays (visibility controlled per preset)')); ?></span>
-            </div>
-          </div>
+          <h4 class="ds-subsection-title"><?php p($l->t('General')); ?></h4>
           <div class="ds-form-grid">
             <div class="ds-form-group">
               <div class="ds-checkbox-row">
@@ -38,46 +66,8 @@ $l = $_['l10n'];
           </div>
         </div>
 
-        <!-- Calendar -->
         <div class="ds-subsection">
-          <h4 class="ds-subsection-title">📅 <?php p($l->t('Calendar')); ?></h4>
-          <div class="ds-form-grid">
-            <div class="ds-form-group ds-form-group-full">
-              <label for="calendar_names" class="ds-label"><?php p($l->t('Calendar sources')); ?></label>
-              <select id="calendar_names" name="calendar_names" multiple class="ds-input ds-multiselect" data-current-value="<?php p($_['calendar_names'] ?? '[]'); ?>">
-                <option value=""><?php p($l->t('Loading calendars...')); ?></option>
-              </select>
-              <span class="ds-hint"><?php p($l->t('Hold Ctrl/Cmd for multiple selection')); ?></span>
-            </div>
-
-            <div class="ds-form-group ds-form-group-full">
-              <label for="calendar_exclude" class="ds-label"><?php p($l->t('Hide events')); ?></label>
-              <div id="calendar-exclude-tags" class="ds-tag-container">
-                <!-- Tags will be inserted here -->
-              </div>
-              <div class="ds-tag-input-group">
-                <input type="text" id="calendar-exclude-input" list="event-titles-list" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
-                <datalist id="event-titles-list"></datalist>
-                <button type="button" id="add-exclude-btn" class="button"><?php p($l->t('+ Add')); ?></button>
-              </div>
-              <input type="hidden" id="calendar_exclude" name="calendar_exclude" value="<?php p($_['calendar_exclude'] ?? '[]'); ?>" />
-              <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden')); ?></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🌦️ <?php p($l->t('Weather')); ?></h4>
-          <span class="ds-hint"><?php p($l->t('Set a location in the Nextcloud Dashboard to show the forecast on displays.')); ?></span>
-          <div class="ds-subsection-actions">
-            <a class="button" href="<?php p($_['weather_dashboard_url']); ?>" target="_blank" rel="noopener">
-              <?php p($l->t('Nextcloud Dashboard')); ?>
-            </a>
-          </div>
-        </div>
-
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🎨 <?php p($l->t('Stylesheet')); ?></h4>
+          <h4 class="ds-subsection-title"><?php p($l->t('Stylesheet')); ?></h4>
 
           <div class="ds-settings-group">
             <h5 class="ds-settings-group-title"><?php p($l->t('Layout')); ?></h5>
@@ -162,16 +152,24 @@ $l = $_['l10n'];
           </div>
         </div>
 
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">🎬 <?php p($l->t('Media / Slideshow presets')); ?></h4>
-          <span class="ds-hint" style="display: block; margin-bottom: 1rem;"><?php p($l->t('Manage media folders (images & videos), crop mode, fullscreen slideshow and interval per preset.')); ?></span>
-          <div class="ds-form-grid">
+        <div class="ds-subsection ds-preset-section">
+          <h4 class="ds-subsection-title"><?php p($l->t('Media / Slideshow presets')); ?></h4>
+          <span class="ds-hint ds-section-hint"><?php p($l->t('Configure media, calendar, display and widget behavior for each preset.')); ?></span>
+          <div class="ds-preset-list-heading"><?php p($l->t('Existing presets')); ?></div>
+          <div id="presets-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
+          <div class="ds-subsection ds-preset-create-section">
+            <button class="button primary" id="new-preset-btn"><?php p($l->t('New preset')); ?></button>
+          </div>
+          <div class="ds-preset-editor ds-object-editor" id="preset-editor" hidden>
+            <div class="ds-form-grid ds-form-grid-compact">
             <input type="hidden" id="preset-id" value="" />
+            <div class="ds-preset-group-title"><?php p($l->t('Basics')); ?></div>
             <div class="ds-form-group">
               <label for="preset-name" class="ds-label"><?php p($l->t('Preset name')); ?></label>
               <input type="text" id="preset-name" placeholder="<?php p($l->t('Media / Slideshow preset name')); ?>" class="ds-input" />
             </div>
 
+            <div class="ds-preset-group-title"><?php p($l->t('Media')); ?></div>
             <div class="ds-form-group">
               <label for="preset-image-folder" class="ds-label"><?php p($l->t('Media folder')); ?></label>
               <select id="preset-image-folder" class="ds-input">
@@ -202,14 +200,7 @@ $l = $_['l10n'];
               <span class="ds-hint"><?php p($l->t('Duration per image. Videos play to completion automatically.')); ?></span>
             </div>
 
-            <div class="ds-form-group">
-              <div class="ds-checkbox-row">
-                <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
-                <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Media-only full-screen mode')); ?></label>
-              </div>
-              <span class="ds-hint"><?php p($l->t('Show only media in full-screen mode; weather and calendar are disabled for this preset')); ?></span>
-            </div>
-
+            <div class="ds-preset-group-title"><?php p($l->t('Display behavior')); ?></div>
             <div class="ds-form-group">
               <label for="preset-header-title-source" class="ds-label"><?php p($l->t('Header title')); ?></label>
               <select id="preset-header-title-source" class="ds-input">
@@ -220,6 +211,27 @@ $l = $_['l10n'];
               <span class="ds-hint"><?php p($l->t('Choose which title is shown in the display header for this preset')); ?></span>
             </div>
 
+            <div class="ds-preset-group-title"><?php p($l->t('Calendar')); ?></div>
+            <div class="ds-form-group ds-preset-calendar-field">
+              <label for="preset-calendar-names" class="ds-label"><?php p($l->t('Calendar sources')); ?></label>
+              <select id="preset-calendar-names" multiple class="ds-input ds-multiselect">
+                <option value=""><?php p($l->t('Loading calendars...')); ?></option>
+              </select>
+              <span class="ds-hint"><?php p($l->t('Select the calendars shown when this preset is active.')); ?></span>
+            </div>
+
+            <div class="ds-form-group ds-preset-calendar-field">
+              <label for="preset-calendar-exclude-input" class="ds-label"><?php p($l->t('Hide events')); ?></label>
+              <div class="ds-tag-input-group">
+                <input type="text" id="preset-calendar-exclude-input" list="event-titles-list" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
+                <datalist id="event-titles-list"></datalist>
+                <button type="button" id="add-exclude-btn" class="button"><?php p($l->t('+ Add')); ?></button>
+              </div>
+              <div id="preset-calendar-exclude-tags" class="ds-tag-container"></div>
+              <input type="hidden" id="preset-calendar-exclude" value="[]" />
+              <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden for this preset')); ?></span>
+            </div>
+
             <div class="ds-form-group">
               <div class="ds-checkbox-row">
                 <input type="checkbox" id="preset-show-event-description" value="1" />
@@ -228,8 +240,8 @@ $l = $_['l10n'];
               <span class="ds-hint"><?php p($l->t('Show a short description below calendar events, limited to three lines')); ?></span>
             </div>
 
-            <div class="ds-form-group ds-form-group-full">
-              <span class="ds-label"><?php p($l->t('Widgets')); ?></span>
+            <div class="ds-preset-group-title"><?php p($l->t('Widgets')); ?></div>
+            <div class="ds-form-group ds-form-group-full ds-preset-widgets-field">
               <div class="ds-checkbox-row">
                 <input type="checkbox" id="preset-show-slideshow" value="1" checked />
                 <label for="preset-show-slideshow" class="ds-label"><?php p($l->t('Show slideshow')); ?></label>
@@ -244,31 +256,60 @@ $l = $_['l10n'];
               </div>
               <span class="ds-hint"><?php p($l->t('Enable at least one widget for this preset')); ?></span>
             </div>
+            <div class="ds-editor-actions">
+              <button class="button primary" id="save-preset-btn"><?php p($l->t('Save preset')); ?></button>
+              <button class="button" id="cancel-preset-edit-btn" style="display:none;"><?php p($l->t('Cancel edit')); ?></button>
+            </div>
           </div>
-          <div class="ds-inline-actions">
-            <button class="button primary" id="save-preset-btn"><?php p($l->t('Save preset')); ?></button>
-            <button class="button" id="cancel-preset-edit-btn" style="display:none;"><?php p($l->t('Cancel edit')); ?></button>
-          </div>
-          <div id="presets-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
         </div>
 
       </div>
 
-      <div class="section ds-section">
-        <h3 class="ds-section-title">📺 <?php p($l->t('Displays')); ?></h3>
+      <div class="section ds-section ds-displays-section">
+        <h4 class="ds-subsection-title"><?php p($l->t('Displays')); ?></h4>
+        <p class="ds-section-subtitle"><?php p($l->t('Create and manage public screens with their own name, location, timezone, weather settings and active preset.')); ?></p>
 
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">➕ <?php p($l->t('Create new display')); ?></h4>
-          <div class="ds-token-create">
-            <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />
-            <button class="button primary" id="create-token-btn"><?php p($l->t('Create display')); ?></button>
-          </div>
-          <span class="ds-hint"><?php p($l->t('Used only to distinguish displays in the admin UI.')); ?></span>
+        <div class="ds-subsection ds-display-section">
+          <h4 class="ds-subsection-title"><?php p($l->t('Existing displays')); ?></h4>
+          <datalist id="timezone-options">
+            <?php foreach (($_['time_zones'] ?? []) as $timeZone): ?>
+              <option value="<?php p($timeZone); ?>"></option>
+            <?php endforeach; ?>
+          </datalist>
+          <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
         </div>
 
-        <div class="ds-subsection">
-          <h4 class="ds-subsection-title">📋 <?php p($l->t('Existing displays')); ?></h4>
-          <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
+        <div class="ds-subsection ds-display-create-section">
+          <button class="button primary" id="new-display-btn"><?php p($l->t('New display')); ?></button>
+          <div class="ds-display-create-editor ds-object-editor" id="display-create-editor" hidden>
+            <label for="token-name" class="ds-label"><?php p($l->t('Display name')); ?></label>
+            <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />
+            <div class="token-row token-location-search-row">
+              <label class="token-row-label" for="display-create-location"><?php p($l->t('Search location')); ?></label>
+              <div class="token-location-search-controls">
+                <input class="ds-input" id="display-create-location" data-create-location-query placeholder="<?php p($l->t('City or address')); ?>" />
+                <small><?php p($l->t('Press Enter to search. Location data provided by')); ?> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.</small>
+              </div>
+            </div>
+            <div class="token-row">
+              <label class="token-row-label" for="display-create-timezone"><?php p($l->t('Display timezone')); ?></label>
+              <input class="ds-input" id="display-create-timezone" data-create-timezone list="timezone-options" placeholder="<?php p($l->t('Nextcloud timezone')); ?>" />
+            </div>
+            <div class="token-row token-coordinate-row">
+              <label class="token-row-label" for="display-create-latitude"><?php p($l->t('Weather latitude')); ?></label>
+              <input class="ds-input" id="display-create-latitude" data-create-latitude type="number" min="-90" max="90" step="any" />
+              <label class="token-row-label" for="display-create-longitude"><?php p($l->t('Weather longitude')); ?></label>
+              <input class="ds-input" id="display-create-longitude" data-create-longitude type="number" min="-180" max="180" step="any" />
+            </div>
+            <div class="token-row">
+              <label class="token-row-label" for="display-create-preset"><?php p($l->t('Active preset')); ?></label>
+              <select class="ds-input" id="display-create-preset" data-create-preset></select>
+            </div>
+            <div class="display-editor-actions ds-editor-actions">
+              <button class="button primary" id="create-token-btn"><?php p($l->t('Save')); ?></button>
+              <button class="button" id="cancel-display-create-btn"><?php p($l->t('Cancel edit')); ?></button>
+            </div>
+          </div>
         </div>
 
         <!-- Save bar at the end -->
@@ -285,14 +326,34 @@ $l = $_['l10n'];
   <div style="display:none;"
       data-list-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.list')); ?>"
       data-create-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.create')); ?>"
+      data-update-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.update', ['id' => 'DISPLAY_ID'])); ?>"
+      data-clone-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.clone', ['id' => 'DISPLAY_ID'])); ?>"
           data-activate-preset-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.activatePreset', ['id' => 'DISPLAY_ID'])); ?>"
       data-delete-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.token.delete', ['id' => 'TOKEN_ID'])); ?>"
           data-preset-list-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.list')); ?>"
           data-preset-create-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.create')); ?>"
           data-preset-update-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.update', ['id' => 'PRESET_ID'])); ?>"
           data-preset-delete-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.delete', ['id' => 'PRESET_ID'])); ?>"
+          data-preset-clone-url="<?php p($_['url_generator']->linkToRoute('digitalsignage.preset.clone', ['id' => 'PRESET_ID'])); ?>"
+          data-translation-display-timezone="<?php p($l->t('Display timezone')); ?>"
+          data-translation-nextcloud-timezone="<?php p($l->t('Nextcloud timezone')); ?>"
+          data-translation-weather-latitude="<?php p($l->t('Weather latitude')); ?>"
+          data-translation-weather-longitude="<?php p($l->t('Weather longitude')); ?>"
+          data-translation-nextcloud-weather-location="<?php p($l->t('Nextcloud Weather location')); ?>"
+          data-translation-save-display-settings="<?php p($l->t('Save display settings')); ?>"
+          data-translation-update-display="<?php p($l->t('Update display')); ?>"
+          data-translation-saved="<?php p($l->t('Saved')); ?>"
+          data-translation-error-saving-display-settings="<?php p($l->t('Error saving display settings')); ?>"
+          data-translation-search-location="<?php p($l->t('Search location')); ?>"
+          data-translation-city-or-address="<?php p($l->t('City or address')); ?>"
+          data-translation-search="<?php p($l->t('Search')); ?>"
+          data-translation-location-results="<?php p($l->t('Location results')); ?>"
+          data-translation-select-location="<?php p($l->t('Select location')); ?>"
+          data-translation-no-locations-found="<?php p($l->t('No locations found')); ?>"
+          data-translation-location-search-failed="<?php p($l->t('Location search failed')); ?>"
+          data-translation-location-data-provided-by="<?php p($l->t('Location data provided by')); ?>"
       data-csrf-token="<?php p($_['requesttoken']); ?>">
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.7.9"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.9.0"></script>

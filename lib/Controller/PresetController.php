@@ -71,11 +71,16 @@ class PresetController extends Controller {
         string $show_weather = '1',
         string $show_calendar = '1',
         string $show_event_description = '0',
+        string $calendar_names = '[]',
+        string $calendar_exclude = '[]',
         int $slide_interval = 10
     ): JSONResponse {
         try {
             if (trim($name) === '') {
                 return new JSONResponse(['error' => 'Missing preset name'], 400);
+            }
+            if ($this->presetMapper->findByNameForUser(trim($name), (string)$this->userId) !== null) {
+                return new JSONResponse(['error' => 'A preset with this name already exists'], 409);
             }
             if ($show_slideshow !== '1' && $show_weather !== '1' && $show_calendar !== '1') {
                 return new JSONResponse(['error' => 'At least one widget must be enabled'], 400);
@@ -96,6 +101,8 @@ class PresetController extends Controller {
             $preset->setShowWeather($show_weather === '1' ? '1' : '0');
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
+            $preset->setCalendarNames($this->presetService->normalizeCalendarNames($calendar_names));
+            $preset->setCalendarExclude($this->presetService->normalizeCalendarNames($calendar_exclude));
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setCreatedAt($now);
             $preset->setUpdatedAt($now);
@@ -124,12 +131,18 @@ class PresetController extends Controller {
         string $show_weather = '1',
         string $show_calendar = '1',
         string $show_event_description = '0',
+        string $calendar_names = '[]',
+        string $calendar_exclude = '[]',
         int $slide_interval = 10
     ): JSONResponse {
         try {
             $preset = $this->presetMapper->findForUser($id, (string)$this->userId);
             if ($preset === null) {
                 return new JSONResponse(['error' => 'Preset not found'], 404);
+            }
+            $existingPreset = $this->presetMapper->findByNameForUser(trim($name), (string)$this->userId);
+            if ($existingPreset !== null && $existingPreset->getId() !== $id) {
+                return new JSONResponse(['error' => 'A preset with this name already exists'], 409);
             }
             if ($show_slideshow !== '1' && $show_weather !== '1' && $show_calendar !== '1') {
                 return new JSONResponse(['error' => 'At least one widget must be enabled'], 400);
@@ -147,12 +160,49 @@ class PresetController extends Controller {
             $preset->setShowWeather($show_weather === '1' ? '1' : '0');
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
+            $preset->setCalendarNames($this->presetService->normalizeCalendarNames($calendar_names));
+            $preset->setCalendarExclude($this->presetService->normalizeCalendarNames($calendar_exclude));
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setUpdatedAt(time());
 
             $preset = $this->presetMapper->update($preset);
 
             return new JSONResponse($this->presetService->serializePreset($preset));
+        } catch (\Throwable $e) {
+            return new JSONResponse(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @NoAdminRequired
+     */
+    public function clone(int $id): JSONResponse {
+        try {
+            $source = $this->presetMapper->findForUser($id, (string)$this->userId);
+            if ($source === null) {
+                return new JSONResponse(['error' => 'Preset not found'], 404);
+            }
+
+            $copy = new Preset();
+            $copy->setUserId((string)$this->userId);
+            $copy->setName($this->getCloneName($source->getName(), (string)$this->userId));
+            $copy->setImageFolder($source->getImageFolder());
+            $copy->setImageFitMode($source->getImageFitMode());
+            $copy->setImageOrderMode($source->getImageOrderMode());
+            $copy->setFullscreenSlideshow($source->getFullscreenSlideshow());
+            $copy->setShowDisplayName($source->getShowDisplayName());
+            $copy->setHeaderTitleSource($source->getHeaderTitleSource());
+            $copy->setShowSlideshow($source->getShowSlideshow());
+            $copy->setShowWeather($source->getShowWeather());
+            $copy->setShowCalendar($source->getShowCalendar());
+            $copy->setShowEventDescription($source->getShowEventDescription());
+            $copy->setCalendarNames($source->getCalendarNames() ?: '[]');
+            $copy->setCalendarExclude($source->getCalendarExclude() ?: '[]');
+            $copy->setSlideInterval($source->getSlideInterval());
+            $copy->setCreatedAt(time());
+            $copy->setUpdatedAt(time());
+
+            return new JSONResponse($this->presetService->serializePreset($this->presetMapper->insert($copy)));
         } catch (\Throwable $e) {
             return new JSONResponse(['error' => $e->getMessage()], 500);
         }
@@ -188,4 +238,17 @@ class PresetController extends Controller {
         $requestValue = $this->request->getParam('image_order_mode', $this->request->getParam('imageOrderMode', $fallback));
         return $this->presetService->normalizeImageOrderMode(is_string($requestValue) ? $requestValue : $fallback);
     }
+
+    private function getCloneName(string $sourceName, string $userId): string {
+        $baseName = $sourceName . ' (Copy)';
+        $candidate = $baseName;
+        $suffix = 2;
+        while ($this->presetMapper->findByNameForUser($candidate, $userId) !== null) {
+            $candidate = $baseName . ' ' . $suffix;
+            $suffix++;
+        }
+
+        return $candidate;
+    }
+
 }

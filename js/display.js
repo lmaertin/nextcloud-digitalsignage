@@ -18,6 +18,38 @@ function parseCalendarDate(dateValue, isAllDay) {
   return new Date(dateValue);
 }
 
+function addCalendarDays(date, days) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function getAllDayEndDate(startDate, endDate) {
+  if (!endDate || endDate <= startDate) {
+    return addCalendarDays(startDate, 1);
+  }
+
+  return endDate;
+}
+
+function isCurrentOrFutureEvent(event, now) {
+  if (!(event.startDate instanceof Date) || Number.isNaN(event.startDate.getTime())) {
+    return false;
+  }
+
+  if (!(event.endDate instanceof Date) || Number.isNaN(event.endDate.getTime())) {
+    return false;
+  }
+
+  if (!event.isAllDay) {
+    return event.endDate > now;
+  }
+
+  // All-day DTEND values are exclusive and represent calendar dates, not instants.
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return event.endDate > today;
+}
+
 let config = null;
 let configRevision = null;
 let latestInstantMessageId = null;
@@ -128,6 +160,24 @@ function getLocale() {
   return normalizeLocale(navigator.language || 'en-US');
 }
 
+function getDisplayTimeZone() {
+  const configuredTimeZone = config && typeof config.timeZone === 'string'
+    ? config.timeZone.trim()
+    : '';
+  return configuredTimeZone || null;
+}
+
+function getDateKey(date, timeZone = getDisplayTimeZone()) {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: timeZone || undefined,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  const parts = Object.fromEntries(formatter.formatToParts(date).map((part) => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
 function getI18nText(key, fallback) {
   const value = config?.i18n?.[key];
   return typeof value === 'string' && value.trim() ? value : fallback;
@@ -147,12 +197,32 @@ function getSlideshowRefreshIntervalMs() {
   return Math.max(1000, configuredMinutes * 60 * 1000);
 }
 
-function getDateFormatter(locale, options) {
+function getDateFormatter(locale, options, timeZone = getDisplayTimeZone()) {
   try {
-    return new Intl.DateTimeFormat(normalizeLocale(locale || getLocale()), options);
+    const formatterOptions = {...options};
+    if (timeZone) {
+      formatterOptions.timeZone = timeZone;
+    }
+    return new Intl.DateTimeFormat(normalizeLocale(locale || getLocale()), formatterOptions);
   } catch (error) {
     return new Intl.DateTimeFormat('en-US', options);
   }
+}
+
+function formatAllDayDate(date, locale, options) {
+  const timeZone = getDisplayTimeZone();
+  if (!timeZone) {
+    return getDateFormatter(locale, options).format(date);
+  }
+
+  const dateAtNoonUtc = new Date(Date.UTC(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    12
+  ));
+  // Date-only values have no timezone. UTC keeps their calendar date stable.
+  return getDateFormatter(locale, options, 'UTC').format(dateAtNoonUtc);
 }
 
 function getShortDateFormatter(locale) {
@@ -564,10 +634,8 @@ async function loadWeather() {
       throw new Error(weatherStatus.error || `HTTP ${weatherStatusResponse.status}`);
     }
 
-    const formatter = new Intl.DateTimeFormat(locale, {
-      weekday: 'short'
-    });
-    const today = new Date().toISOString().slice(0, 10);
+    const formatter = getDateFormatter(locale, {weekday: 'short'}, 'UTC');
+    const today = getDateKey(new Date());
     const getDayName = (date) => {
       const dateText = String(date || '');
       try {
@@ -652,7 +720,12 @@ async function loadICS() {
           const obj = eventData.objects[0];
           const isAllDay = Boolean(obj.DTSTART && obj.DTSTART[1] && obj.DTSTART[1].VALUE === 'DATE');
           const startDate = obj.DTSTART ? parseCalendarDate(obj.DTSTART[0].date, isAllDay) : new Date();
-          const endDate = obj.DTEND ? parseCalendarDate(obj.DTEND[0].date, isAllDay) : startDate;
+          const parsedEndDate = obj.DTEND
+            ? parseCalendarDate(obj.DTEND[0].date, isAllDay)
+            : null;
+          const endDate = isAllDay
+            ? getAllDayEndDate(startDate, parsedEndDate)
+            : (parsedEndDate || startDate);
 
           // Create a simple event object
           const event = {
@@ -677,7 +750,6 @@ async function loadICS() {
     console.log('Current date:', now);
 
     const upcoming = events.filter(e => {
-      const eventDate = e.endDate;
       const eventTitle = e.summary.toLowerCase();
 
       // Check if event should be excluded (exact match)
@@ -685,8 +757,8 @@ async function loadICS() {
         eventTitle === excludeText.toLowerCase()
       );
 
-      const isCurrentOrFuture = eventDate > now;
-      console.log('Event:', e.summary, 'End date:', eventDate, 'Is current or future:', isCurrentOrFuture, 'Excluded:', shouldExclude);
+      const isCurrentOrFuture = isCurrentOrFutureEvent(e, now);
+      console.log('Event:', e.summary, 'End date:', e.endDate, 'Is current or future:', isCurrentOrFuture, 'Excluded:', shouldExclude);
 
       return isCurrentOrFuture && !shouldExclude;
     }).sort((a,b) => a.startDate - b.startDate)
@@ -698,14 +770,14 @@ async function loadICS() {
     const fmtWithTime = getDateFormatter(locale, {
       weekday: 'short',
       day: 'numeric',
-      month: 'long',
+      month: 'short',
       hour: '2-digit',
       minute: '2-digit'
     });
     const fmtDateOnly = getDateFormatter(locale, {
       weekday: 'short',
       day: 'numeric',
-      month: 'long'
+      month: 'short'
     });
     if (upcoming.length === 0) {
       cal.innerHTML = '<p>No upcoming events</p>';
@@ -715,7 +787,9 @@ async function loadICS() {
         const listItem = document.createElement('li');
         const eventDate = event.startDate;
         const isAllDay = event.isAllDay;
-        const timeStr = removeDots(isAllDay ? fmtDateOnly.format(eventDate) : fmtWithTime.format(eventDate));
+        const timeStr = removeDots(isAllDay
+          ? formatAllDayDate(eventDate, locale, {weekday: 'short', day: 'numeric', month: 'short'})
+          : fmtWithTime.format(eventDate));
         const title = document.createElement('div');
         title.className = 'event-title';
         title.textContent = event.summary;
@@ -767,13 +841,13 @@ function initDateTime() {
     const locale = getLocale();
 
     // Format time based on locale
-    const timeFormat = new Intl.DateTimeFormat(locale, {
+    const timeFormat = getDateFormatter(locale, {
       hour: '2-digit',
       minute: '2-digit'
     });
 
     // Format date - use centralized short date formatter
-    const dateFormat = getClockDateFormatter(locale);
+    const dateFormat = getShortDateFormatter(locale);
 
     if (typeof timeFormat.formatToParts === 'function') {
       const timeParts = timeFormat.formatToParts(now);

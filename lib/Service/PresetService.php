@@ -45,6 +45,8 @@ class PresetService {
         $preset->setShowWeather('1');
         $preset->setShowCalendar('1');
         $preset->setShowEventDescription($this->config->getAppValue('digitalsignage', 'show_event_description', '0'));
+        $preset->setCalendarNames($this->normalizeCalendarNames($this->config->getAppValue('digitalsignage', 'calendar_names', '[]')));
+        $preset->setCalendarExclude($this->normalizeCalendarNames($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]')));
         $preset->setSlideInterval((int)$this->config->getAppValue('digitalsignage', 'slide_interval', '10'));
         $preset->setCreatedAt($now);
         $preset->setUpdatedAt($now);
@@ -68,6 +70,8 @@ class PresetService {
             'showWeather' => ($preset->getShowWeather() ?? '1') === '1',
             'showCalendar' => ($preset->getShowCalendar() ?? '1') === '1',
             'showEventDescription' => ($preset->getShowEventDescription() ?? '0') === '1',
+            'calendarNames' => json_decode($preset->getCalendarNames() ?: '[]', true) ?: [],
+            'calendarExclude' => json_decode($preset->getCalendarExclude() ?: '[]', true) ?: [],
             'slideInterval' => $preset->getSlideInterval(),
             'createdAt' => $preset->getCreatedAt(),
             'updatedAt' => $preset->getUpdatedAt(),
@@ -80,5 +84,15 @@ class PresetService {
 
     public function normalizeHeaderTitleSource(string $source): string {
         return in_array($source, ['global', 'preset', 'none'], true) ? $source : 'global';
+    }
+
+    public function normalizeCalendarNames(string $calendarNames): string {
+        $names = json_decode($calendarNames, true);
+        if (!is_array($names)) {
+            return '[]';
+        }
+
+        $names = array_values(array_unique(array_filter($names, 'is_string')));
+        return json_encode($names, JSON_THROW_ON_ERROR);
     }
 }

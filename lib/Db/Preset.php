@@ -31,6 +31,10 @@ use OCP\AppFramework\Db\Entity;
  * @method void setShowCalendar(string $showCalendar)
  * @method string getShowEventDescription()
  * @method void setShowEventDescription(string $showEventDescription)
+ * @method string getCalendarNames()
+ * @method void setCalendarNames(string $calendarNames)
+ * @method string getCalendarExclude()
+ * @method void setCalendarExclude(string $calendarExclude)
  * @method int getSlideInterval()
  * @method void setSlideInterval(int $slideInterval)
  * @method int getCreatedAt()
@@ -51,6 +55,9 @@ class Preset extends Entity {
     protected $showWeather;
     protected $showCalendar;
     protected $showEventDescription;
+    protected $calendarNames;
+    protected $calendarExclude;
+    protected $timeZone;
     protected $slideInterval;
     protected $createdAt;
     protected $updatedAt;
@@ -68,6 +75,9 @@ class Preset extends Entity {
         $this->addType('showWeather', 'string');
         $this->addType('showCalendar', 'string');
         $this->addType('showEventDescription', 'string');
+        $this->addType('calendarNames', 'string');
+        $this->addType('calendarExclude', 'string');
+        $this->addType('timeZone', 'string');
         $this->addType('slideInterval', 'integer');
         $this->addType('createdAt', 'integer');
         $this->addType('updatedAt', 'integer');

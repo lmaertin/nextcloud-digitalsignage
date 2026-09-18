@@ -216,7 +216,7 @@ class ApiController extends Controller {
      */
     public function getEventTitles(): JSONResponse {
         try {
-            $calendarNamesJson = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
+            $calendarNamesJson = $this->request->getParam('calendar_names', '[]');
             $calendarNames = json_decode($calendarNamesJson, true);
 
             if (empty($calendarNames) || !is_array($calendarNames)) {

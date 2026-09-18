@@ -26,14 +26,11 @@ class SettingsController extends Controller {
      * @NoCSRFRequired
      */
     public function saveUser(
-        string $display_name = '',
         string $auto_fullscreen_prompt = '0',
         string $content_split_ratio = '50',
         string $slide_interval = '60',
         string $image_refresh_interval_minutes = '15',
-        string $calendar_names = '[]',
         string $image_folder = '',
-        string $calendar_exclude = '[]',
         string $color_primary = '#0066cc',
         string $color_bg = '#f8f9fa',
         string $color_text = '#2c3e50',
@@ -55,15 +52,12 @@ class SettingsController extends Controller {
         $imageRefreshValue = (int)$image_refresh_interval_minutes;
         $normalizedImageRefreshInterval = (string)($imageRefreshValue >= 0 ? $imageRefreshValue : self::DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES);
 
-        $this->config->setAppValue('digitalsignage', 'display_name', $display_name);
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
         $this->config->deleteAppValue('digitalsignage', 'left_column_split_ratio');
         $this->config->setAppValue('digitalsignage', 'slide_interval', $slide_interval);
         $this->config->setAppValue('digitalsignage', 'image_refresh_interval_minutes', $normalizedImageRefreshInterval);
-        $this->config->setAppValue('digitalsignage', 'calendar_names', $calendar_names);
         $this->config->setAppValue('digitalsignage', 'image_folder', $image_folder);
-        $this->config->setAppValue('digitalsignage', 'calendar_exclude', $calendar_exclude);
         $this->config->setAppValue('digitalsignage', 'color_primary', $color_primary);
         $this->config->setAppValue('digitalsignage', 'color_bg', $color_bg);
         $this->config->setAppValue('digitalsignage', 'color_text', $color_text);
@@ -89,14 +83,11 @@ class SettingsController extends Controller {
      * @NoAdminRequired
      */
     public function getUser(): JSONResponse {
-        $display_name = $this->config->getAppValue('digitalsignage', 'display_name', '');
         $auto_fullscreen_prompt = $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0');
         $content_split_ratio = $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50');
         $slide_interval = $this->config->getAppValue('digitalsignage', 'slide_interval', '60');
         $image_refresh_interval_minutes = $this->config->getAppValue('digitalsignage', 'image_refresh_interval_minutes', '15');
-        $calendar_names = $this->config->getAppValue('digitalsignage', 'calendar_names', '[]');
         $image_folder = $this->config->getAppValue('digitalsignage', 'image_folder', '');
-        $calendar_exclude = $this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]');
         $color_primary = $this->config->getAppValue('digitalsignage', 'color_primary', '#0066cc');
         $color_bg = $this->config->getAppValue('digitalsignage', 'color_bg', '#f8f9fa');
         $color_text = $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50');
@@ -108,14 +99,11 @@ class SettingsController extends Controller {
         $fullscreen_slideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
 
         return new JSONResponse([
-            'display_name' => $display_name,
             'auto_fullscreen_prompt' => $auto_fullscreen_prompt,
             'content_split_ratio' => $content_split_ratio,
             'slide_interval' => $slide_interval,
             'image_refresh_interval_minutes' => $image_refresh_interval_minutes,
-            'calendar_names' => $calendar_names,
             'image_folder' => $image_folder,
-            'calendar_exclude' => $calendar_exclude,
             'color_primary' => $color_primary,
             'color_bg' => $color_bg,
             'color_text' => $color_text,

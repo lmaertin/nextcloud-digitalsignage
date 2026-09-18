@@ -20,6 +20,12 @@ use OCP\AppFramework\Db\Entity;
  * @method void setCreatedAt(int $createdAt)
  * @method int getUpdatedAt()
  * @method void setUpdatedAt(int $updatedAt)
+ * @method string|null getTimeZone()
+ * @method void setTimeZone(?string $timeZone)
+ * @method float|null getWeatherLatitude()
+ * @method void setWeatherLatitude(?float $latitude)
+ * @method float|null getWeatherLongitude()
+ * @method void setWeatherLongitude(?float $longitude)
  */
 class Token extends Entity {
     protected $token;
@@ -30,6 +36,9 @@ class Token extends Entity {
     protected $revision;
     protected $createdAt;
     protected $updatedAt;
+    protected $timeZone;
+    protected $weatherLatitude;
+    protected $weatherLongitude;
 
     public function __construct() {
         $this->addType('token', 'string');
@@ -40,5 +49,8 @@ class Token extends Entity {
         $this->addType('revision', 'integer');
         $this->addType('createdAt', 'integer');
         $this->addType('updatedAt', 'integer');
+        $this->addType('timeZone', 'string');
+        $this->addType('weatherLatitude', 'float');
+        $this->addType('weatherLongitude', 'float');
     }
 }

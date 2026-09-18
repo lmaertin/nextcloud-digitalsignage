@@ -50,14 +50,29 @@ class DisplayConfigService {
         return 'en';
     }
 
+    private function resolveTimeZone(Token $display): string {
+        $displayTimeZone = $display->getTimeZone();
+        if (is_string($displayTimeZone) && $this->isValidTimeZone($displayTimeZone)) {
+            return $displayTimeZone;
+        }
+
+        $userTimeZone = trim($this->config->getUserValue($display->getUserId(), 'core', 'timezone', ''));
+        return $this->isValidTimeZone($userTimeZone) ? $userTimeZone : '';
+    }
+
     public function getEffectiveConfig(Token $display): array {
         $effective = [
-            'displayName' => $this->config->getAppValue('digitalsignage', 'display_name', 'Digital Signage'),
+            'displayName' => $display->getName() ?: 'Digital Signage',
             'showDisplayName' => '1',
             'headerTitleSource' => 'global',
             'locale' => $this->resolveLocale($display),
+            'timeZone' => $this->resolveTimeZone($display),
+            'weatherLatitude' => $display->getWeatherLatitude(),
+            'weatherLongitude' => $display->getWeatherLongitude(),
             'contentSplitRatio' => max(50, min(85, (int)$this->config->getAppValue('digitalsignage', 'content_split_ratio', '50'))),
             'calendarExclude' => json_decode($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]'), true) ?: [],
+            'calendarNames' => [],
+            'calendarExclude' => [],
             'autoFullscreenPrompt' => $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0') === '1',
             'textSizes' => TextSizeConfig::getConfiguredSizes($this->config),
             'textSizeCssVariables' => TextSizeConfig::toCssVariables(TextSizeConfig::getConfiguredSizes($this->config)),
@@ -100,6 +115,8 @@ class DisplayConfigService {
                 $effective['showWeather'] = ($preset->getShowWeather() ?? '1') === '1';
                 $effective['showCalendar'] = ($preset->getShowCalendar() ?? '1') === '1';
                 $effective['showEventDescription'] = ($preset->getShowEventDescription() ?? '0') === '1';
+                $effective['calendarNames'] = json_decode($preset->getCalendarNames() ?: '[]', true) ?: [];
+                $effective['calendarExclude'] = json_decode($preset->getCalendarExclude() ?: '[]', true) ?: [];
                 $effective['activePresetName'] = $preset->getName();
             }
         }
@@ -115,5 +132,9 @@ class DisplayConfigService {
 
     private function normalizeHeaderTitleSource(string $source): string {
         return in_array($source, ['global', 'preset', 'none'], true) ? $source : 'global';
+    }
+
+    private function isValidTimeZone(string $timeZone): bool {
+        return in_array($timeZone, \DateTimeZone::listIdentifiers(), true);
     }
 }
