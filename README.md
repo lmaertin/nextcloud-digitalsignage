@@ -5,7 +5,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and me
 
 Short App Store summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows (images & videos), presets and remote switching.
 
-Current release: **0.8.5**
+Current release: **0.8.6**
 
 ![Digital Signage Display](img/screenshot-display.png)
 
@@ -17,6 +17,7 @@ Current release: **0.8.5**
 - **Preset widget selection**: Enable or disable the slideshow, weather and calendar independently for each preset
 - **Adaptive widget layouts**: Automatically give the remaining widgets the available space; weather is displayed in a narrow vertical column when paired with the slideshow or calendar
 - **Media slideshow**: Automated slideshow from a Nextcloud folder with images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
+- **Optional recursive media search**: Include supported media files from subfolders of the selected folder independently per preset
 - **Video playback**: Native HTML5 video support with muted autoplay and auto-advance to next item after video ends
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
@@ -93,6 +94,7 @@ Instant messages are delivered to one display at a time. The control token is us
    - **Preset Name**: Administrative name for the preset
    - **Media Folder**: Select folder from your Nextcloud file tree (for example `/Photos/Info-Monitor` or `/Media/Signage`)
    - Supports images (JPG, PNG, GIF, WebP) and videos (MP4, WebM, MOV, MKV)
+   - **Include media from subfolders**: Optionally search supported media files recursively below the selected folder
    - **Crop Mode**: Choose whether media fills the area or is fully contained with background
    - **Playback Order**: Shuffle media files or play them in ascending filename order
    - **Slide Interval (seconds)**: Duration per image in slideshow (videos play to completion automatically)

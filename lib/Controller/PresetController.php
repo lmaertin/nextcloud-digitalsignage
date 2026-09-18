@@ -73,7 +73,8 @@ class PresetController extends Controller {
         string $show_event_description = '0',
         string $calendar_names = '[]',
         string $calendar_exclude = '[]',
-        int $slide_interval = 10
+        int $slide_interval = 10,
+        string $recursive_media = '0'
     ): JSONResponse {
         try {
             if (trim($name) === '') {
@@ -94,6 +95,7 @@ class PresetController extends Controller {
             $preset->setImageFolder($image_folder);
             $preset->setImageFitMode($image_fit_mode);
             $preset->setImageOrderMode($imageOrderMode);
+            $preset->setRecursiveMedia($recursive_media === '1' ? '1' : '0');
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
             $preset->setHeaderTitleSource($this->presetService->normalizeHeaderTitleSource($header_title_source));
@@ -133,7 +135,8 @@ class PresetController extends Controller {
         string $show_event_description = '0',
         string $calendar_names = '[]',
         string $calendar_exclude = '[]',
-        int $slide_interval = 10
+        int $slide_interval = 10,
+        string $recursive_media = '0'
     ): JSONResponse {
         try {
             $preset = $this->presetMapper->findForUser($id, (string)$this->userId);
@@ -153,6 +156,7 @@ class PresetController extends Controller {
             $preset->setImageFolder($image_folder);
             $preset->setImageFitMode($image_fit_mode);
             $preset->setImageOrderMode($imageOrderMode);
+            $preset->setRecursiveMedia($recursive_media === '1' ? '1' : '0');
             $preset->setFullscreenSlideshow($fullscreen_slideshow === '1' ? '1' : '0');
             $preset->setShowDisplayName($show_display_name === '1' ? '1' : '0');
             $preset->setHeaderTitleSource($this->presetService->normalizeHeaderTitleSource($header_title_source));
@@ -189,6 +193,7 @@ class PresetController extends Controller {
             $copy->setImageFolder($source->getImageFolder());
             $copy->setImageFitMode($source->getImageFitMode());
             $copy->setImageOrderMode($source->getImageOrderMode());
+            $copy->setRecursiveMedia($source->getRecursiveMedia() ?: '0');
             $copy->setFullscreenSlideshow($source->getFullscreenSlideshow());
             $copy->setShowDisplayName($source->getShowDisplayName());
             $copy->setHeaderTitleSource($source->getHeaderTitleSource());

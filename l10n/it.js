@@ -145,6 +145,8 @@ OC.L10N.register(
     "Events containing these terms will be hidden" : "Gli eventi che contengono questi termini verranno nascosti",
     "Images / Slideshow" : "Media / Presentazione",
     "Media folder" : "Cartella media",
+    "Include media from subfolders" : "Includi i media dalle sottocartelle",
+    "Also search supported media files in subfolders of the selected media folder." : "Cerca i file multimediali supportati anche nelle sottocartelle della cartella selezionata.",
     "Slide interval (seconds)" : "Intervallo diapositive (secondi)",
     "Duration per image. Videos play to completion automatically." : "Durata per immagine. I video vengono riprodotti automaticamente fino alla fine.",
     "Weather" : "Meteo",

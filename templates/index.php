@@ -4,7 +4,7 @@
 $l = $_['l10n'];
 ?>
 
-<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=0.8.5" />
+<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=0.8.6" />
 
 <style nonce="<?php p($_['cspNonce']); ?>">
   .ds-save-bar {
@@ -178,11 +178,11 @@ $l = $_['l10n'];
             </div>
 
             <div class="ds-form-group">
-              <label for="preset-image-fit-mode" class="ds-label"><?php p($l->t('Crop mode')); ?></label>
-              <select id="preset-image-fit-mode" class="ds-input">
-                <option value="cover"><?php p($l->t('Fill (crop if needed)')); ?></option>
-                <option value="contain"><?php p($l->t('Fit complete (with background)')); ?></option>
-              </select>
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-recursive-media" value="1" />
+                <label for="preset-recursive-media" class="ds-label"><?php p($l->t('Include media from subfolders')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Also search supported media files in subfolders of the selected media folder.')); ?></span>
             </div>
 
             <div class="ds-form-group">
@@ -198,6 +198,14 @@ $l = $_['l10n'];
               <label for="preset-slide-interval" class="ds-label"><?php p($l->t('Slide interval (seconds)')); ?></label>
               <input type="number" id="preset-slide-interval" value="10" min="5" max="300" class="ds-input" />
               <span class="ds-hint"><?php p($l->t('Duration per image. Videos play to completion automatically.')); ?></span>
+            </div>
+
+            <div class="ds-form-group">
+              <label for="preset-image-fit-mode" class="ds-label"><?php p($l->t('Crop mode')); ?></label>
+              <select id="preset-image-fit-mode" class="ds-input">
+                <option value="cover"><?php p($l->t('Fill (crop if needed)')); ?></option>
+                <option value="contain"><?php p($l->t('Fit complete (with background)')); ?></option>
+              </select>
             </div>
 
             <div class="ds-preset-group-title"><?php p($l->t('Display behavior')); ?></div>
@@ -356,4 +364,4 @@ $l = $_['l10n'];
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.8.5"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.8.6"></script>
