@@ -80,6 +80,14 @@ function applyRuntimeConfig() {
     });
   }
 
+  if (config.messageStyleCssVariables && typeof config.messageStyleCssVariables === 'object') {
+    Object.entries(config.messageStyleCssVariables).forEach(([cssVariable, value]) => {
+      if (typeof value === 'string' && value.trim() !== '') {
+        document.documentElement.style.setProperty(cssVariable, value);
+      }
+    });
+  }
+
   const showSlideshow = config.showSlideshow !== false;
   const showWeather = config.showWeather !== false;
   const showCalendar = config.showCalendar !== false;
