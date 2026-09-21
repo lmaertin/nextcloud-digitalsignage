@@ -178,7 +178,7 @@ $l = $_['l10n'];
                 <input type="number" id="message_font_size" value="<?php p($_['message_font_size'] ?? '1.0'); ?>" min="0.5" max="4" step="0.1" inputmode="decimal" class="ds-input" />
               </div>
               <div class="ds-form-group">
-                <label for="message_width_percent" class="ds-label"><?php p($l->t('Width (% of screen)')); ?></label>
+                <label for="message_width_percent" class="ds-label"><?php p($l->t('Width (percent of screen)')); ?></label>
                 <input type="number" id="message_width_percent" value="<?php p($_['message_width_percent'] ?? '88'); ?>" min="20" max="100" step="1" class="ds-input" />
               </div>
               <div class="ds-form-group">
