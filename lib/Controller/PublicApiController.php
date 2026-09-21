@@ -247,6 +247,7 @@ class PublicApiController extends Controller {
             'activePresetId' => $effectiveConfig['activePresetId'],
             'activePresetName' => $effectiveConfig['activePresetName'],
             'revision' => $effectiveConfig['revision'],
+            'messagePosition' => $effectiveConfig['messagePosition'],
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),

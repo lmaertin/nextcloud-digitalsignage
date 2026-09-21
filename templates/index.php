@@ -150,6 +150,55 @@ $l = $_['l10n'];
               </button>
             </div>
           </div>
+
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Instant message styling')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Configure how the overlay for instant messages (sent via the control API) is displayed on all screens.')); ?></p>
+            <div class="ds-form-grid ds-form-grid-compact">
+              <div class="ds-form-group ds-color-group">
+                <label for="message_bg_color" class="ds-label"><?php p($l->t('Background')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="message_bg_color" name="message_bg_color" value="<?php p($_['message_bg_color'] ?? '#20262f'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="message_bg_color_hex" name="message_bg_color_hex" value="<?php p($_['message_bg_color'] ?? '#20262f'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group">
+                <label for="message_bg_opacity" class="ds-label"><?php p($l->t('Background opacity')); ?> <span id="message_bg_opacity_value" class="ds-hint"><?php p($_['message_bg_opacity'] ?? '86'); ?>%</span></label>
+                <input type="range" id="message_bg_opacity" value="<?php p($_['message_bg_opacity'] ?? '86'); ?>" min="0" max="100" step="1" class="ds-input ds-range" />
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="message_text_color" class="ds-label"><?php p($l->t('Text color')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="message_text_color" name="message_text_color" value="<?php p($_['message_text_color'] ?? '#ffffff'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="message_text_color_hex" name="message_text_color_hex" value="<?php p($_['message_text_color'] ?? '#ffffff'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group">
+                <label for="message_font_size" class="ds-label"><?php p($l->t('Font size (rem)')); ?></label>
+                <input type="number" id="message_font_size" value="<?php p($_['message_font_size'] ?? '1.0'); ?>" min="0.5" max="4" step="0.1" inputmode="decimal" class="ds-input" />
+              </div>
+              <div class="ds-form-group">
+                <label for="message_width_percent" class="ds-label"><?php p($l->t('Width (% of screen)')); ?></label>
+                <input type="number" id="message_width_percent" value="<?php p($_['message_width_percent'] ?? '88'); ?>" min="20" max="100" step="1" class="ds-input" />
+              </div>
+              <div class="ds-form-group">
+                <label for="message_position" class="ds-label"><?php p($l->t('Position')); ?></label>
+                <select id="message_position" class="ds-input">
+                  <option value="top" <?php if (($_['message_position'] ?? 'top') === 'top') p('selected'); ?>><?php p($l->t('Top')); ?></option>
+                  <option value="middle" <?php if (($_['message_position'] ?? 'top') === 'middle') p('selected'); ?>><?php p($l->t('Middle')); ?></option>
+                  <option value="bottom" <?php if (($_['message_position'] ?? 'top') === 'bottom') p('selected'); ?>><?php p($l->t('Bottom')); ?></option>
+                </select>
+              </div>
+            </div>
+            <div class="ds-message-preview-screen" id="message-style-preview-screen">
+              <div class="ds-message-preview-bubble" id="message-style-preview-bubble"><?php p($l->t('Live preview: the meeting room is reserved until 16:00.')); ?></div>
+            </div>
+            <div class="ds-subsection-actions ds-subsection-actions-end">
+              <button type="button" id="reset-message-style-btn" class="button ds-button-compact">
+                <?php p($l->t('Reset to defaults')); ?>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="ds-subsection ds-preset-section">

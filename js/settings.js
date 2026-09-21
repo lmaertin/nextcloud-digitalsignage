@@ -878,6 +878,12 @@ async function saveSettings() {
       color_gradient_start: document.getElementById('color_gradient_start').value,
       color_gradient_end: document.getElementById('color_gradient_end').value,
       show_titlebar: '1',
+      message_bg_color: document.getElementById('message_bg_color').value,
+      message_bg_opacity: document.getElementById('message_bg_opacity').value,
+      message_text_color: document.getElementById('message_text_color').value,
+      message_font_size: document.getElementById('message_font_size').value,
+      message_width_percent: document.getElementById('message_width_percent').value,
+      message_position: document.getElementById('message_position').value,
       ...getTextSizeSettings()
     };
 
@@ -1005,6 +1011,24 @@ function syncColorPickers() {
       }
     });
   });
+
+  ['message_bg_color', 'message_text_color'].forEach((id) => {
+    const colorInput = document.getElementById(id);
+    const hexInput = document.getElementById(`${id}_hex`);
+    if (!colorInput || !hexInput) {
+      return;
+    }
+
+    colorInput.addEventListener('input', () => {
+      hexInput.value = colorInput.value;
+    });
+
+    hexInput.addEventListener('input', () => {
+      if (/^#[0-9a-fA-F]{6}$/.test(hexInput.value)) {
+        colorInput.value = hexInput.value;
+      }
+    });
+  });
 }
 
 function resetColorsToDefaults() {
@@ -1039,6 +1063,105 @@ function resetLayoutToDefaults() {
   });
 }
 
+function resetMessageStyleToDefaults() {
+  const defaults = {
+    message_bg_color: '#20262f',
+    message_text_color: '#ffffff'
+  };
+
+  Object.entries(defaults).forEach(([key, value]) => {
+    const colorInput = document.getElementById(key);
+    const hexInput = document.getElementById(`${key}_hex`);
+    if (colorInput && hexInput) {
+      colorInput.value = value;
+      hexInput.value = value;
+    }
+  });
+
+  const opacityInput = document.getElementById('message_bg_opacity');
+  if (opacityInput) {
+    opacityInput.value = '86';
+  }
+
+  const fontSizeInput = document.getElementById('message_font_size');
+  if (fontSizeInput) {
+    fontSizeInput.value = '1.0';
+  }
+
+  const widthInput = document.getElementById('message_width_percent');
+  if (widthInput) {
+    widthInput.value = '88';
+  }
+
+  const positionInput = document.getElementById('message_position');
+  if (positionInput) {
+    positionInput.value = 'top';
+  }
+
+  updateMessageStylePreview();
+}
+
+function hexToRgba(hex, opacityPercent) {
+  const match = /^#([0-9a-fA-F]{6})$/.exec(hex);
+  if (!match) {
+    return 'rgba(32, 38, 48, 0.86)';
+  }
+
+  const red = parseInt(match[1].slice(0, 2), 16);
+  const green = parseInt(match[1].slice(2, 4), 16);
+  const blue = parseInt(match[1].slice(4, 6), 16);
+  const alpha = Math.max(0, Math.min(100, opacityPercent)) / 100;
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function updateMessageStylePreview() {
+  const bubble = document.getElementById('message-style-preview-bubble');
+  if (!bubble) {
+    return;
+  }
+
+  const bgColor = document.getElementById('message_bg_color')?.value || '#20262f';
+  const opacity = Number.parseInt(document.getElementById('message_bg_opacity')?.value, 10) || 0;
+  const textColor = document.getElementById('message_text_color')?.value || '#ffffff';
+  const fontSize = document.getElementById('message_font_size')?.value || '1.0';
+  const widthPercent = document.getElementById('message_width_percent')?.value || '88';
+  const position = document.getElementById('message_position')?.value || 'top';
+
+  const opacityLabel = document.getElementById('message_bg_opacity_value');
+  if (opacityLabel) {
+    opacityLabel.textContent = `${opacity}%`;
+  }
+
+  bubble.style.background = hexToRgba(bgColor, opacity);
+  bubble.style.color = textColor;
+  bubble.style.fontSize = `${fontSize}rem`;
+  bubble.style.width = `min(${widthPercent}%, 100% - 24px)`;
+
+  bubble.style.top = position === 'top' ? '10px' : position === 'middle' ? '50%' : 'auto';
+  bubble.style.bottom = position === 'bottom' ? '10px' : 'auto';
+  bubble.style.transform = position === 'middle' ? 'translate(-50%, -50%)' : 'translateX(-50%)';
+}
+
+function initMessageStylePreview() {
+  const inputIds = [
+    'message_bg_color',
+    'message_bg_color_hex',
+    'message_bg_opacity',
+    'message_text_color',
+    'message_text_color_hex',
+    'message_font_size',
+    'message_width_percent',
+    'message_position'
+  ];
+
+  inputIds.forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', updateMessageStylePreview);
+  });
+
+  updateMessageStylePreview();
+}
+
 function resetTextSizesToDefaults() {
   document.querySelectorAll('[data-text-size-field="1"]').forEach((input) => {
     const defaultValue = input.getAttribute('data-default-value');
@@ -1062,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('save-settings-btn')?.addEventListener('click', saveSettings);
   document.getElementById('reset-layout-btn')?.addEventListener('click', resetLayoutToDefaults);
   document.getElementById('reset-colors-btn')?.addEventListener('click', resetColorsToDefaults);
+  document.getElementById('reset-message-style-btn')?.addEventListener('click', resetMessageStyleToDefaults);
   document.getElementById('reset-text-sizes-btn')?.addEventListener('click', resetTextSizesToDefaults);
   document.getElementById('save-preset-btn')?.addEventListener('click', savePreset);
   document.getElementById('cancel-preset-edit-btn')?.addEventListener('click', hidePresetEditor);
@@ -1073,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   initExcludeTags();
   syncColorPickers();
+  initMessageStylePreview();
   resetPresetForm();
 
   await Promise.all([loadCalendars(), loadFolders()]);

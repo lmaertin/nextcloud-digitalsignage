@@ -92,6 +92,12 @@ class DisplayConfigService {
             'colorText' => $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50'),
             'colorGradientStart' => $this->config->getAppValue('digitalsignage', 'color_gradient_start', '#0066cc'),
             'colorGradientEnd' => $this->config->getAppValue('digitalsignage', 'color_gradient_end', '#3399ff'),
+            'messageBgColor' => $this->config->getAppValue('digitalsignage', 'message_bg_color', '#20262f'),
+            'messageBgOpacity' => (int)$this->config->getAppValue('digitalsignage', 'message_bg_opacity', '86'),
+            'messageTextColor' => $this->config->getAppValue('digitalsignage', 'message_text_color', '#ffffff'),
+            'messageFontSize' => $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0'),
+            'messageWidthPercent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
+            'messagePosition' => $this->normalizeMessagePosition($this->config->getAppValue('digitalsignage', 'message_position', 'top')),
             'activePresetId' => $display->getActivePresetId(),
             'activePresetName' => null,
             'revision' => $display->getRevision() ?: 1,
@@ -129,11 +135,30 @@ class DisplayConfigService {
             $effective['showCalendar'] = false;
         }
 
+        $effective['messageBgColorRgba'] = self::hexToRgba($effective['messageBgColor'], $effective['messageBgOpacity']);
+
         return $effective;
     }
 
     private function normalizeHeaderTitleSource(string $source): string {
         return in_array($source, ['global', 'preset', 'none'], true) ? $source : 'global';
+    }
+
+    private function normalizeMessagePosition(string $position): string {
+        return in_array($position, ['top', 'middle', 'bottom'], true) ? $position : 'top';
+    }
+
+    public static function hexToRgba(string $hex, int $opacityPercent): string {
+        if (preg_match('/^#([0-9a-fA-F]{6})$/', $hex, $matches) !== 1) {
+            return 'rgba(32, 38, 48, 0.86)';
+        }
+
+        $red = hexdec(substr($matches[1], 0, 2));
+        $green = hexdec(substr($matches[1], 2, 2));
+        $blue = hexdec(substr($matches[1], 4, 2));
+        $alpha = max(0, min(100, $opacityPercent)) / 100;
+
+        return sprintf('rgba(%d, %d, %d, %s)', $red, $green, $blue, rtrim(rtrim(number_format($alpha, 2, '.', ''), '0'), '.') ?: '0');
     }
 
     private function isValidTimeZone(string $timeZone): bool {

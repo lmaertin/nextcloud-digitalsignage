@@ -332,6 +332,19 @@ function hideInstantMessage() {
 }
 
 function positionInstantMessageOverlay(overlay) {
+  const position = config?.messagePosition === 'middle' || config?.messagePosition === 'bottom'
+    ? config.messagePosition
+    : 'top';
+
+  document.body.dataset.messagePosition = position;
+
+  if (position !== 'top') {
+    // Positioning for 'middle'/'bottom' is handled entirely via CSS attribute selectors.
+    overlay.style.top = '';
+    overlay.style.transform = '';
+    return;
+  }
+
   const header = document.querySelector('.display-header');
   if (!header) {
     overlay.style.top = '0.5rem';
@@ -342,6 +355,7 @@ function positionInstantMessageOverlay(overlay) {
   overlay.style.top = `${header.getBoundingClientRect().height / 2}px`;
   overlay.style.transform = 'translate(-50%, -50%)';
 }
+
 
 function showInstantMessage(message, duration) {
   const overlay = getInstantMessageOverlay();
