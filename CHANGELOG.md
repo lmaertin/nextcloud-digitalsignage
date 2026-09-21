@@ -7,6 +7,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.8] - 2026-09-21
+
+### Added
+
+- Backend-configured styling for instant popup messages: background color and opacity, text color, font size, width and screen position, applied to all displays without editing code (#11).
+
+### Fixed
+
+- Style of dialogues in admin panel.
+- Save button floating again.
+
 ## [0.8.6] - 2026-09-19
 
 ### Added
