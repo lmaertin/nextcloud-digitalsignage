@@ -5,7 +5,7 @@ A Nextcloud app for displaying digital info monitors with calendar events and me
 
 Short App Store summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows (images & videos), presets and remote switching.
 
-Current release: **0.8.6**
+Current release: **0.8.8**
 
 ![Digital Signage Display](img/screenshot-display.png)
 
