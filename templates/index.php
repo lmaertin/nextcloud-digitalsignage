@@ -2,43 +2,10 @@
 <!-- Farbsynchronisation jetzt in settings.js ausgelagert (CSP-konform) -->
 <?php
 $l = $_['l10n'];
+$assetVersion = static fn (string $relativePath): string => (string)@filemtime(__DIR__ . '/../' . $relativePath) ?: '0';
 ?>
 
-<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=0.8.6" />
-
-<style nonce="<?php p($_['cspNonce']); ?>">
-  .ds-save-bar {
-    position: static !important;
-    margin-top: 24px;
-    padding: 14px 0 0;
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-width: 1px 0 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .ds-displays-section {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .ds-display-create-section:has(#display-create-editor:not([hidden])) > #new-display-btn {
-    display: none !important;
-  }
-
-  .ds-preset-editor .ds-editor-actions {
-    display: flex !important;
-    grid-column: 1 / -1 !important;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-  }
-
-  .ds-preset-widgets-field {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-</style>
+<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=<?php p($assetVersion('css/settings.css')); ?>" />
 
 <div id="app-content">
   <div id="app-content-wrapper" class="ds-page-shell">
@@ -146,6 +113,55 @@ $l = $_['l10n'];
             </div>
             <div class="ds-subsection-actions ds-subsection-actions-end">
               <button type="button" id="reset-text-sizes-btn" class="button ds-button-compact">
+                <?php p($l->t('Reset to defaults')); ?>
+              </button>
+            </div>
+          </div>
+
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Instant message styling')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Configure how the overlay for instant messages (sent via the control API) is displayed on all screens.')); ?></p>
+            <div class="ds-form-grid ds-form-grid-compact">
+              <div class="ds-form-group ds-color-group">
+                <label for="message_bg_color" class="ds-label"><?php p($l->t('Background')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="message_bg_color" name="message_bg_color" value="<?php p($_['message_bg_color'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="message_bg_color_hex" name="message_bg_color_hex" value="<?php p($_['message_bg_color'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group">
+                <label for="message_bg_opacity" class="ds-label"><?php p($l->t('Background opacity')); ?> <span id="message_bg_opacity_value" class="ds-hint"><?php p($_['message_bg_opacity'] ?? '50'); ?>%</span></label>
+                <input type="range" id="message_bg_opacity" value="<?php p($_['message_bg_opacity'] ?? '50'); ?>" min="0" max="100" step="1" class="ds-input ds-range" />
+              </div>
+              <div class="ds-form-group ds-color-group">
+                <label for="message_text_color" class="ds-label"><?php p($l->t('Text color')); ?></label>
+                <div class="ds-color-controls">
+                  <input type="color" id="message_text_color" name="message_text_color" value="<?php p($_['message_text_color'] ?? '#ffffff'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="message_text_color_hex" name="message_text_color_hex" value="<?php p($_['message_text_color'] ?? '#ffffff'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                </div>
+              </div>
+              <div class="ds-form-group">
+                <label for="message_font_size" class="ds-label"><?php p($l->t('Font size (rem)')); ?></label>
+                <input type="number" id="message_font_size" value="<?php p($_['message_font_size'] ?? '1.0'); ?>" min="0.5" max="4" step="0.1" inputmode="decimal" class="ds-input" />
+              </div>
+              <div class="ds-form-group">
+                <label for="message_width_percent" class="ds-label"><?php p($l->t('Width (percent of screen)')); ?></label>
+                <input type="number" id="message_width_percent" value="<?php p($_['message_width_percent'] ?? '88'); ?>" min="20" max="100" step="1" class="ds-input" />
+              </div>
+              <div class="ds-form-group">
+                <label for="message_position" class="ds-label"><?php p($l->t('Position')); ?></label>
+                <select id="message_position" class="ds-input">
+                  <option value="top" <?php if (($_['message_position'] ?? 'top') === 'top') p('selected'); ?>><?php p($l->t('Top')); ?></option>
+                  <option value="middle" <?php if (($_['message_position'] ?? 'top') === 'middle') p('selected'); ?>><?php p($l->t('Middle')); ?></option>
+                  <option value="bottom" <?php if (($_['message_position'] ?? 'top') === 'bottom') p('selected'); ?>><?php p($l->t('Bottom')); ?></option>
+                </select>
+              </div>
+            </div>
+            <div class="ds-message-preview-screen" id="message-style-preview-screen">
+              <div class="ds-message-preview-bubble" id="message-style-preview-bubble"><?php p($l->t('Live preview: the meeting room is reserved until 16:00.')); ?></div>
+            </div>
+            <div class="ds-subsection-actions ds-subsection-actions-end">
+              <button type="button" id="reset-message-style-btn" class="button ds-button-compact">
                 <?php p($l->t('Reset to defaults')); ?>
               </button>
             </div>
@@ -278,17 +294,16 @@ $l = $_['l10n'];
         <p class="ds-section-subtitle"><?php p($l->t('Create and manage public screens with their own name, location, timezone, weather settings and active preset.')); ?></p>
 
         <div class="ds-subsection ds-display-section">
-          <h4 class="ds-subsection-title"><?php p($l->t('Existing displays')); ?></h4>
+          <h4 class="ds-subsection-title ds-subsection-title-plain"><?php p($l->t('Existing displays')); ?></h4>
           <datalist id="timezone-options">
             <?php foreach (($_['time_zones'] ?? []) as $timeZone): ?>
               <option value="<?php p($timeZone); ?>"></option>
             <?php endforeach; ?>
           </datalist>
           <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
-        </div>
-
-        <div class="ds-subsection ds-display-create-section">
-          <button class="button primary" id="new-display-btn"><?php p($l->t('New display')); ?></button>
+          <div class="ds-subsection ds-display-create-section">
+            <button class="button primary" id="new-display-btn"><?php p($l->t('New display')); ?></button>
+          </div>
           <div class="ds-display-create-editor ds-object-editor" id="display-create-editor" hidden>
             <label for="token-name" class="ds-label"><?php p($l->t('Display name')); ?></label>
             <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />
@@ -364,4 +379,4 @@ $l = $_['l10n'];
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.8.6"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=<?php p($assetVersion('js/settings.js')); ?>"></script>

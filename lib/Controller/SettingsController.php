@@ -46,11 +46,21 @@ class SettingsController extends Controller {
         string $text_size_appointments_title = '',
         string $text_size_appointments_time = '',
         string $text_size_appointments_location = '',
-        string $fullscreen_slideshow = '0'
+        string $fullscreen_slideshow = '0',
+        string $message_bg_color = '#0066cc',
+        string $message_bg_opacity = '50',
+        string $message_text_color = '#ffffff',
+        string $message_font_size = '1.0',
+        string $message_width_percent = '88',
+        string $message_position = 'top'
     ): JSONResponse {
         $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
         $imageRefreshValue = (int)$image_refresh_interval_minutes;
         $normalizedImageRefreshInterval = (string)($imageRefreshValue >= 0 ? $imageRefreshValue : self::DEFAULT_IMAGE_REFRESH_INTERVAL_MINUTES);
+        $normalizedMessageFontSize = (string)max(0.5, min(4.0, (float)$message_font_size ?: 1.0));
+        $normalizedMessageWidthPercent = (string)max(20, min(100, (int)$message_width_percent ?: 88));
+        $normalizedMessageBgOpacity = (string)max(0, min(100, (int)$message_bg_opacity));
+        $normalizedMessagePosition = in_array($message_position, ['top', 'middle', 'bottom'], true) ? $message_position : 'top';
 
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
@@ -76,6 +86,12 @@ class SettingsController extends Controller {
             'appointments_location' => $text_size_appointments_location,
         ]);
         $this->config->setAppValue('digitalsignage', 'fullscreen_slideshow', $fullscreen_slideshow);
+        $this->config->setAppValue('digitalsignage', 'message_bg_color', $message_bg_color);
+        $this->config->setAppValue('digitalsignage', 'message_bg_opacity', $normalizedMessageBgOpacity);
+        $this->config->setAppValue('digitalsignage', 'message_text_color', $message_text_color);
+        $this->config->setAppValue('digitalsignage', 'message_font_size', $normalizedMessageFontSize);
+        $this->config->setAppValue('digitalsignage', 'message_width_percent', $normalizedMessageWidthPercent);
+        $this->config->setAppValue('digitalsignage', 'message_position', $normalizedMessagePosition);
         return new JSONResponse(['status' => 'success']);
     }
 
@@ -97,6 +113,12 @@ class SettingsController extends Controller {
         $image_fit_mode = $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover');
         $text_sizes = TextSizeConfig::getConfiguredSizes($this->config);
         $fullscreen_slideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
+        $message_bg_color = $this->config->getAppValue('digitalsignage', 'message_bg_color', '#0066cc');
+        $message_bg_opacity = $this->config->getAppValue('digitalsignage', 'message_bg_opacity', '50');
+        $message_text_color = $this->config->getAppValue('digitalsignage', 'message_text_color', '#ffffff');
+        $message_font_size = $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0');
+        $message_width_percent = $this->config->getAppValue('digitalsignage', 'message_width_percent', '88');
+        $message_position = $this->config->getAppValue('digitalsignage', 'message_position', 'top');
 
         return new JSONResponse([
             'auto_fullscreen_prompt' => $auto_fullscreen_prompt,
@@ -113,6 +135,12 @@ class SettingsController extends Controller {
             'image_fit_mode' => $image_fit_mode,
             'text_sizes' => $text_sizes,
             'fullscreen_slideshow' => $fullscreen_slideshow,
+            'message_bg_color' => $message_bg_color,
+            'message_bg_opacity' => $message_bg_opacity,
+            'message_text_color' => $message_text_color,
+            'message_font_size' => $message_font_size,
+            'message_width_percent' => $message_width_percent,
+            'message_position' => $message_position,
         ]);
     }
 }

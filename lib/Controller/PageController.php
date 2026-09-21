@@ -78,6 +78,12 @@ class PageController extends Controller {
             'color_gradient_start' => $this->config->getAppValue('digitalsignage', 'color_gradient_start', '#0066cc'),
             'color_gradient_end' => $this->config->getAppValue('digitalsignage', 'color_gradient_end', '#3399ff'),
             'show_titlebar' => $this->config->getAppValue('digitalsignage', 'show_titlebar', '1'),
+            'message_bg_color' => $this->config->getAppValue('digitalsignage', 'message_bg_color', '#0066cc'),
+            'message_bg_opacity' => $this->config->getAppValue('digitalsignage', 'message_bg_opacity', '50'),
+            'message_text_color' => $this->config->getAppValue('digitalsignage', 'message_text_color', '#ffffff'),
+            'message_font_size' => $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0'),
+            'message_width_percent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
+            'message_position' => $this->config->getAppValue('digitalsignage', 'message_position', 'top'),
         ];
 
         return new TemplateResponse(

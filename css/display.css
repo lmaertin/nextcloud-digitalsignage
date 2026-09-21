@@ -186,7 +186,7 @@ body {
   left: 50%;
   top: 0;
   transform: translate(-50%, -50%);
-  width: min(88vw, 720px);
+  width: min(var(--instant-message-width, 88%), 720px);
   z-index: 15000;
   pointer-events: none;
   opacity: 0;
@@ -197,15 +197,29 @@ body {
   opacity: 1;
 }
 
+/* Vertically centered overlay, independent of the display header height. */
+body[data-message-position='middle'] .instant-message-overlay {
+  top: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+}
+
+/* Anchored near the bottom edge of the screen. */
+body[data-message-position='bottom'] .instant-message-overlay {
+  top: auto;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+}
+
 .instant-message-content {
   width: 100%;
   box-sizing: border-box;
-  background: rgba(32, 38, 48, 0.86);
+  background: var(--instant-message-bg, #0066cc);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   padding: 0.58rem 1rem;
-  color: rgba(255, 255, 255, 0.94);
-  font-size: 1rem;
+  color: var(--instant-message-color, rgba(255, 255, 255, 0.94));
+  font-size: var(--instant-message-font-size, 1rem);
   line-height: 1.3;
   text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);

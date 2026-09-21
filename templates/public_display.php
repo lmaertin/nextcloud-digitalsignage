@@ -7,8 +7,9 @@
   <?php
     $urlGen = $_['url_generator'];
     $nonce = $_['cspNonce'];
+    $assetVersion = static fn (string $relativePath): string => (string)@filemtime(__DIR__ . '/../' . $relativePath) ?: '0';
   ?>
-  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=0.8.6">
+  <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=<?php p($assetVersion('css/display.css')); ?>">
   <style>
     :root {
       --primary-blue: <?php p($_['color_primary'] ?? '#0066cc'); ?>;
@@ -16,6 +17,10 @@
       --text-primary: <?php p($_['color_text'] ?? '#2c3e50'); ?>;
       --gradient-start: <?php p($_['color_gradient_start'] ?? '#0066cc'); ?>;
       --gradient-end: <?php p($_['color_gradient_end'] ?? '#3399ff'); ?>;
+      --instant-message-bg: <?php p($_['message_bg_color'] ?? '#0066cc'); ?>;
+      --instant-message-color: <?php p($_['message_text_color'] ?? '#ffffff'); ?>;
+      --instant-message-font-size: <?php p($_['message_font_size'] ?? '1.0'); ?>rem;
+      --instant-message-width: <?php p($_['message_width_percent'] ?? '88'); ?>%;
 <?php foreach (($_['text_size_css_variables'] ?? []) as $cssVariable => $value): ?>
       <?php p($cssVariable); ?>: <?php p($value); ?>;
 <?php endforeach; ?>
@@ -26,6 +31,7 @@
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
       data-base-url="<?php p($urlGen->getAbsoluteURL('/index.php/')); ?>"
+      data-message-position="<?php p($_['message_position'] ?? 'top'); ?>"
   data-fullscreen-title-enter="<?php p($_['fullscreen_title_enter'] ?? 'Fullscreen'); ?>"
   data-fullscreen-title-exit="<?php p($_['fullscreen_title_exit'] ?? 'Exit fullscreen'); ?>"
       class="<?php
@@ -90,6 +96,6 @@
   </div>
   <?php endif; ?>
   <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/ical.min.js')); ?>"></script>
-  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=0.8.6" defer></script>
+  <script nonce="<?php p($nonce); ?>" src="<?php p($urlGen->linkTo('digitalsignage', 'js/display.js')); ?>?v=<?php p($assetVersion('js/display.js')); ?>" defer></script>
 </body>
 </html>

@@ -247,6 +247,13 @@ class PublicApiController extends Controller {
             'activePresetId' => $effectiveConfig['activePresetId'],
             'activePresetName' => $effectiveConfig['activePresetName'],
             'revision' => $effectiveConfig['revision'],
+            'messagePosition' => $effectiveConfig['messagePosition'],
+            'messageStyleCssVariables' => [
+                '--instant-message-bg' => $effectiveConfig['messageBgColorRgba'],
+                '--instant-message-color' => $effectiveConfig['messageTextColor'],
+                '--instant-message-font-size' => $effectiveConfig['messageFontSize'] . 'rem',
+                '--instant-message-width' => $effectiveConfig['messageWidthPercent'] . '%',
+            ],
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),

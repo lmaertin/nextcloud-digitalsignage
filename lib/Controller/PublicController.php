@@ -117,6 +117,11 @@ class PublicController extends PublicShareController {
             $colorText = $effectiveConfig['colorText'];
             $colorGradientStart = $effectiveConfig['colorGradientStart'];
             $colorGradientEnd = $effectiveConfig['colorGradientEnd'];
+            $messageBgColor = $effectiveConfig['messageBgColorRgba'];
+            $messageTextColor = $effectiveConfig['messageTextColor'];
+            $messageFontSize = $effectiveConfig['messageFontSize'];
+            $messageWidthPercent = $effectiveConfig['messageWidthPercent'];
+            $messagePosition = $effectiveConfig['messagePosition'];
             $showTitlebar = $this->config->getAppValue('digitalsignage', 'show_titlebar', '1');
             $displayName = $effectiveConfig['displayName'];
             $showDisplayName = $effectiveConfig['showDisplayName'];
@@ -140,6 +145,11 @@ class PublicController extends PublicShareController {
                     'color_text' => $colorText,
                     'color_gradient_start' => $colorGradientStart,
                     'color_gradient_end' => $colorGradientEnd,
+                    'message_bg_color' => $messageBgColor,
+                    'message_text_color' => $messageTextColor,
+                    'message_font_size' => $messageFontSize,
+                    'message_width_percent' => $messageWidthPercent,
+                    'message_position' => $messagePosition,
                     'show_titlebar' => $showTitlebar,
                     'display_name' => $displayName,
                     'show_display_name' => $showDisplayName,
