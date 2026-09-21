@@ -2,9 +2,10 @@
 <!-- Farbsynchronisation jetzt in settings.js ausgelagert (CSP-konform) -->
 <?php
 $l = $_['l10n'];
+$assetVersion = static fn (string $relativePath): string => (string)@filemtime(__DIR__ . '/../' . $relativePath) ?: '0';
 ?>
 
-<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=0.8.6" />
+<link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=<?php p($assetVersion('css/settings.css')); ?>" />
 
 <style nonce="<?php p($_['cspNonce']); ?>">
   .ds-save-bar {
@@ -413,4 +414,4 @@ $l = $_['l10n'];
   </div>
 
   <?php \OCP\Util::addTranslations('digitalsignage'); ?>
-  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=0.8.6"></script>
+  <script nonce="<?php p($_['cspNonce']); ?>" src="<?php p($_['url_generator']->linkTo('digitalsignage', 'js/settings.js')); ?>?v=<?php p($assetVersion('js/settings.js')); ?>"></script>
