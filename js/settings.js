@@ -1065,7 +1065,7 @@ function resetLayoutToDefaults() {
 
 function resetMessageStyleToDefaults() {
   const defaults = {
-    message_bg_color: '#20262f',
+    message_bg_color: '#0066cc',
     message_text_color: '#ffffff'
   };
 
@@ -1080,7 +1080,7 @@ function resetMessageStyleToDefaults() {
 
   const opacityInput = document.getElementById('message_bg_opacity');
   if (opacityInput) {
-    opacityInput.value = '86';
+    opacityInput.value = '50';
   }
 
   const fontSizeInput = document.getElementById('message_font_size');
@@ -1104,7 +1104,7 @@ function resetMessageStyleToDefaults() {
 function hexToRgba(hex, opacityPercent) {
   const match = /^#([0-9a-fA-F]{6})$/.exec(hex);
   if (!match) {
-    return 'rgba(32, 38, 48, 0.86)';
+    return 'rgba(0, 102, 204, 1)';
   }
 
   const red = parseInt(match[1].slice(0, 2), 16);
@@ -1121,12 +1121,11 @@ function updateMessageStylePreview() {
     return;
   }
 
-  const bgColor = document.getElementById('message_bg_color')?.value || '#20262f';
+  const bgColor = document.getElementById('message_bg_color')?.value || '#0066cc';
   const opacity = Number.parseInt(document.getElementById('message_bg_opacity')?.value, 10) || 0;
   const textColor = document.getElementById('message_text_color')?.value || '#ffffff';
   const fontSize = document.getElementById('message_font_size')?.value || '1.0';
   const widthPercent = document.getElementById('message_width_percent')?.value || '88';
-  const position = document.getElementById('message_position')?.value || 'top';
 
   const opacityLabel = document.getElementById('message_bg_opacity_value');
   if (opacityLabel) {
@@ -1137,10 +1136,6 @@ function updateMessageStylePreview() {
   bubble.style.color = textColor;
   bubble.style.fontSize = `${fontSize}rem`;
   bubble.style.width = `min(${widthPercent}%, 100% - 24px)`;
-
-  bubble.style.top = position === 'top' ? '10px' : position === 'middle' ? '50%' : 'auto';
-  bubble.style.bottom = position === 'bottom' ? '10px' : 'auto';
-  bubble.style.transform = position === 'middle' ? 'translate(-50%, -50%)' : 'translateX(-50%)';
 }
 
 function initMessageStylePreview() {
@@ -1151,8 +1146,7 @@ function initMessageStylePreview() {
     'message_text_color',
     'message_text_color_hex',
     'message_font_size',
-    'message_width_percent',
-    'message_position'
+    'message_width_percent'
   ];
 
   inputIds.forEach((id) => {

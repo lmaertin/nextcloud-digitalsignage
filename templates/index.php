@@ -7,40 +7,6 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
 
 <link rel="stylesheet" href="<?php p($_['url_generator']->linkTo('digitalsignage', 'css/settings.css')); ?>?v=<?php p($assetVersion('css/settings.css')); ?>" />
 
-<style nonce="<?php p($_['cspNonce']); ?>">
-  .ds-save-bar {
-    position: static !important;
-    margin-top: 24px;
-    padding: 14px 0 0;
-    background: transparent;
-    border: 1px solid var(--color-border);
-    border-width: 1px 0 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .ds-displays-section {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .ds-display-create-section:has(#display-create-editor:not([hidden])) > #new-display-btn {
-    display: none !important;
-  }
-
-  .ds-preset-editor .ds-editor-actions {
-    display: flex !important;
-    grid-column: 1 / -1 !important;
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-  }
-
-  .ds-preset-widgets-field {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-  }
-</style>
-
 <div id="app-content">
   <div id="app-content-wrapper" class="ds-page-shell">
     <div class="ds-stack">
@@ -159,13 +125,13 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
               <div class="ds-form-group ds-color-group">
                 <label for="message_bg_color" class="ds-label"><?php p($l->t('Background')); ?></label>
                 <div class="ds-color-controls">
-                  <input type="color" id="message_bg_color" name="message_bg_color" value="<?php p($_['message_bg_color'] ?? '#20262f'); ?>" class="ds-input ds-color-picker" />
-                  <input type="text" id="message_bg_color_hex" name="message_bg_color_hex" value="<?php p($_['message_bg_color'] ?? '#20262f'); ?>" maxlength="7" class="ds-input ds-color-hex" />
+                  <input type="color" id="message_bg_color" name="message_bg_color" value="<?php p($_['message_bg_color'] ?? '#0066cc'); ?>" class="ds-input ds-color-picker" />
+                  <input type="text" id="message_bg_color_hex" name="message_bg_color_hex" value="<?php p($_['message_bg_color'] ?? '#0066cc'); ?>" maxlength="7" class="ds-input ds-color-hex" />
                 </div>
               </div>
               <div class="ds-form-group">
-                <label for="message_bg_opacity" class="ds-label"><?php p($l->t('Background opacity')); ?> <span id="message_bg_opacity_value" class="ds-hint"><?php p($_['message_bg_opacity'] ?? '86'); ?>%</span></label>
-                <input type="range" id="message_bg_opacity" value="<?php p($_['message_bg_opacity'] ?? '86'); ?>" min="0" max="100" step="1" class="ds-input ds-range" />
+                <label for="message_bg_opacity" class="ds-label"><?php p($l->t('Background opacity')); ?> <span id="message_bg_opacity_value" class="ds-hint"><?php p($_['message_bg_opacity'] ?? '50'); ?>%</span></label>
+                <input type="range" id="message_bg_opacity" value="<?php p($_['message_bg_opacity'] ?? '50'); ?>" min="0" max="100" step="1" class="ds-input ds-range" />
               </div>
               <div class="ds-form-group ds-color-group">
                 <label for="message_text_color" class="ds-label"><?php p($l->t('Text color')); ?></label>
@@ -328,17 +294,16 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
         <p class="ds-section-subtitle"><?php p($l->t('Create and manage public screens with their own name, location, timezone, weather settings and active preset.')); ?></p>
 
         <div class="ds-subsection ds-display-section">
-          <h4 class="ds-subsection-title"><?php p($l->t('Existing displays')); ?></h4>
+          <h4 class="ds-subsection-title ds-subsection-title-plain"><?php p($l->t('Existing displays')); ?></h4>
           <datalist id="timezone-options">
             <?php foreach (($_['time_zones'] ?? []) as $timeZone): ?>
               <option value="<?php p($timeZone); ?>"></option>
             <?php endforeach; ?>
           </datalist>
           <div id="tokens-container" class="ds-tokens-list"><?php p($l->t('Loading...')); ?></div>
-        </div>
-
-        <div class="ds-subsection ds-display-create-section">
-          <button class="button primary" id="new-display-btn"><?php p($l->t('New display')); ?></button>
+          <div class="ds-subsection ds-display-create-section">
+            <button class="button primary" id="new-display-btn"><?php p($l->t('New display')); ?></button>
+          </div>
           <div class="ds-display-create-editor ds-object-editor" id="display-create-editor" hidden>
             <label for="token-name" class="ds-label"><?php p($l->t('Display name')); ?></label>
             <input type="text" id="token-name" placeholder="<?php p($l->t('Internal display label (e.g. reception screen)')); ?>" class="ds-input" />

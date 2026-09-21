@@ -214,7 +214,7 @@ body[data-message-position='bottom'] .instant-message-overlay {
 .instant-message-content {
   width: 100%;
   box-sizing: border-box;
-  background: var(--instant-message-bg, rgba(32, 38, 48, 0.86));
+  background: var(--instant-message-bg, #0066cc);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
   padding: 0.58rem 1rem;

@@ -47,8 +47,8 @@ class SettingsController extends Controller {
         string $text_size_appointments_time = '',
         string $text_size_appointments_location = '',
         string $fullscreen_slideshow = '0',
-        string $message_bg_color = '#20262f',
-        string $message_bg_opacity = '86',
+        string $message_bg_color = '#0066cc',
+        string $message_bg_opacity = '50',
         string $message_text_color = '#ffffff',
         string $message_font_size = '1.0',
         string $message_width_percent = '88',
@@ -113,8 +113,8 @@ class SettingsController extends Controller {
         $image_fit_mode = $this->config->getAppValue('digitalsignage', 'image_fit_mode', 'cover');
         $text_sizes = TextSizeConfig::getConfiguredSizes($this->config);
         $fullscreen_slideshow = $this->config->getAppValue('digitalsignage', 'fullscreen_slideshow', '0');
-        $message_bg_color = $this->config->getAppValue('digitalsignage', 'message_bg_color', '#20262f');
-        $message_bg_opacity = $this->config->getAppValue('digitalsignage', 'message_bg_opacity', '86');
+        $message_bg_color = $this->config->getAppValue('digitalsignage', 'message_bg_color', '#0066cc');
+        $message_bg_opacity = $this->config->getAppValue('digitalsignage', 'message_bg_opacity', '50');
         $message_text_color = $this->config->getAppValue('digitalsignage', 'message_text_color', '#ffffff');
         $message_font_size = $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0');
         $message_width_percent = $this->config->getAppValue('digitalsignage', 'message_width_percent', '88');

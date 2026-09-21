@@ -328,7 +328,7 @@ The widget fields default to `1`. Existing presets are migrated with all three w
 - `GET /apps/digitalsignage/api/public/{token}/messages?since=<message-id>`
    Returns the current unexpired instant message for the addressed display (or an empty result when no message is pending). Messages are rendered as non-blocking text overlays and automatically disappear after their configured duration.
 
-   The overlay's background color, text color, font size, width and screen position (top, middle or bottom) apply to all displays and are configured in the app settings under "Instant message styling", not per API request.
+   The overlay's background color, text color, font size, width and screen position (top, middle or bottom) apply to all displays and are configured in the app settings under "Instant message styling".
 
 ### Public Control API (Control token required)
 

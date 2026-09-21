@@ -17,7 +17,7 @@
       --text-primary: <?php p($_['color_text'] ?? '#2c3e50'); ?>;
       --gradient-start: <?php p($_['color_gradient_start'] ?? '#0066cc'); ?>;
       --gradient-end: <?php p($_['color_gradient_end'] ?? '#3399ff'); ?>;
-      --instant-message-bg: <?php p($_['message_bg_color'] ?? '#20262f'); ?>;
+      --instant-message-bg: <?php p($_['message_bg_color'] ?? '#0066cc'); ?>;
       --instant-message-color: <?php p($_['message_text_color'] ?? '#ffffff'); ?>;
       --instant-message-font-size: <?php p($_['message_font_size'] ?? '1.0'); ?>rem;
       --instant-message-width: <?php p($_['message_width_percent'] ?? '88'); ?>%;

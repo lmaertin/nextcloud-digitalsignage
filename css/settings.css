@@ -10,6 +10,7 @@
   box-sizing: border-box;
   margin: 0 auto;
   padding: 30px;
+  padding-bottom: 90px;
   width: 100%;
 }
 
@@ -24,12 +25,14 @@
   border-radius: var(--border-radius-large);
   padding: 25px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px var(--color-box-shadow);
 }
 
 .ds-displays-section {
-  padding-left: 0;
-  padding-right: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .ds-stack {
@@ -97,6 +100,11 @@
   margin: 0 0 15px 0;
   padding-left: 8px;
   border-left: 3px solid var(--color-primary-element);
+}
+
+.ds-subsection-title-plain {
+  padding-left: 0;
+  border-left: none;
 }
 
 .ds-form-grid {
@@ -259,10 +267,10 @@
 
 .ds-message-preview-screen {
   position: relative;
-  height: 160px;
+  height: 90px;
   margin: 4px 0 20px;
-  border-radius: 8px;
-  background: #2c3038;
+  border-radius: var(--border-radius);
+  background: var(--color-background-dark);
   border: 1px solid var(--color-border);
   overflow: hidden;
 }
@@ -270,13 +278,14 @@
 .ds-message-preview-bubble {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   box-sizing: border-box;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 0.58rem 1rem;
   text-align: center;
   line-height: 1.3;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px var(--color-box-shadow);
   white-space: pre-wrap;
 }
 
@@ -356,14 +365,16 @@
 }
 
 .ds-save-bar {
-  position: static;
-  margin-top: 24px;
-  padding: 14px 0 0;
-  background: transparent;
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: fit-content;
+  margin: 0;
+  padding: 10px;
+  background: var(--color-main-background);
   border: 1px solid var(--color-border);
-  border-width: 1px 0 0;
-  border-radius: 0;
-  box-shadow: none;
+  border-radius: var(--border-radius-large);
+  box-shadow: 0 2px 9px var(--color-box-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,16 +384,10 @@
 
 .ds-save-bar button {
   margin: 0;
-  border-radius: 8px;
-  font-size: 0.95em;
-  padding: 9px 22px;
-  box-shadow: none;
-  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.ds-save-bar button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0, 102, 204, 0.25);
+.ds-message:empty {
+  display: none;
 }
 
 .ds-message {
@@ -420,7 +425,7 @@
 
 #tokens-container .token-item:hover {
   border-color: var(--color-primary-element);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px var(--color-box-shadow);
 }
 
 .token-info {
@@ -476,9 +481,8 @@
 
 .token-name {
   font-weight: 600;
-  font-size: 1.15em;
-  margin-bottom: 8px;
-  color: var(--color-primary-element);
+  font-size: 1rem;
+  margin-bottom: 4px;
 }
 
 #tokens-container .token-url {
@@ -514,10 +518,6 @@
   display: grid;
   gap: 10px;
   margin-top: 14px;
-  padding: 14px;
-  background: var(--color-main-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
 }
 
 .token-row {
@@ -726,7 +726,8 @@
   flex: 0 0 auto;
 }
 
-.ds-preset-create-section {
+.ds-preset-create-section,
+.ds-display-create-section {
   display: flex;
   justify-content: flex-start;
   margin-top: 18px;

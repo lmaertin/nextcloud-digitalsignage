@@ -92,8 +92,8 @@ class DisplayConfigService {
             'colorText' => $this->config->getAppValue('digitalsignage', 'color_text', '#2c3e50'),
             'colorGradientStart' => $this->config->getAppValue('digitalsignage', 'color_gradient_start', '#0066cc'),
             'colorGradientEnd' => $this->config->getAppValue('digitalsignage', 'color_gradient_end', '#3399ff'),
-            'messageBgColor' => $this->config->getAppValue('digitalsignage', 'message_bg_color', '#20262f'),
-            'messageBgOpacity' => (int)$this->config->getAppValue('digitalsignage', 'message_bg_opacity', '86'),
+            'messageBgColor' => $this->config->getAppValue('digitalsignage', 'message_bg_color', '#0066cc'),
+            'messageBgOpacity' => (int)$this->config->getAppValue('digitalsignage', 'message_bg_opacity', '50'),
             'messageTextColor' => $this->config->getAppValue('digitalsignage', 'message_text_color', '#ffffff'),
             'messageFontSize' => $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0'),
             'messageWidthPercent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
@@ -150,7 +150,7 @@ class DisplayConfigService {
 
     public static function hexToRgba(string $hex, int $opacityPercent): string {
         if (preg_match('/^#([0-9a-fA-F]{6})$/', $hex, $matches) !== 1) {
-            return 'rgba(32, 38, 48, 0.86)';
+            return 'rgba(0, 102, 204, 1)';
         }
 
         $red = hexdec(substr($matches[1], 0, 2));
