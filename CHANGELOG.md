@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.10] - 2026-09-24
+
+### Fixed
+
+- Preset calendar selection could silently show the wrong calendar (or none) when two calendars shared the same display name, e.g. after deleting and recreating one. Presets now store the calendar's unique key instead of its display name. Fixes #18.
+
 ## [0.8.9] - 2026-09-24
 
 ### Fixed
