@@ -182,11 +182,12 @@ body {
 }
 
 .instant-message-overlay {
+  --overlay-width: clamp(720px, var(--instant-message-width, 88%), 100%);
   position: fixed;
-  left: 50%;
+  left: calc((100% - var(--overlay-width)) / 2);
   top: 0;
-  transform: translate(-50%, -50%);
-  width: min(var(--instant-message-width, 88%), 720px);
+  transform: translateY(-50%);
+  width: var(--overlay-width);
   z-index: 15000;
   pointer-events: none;
   opacity: 0;
@@ -201,14 +202,14 @@ body {
 body[data-message-position='middle'] .instant-message-overlay {
   top: 50%;
   bottom: auto;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
 }
 
 /* Anchored near the bottom edge of the screen. */
 body[data-message-position='bottom'] .instant-message-overlay {
   top: auto;
   bottom: 1.5rem;
-  transform: translateX(-50%);
+  transform: none;
 }
 
 .instant-message-content {

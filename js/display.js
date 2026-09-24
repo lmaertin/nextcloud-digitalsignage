@@ -355,13 +355,14 @@ function positionInstantMessageOverlay(overlay) {
 
   const header = document.querySelector('.display-header');
   if (!header) {
+    // Horizontal centering is handled entirely via CSS (left: calc(...)).
     overlay.style.top = '0.5rem';
-    overlay.style.transform = 'translateX(-50%)';
+    overlay.style.transform = 'none';
     return;
   }
 
   overlay.style.top = `${header.getBoundingClientRect().height / 2}px`;
-  overlay.style.transform = 'translate(-50%, -50%)';
+  overlay.style.transform = 'translateY(-50%)';
 }
 
 
