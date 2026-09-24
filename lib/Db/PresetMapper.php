@@ -24,6 +24,14 @@ class PresetMapper extends QBMapper {
         return $this->findEntities($qb);
     }
 
+    public function findAll(): array {
+        $qb = $this->db->getQueryBuilder();
+        $qb->select('*')
+            ->from($this->getTableName());
+
+        return $this->findEntities($qb);
+    }
+
     public function findForUser(int $id, string $userId): ?Preset {
         $qb = $this->db->getQueryBuilder();
         $qb->select('*')

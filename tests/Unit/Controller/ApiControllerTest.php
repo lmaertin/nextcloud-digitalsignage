@@ -184,4 +184,62 @@ class ApiControllerTest extends TestCase {
         $this->assertSame('2026-09-14', $events[1]['objects'][0]['DTSTART'][0]['date']);
         $this->assertSame('2026-09-21', $events[2]['objects'][0]['DTSTART'][0]['date']);
     }
+
+    /**
+     * Regression test for https://github.com/lmaertin/nextcloud-digitalsignage/issues/18:
+     * two calendars can share the same display name (e.g. a recreated calendar, or a
+     * calendar shared by another user). Matching only by display name picks whichever
+     * one happens to come first, silently showing the wrong (possibly empty) calendar.
+     * Matching by the unique calendar key must always resolve the intended calendar.
+     */
+    public function testGetCalendarResolvesCorrectCalendarByKeyWhenDisplayNamesCollide(): void {
+        $emptyCalendar = $this->createMock(ICalendar::class);
+        $emptyCalendar->method('getDisplayName')->willReturn('Family');
+        $emptyCalendar->method('getKey')->willReturn('family-old');
+        $emptyCalendar->method('search')->willReturn([]);
+
+        $realCalendar = $this->createMock(ICalendar::class);
+        $realCalendar->method('getDisplayName')->willReturn('Family');
+        $realCalendar->method('getKey')->willReturn('family-new');
+        $realCalendar->method('search')->willReturn([
+            [
+                'objects' => [[
+                    'SUMMARY' => ['Dentist appointment'],
+                    'DTSTART' => [new \DateTimeImmutable('2026-09-25 09:00:00', new \DateTimeZone('UTC')), ['VALUE' => 'DATE-TIME']],
+                ]],
+            ],
+        ]);
+
+        $calendarManager = $this->createMock(ICalendarManager::class);
+        $calendarManager->method('getCalendarsForPrincipal')
+            ->with('principals/users/testUser')
+            ->willReturn([$emptyCalendar, $realCalendar]);
+
+        $request = $this->createMock(IRequest::class);
+        $config = $this->createMock(IConfig::class);
+        $config->method('getAppValue')
+            ->willReturnMap([
+                // The preset stores the unique calendar key, not the ambiguous display name.
+                ['digitalsignage', 'calendar_name', '', 'family-new'],
+            ]);
+
+        $rootFolder = $this->createMock(IRootFolder::class);
+        $userSession = $this->createMock(IUserSession::class);
+
+        $controller = new ApiController(
+            'digitalsignage',
+            $request,
+            $config,
+            $rootFolder,
+            $calendarManager,
+            $userSession,
+            'testUser'
+        );
+
+        $response = $controller->getCalendar();
+        $events = $response->getData()['calendar'];
+
+        $this->assertCount(1, $events);
+        $this->assertSame('Dentist appointment', $events[0]['objects'][0]['SUMMARY'][0]);
+    }
 }

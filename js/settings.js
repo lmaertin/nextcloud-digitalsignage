@@ -805,9 +805,21 @@ function populatePresetCalendars(selectedValues) {
     return;
   }
   const selected = new Set(selectedValues);
-  select.innerHTML = availableCalendars.map((calendar) =>
-    `<option value="${escapeHtml(calendar.displayName)}" ${selected.has(calendar.displayName) ? 'selected' : ''}>${escapeHtml(calendar.displayName)}</option>`
-  ).join('');
+  // Calendars can share the same display name (e.g. after deleting and
+  // recreating one, or with shared calendars), so options are keyed by the
+  // unique calendar key. Old presets that still store display names remain
+  // selectable via the fallback match below.
+  const nameCounts = availableCalendars.reduce((counts, calendar) => {
+    counts[calendar.displayName] = (counts[calendar.displayName] || 0) + 1;
+    return counts;
+  }, {});
+  select.innerHTML = availableCalendars.map((calendar) => {
+    const label = nameCounts[calendar.displayName] > 1
+      ? `${calendar.displayName} (${calendar.key})`
+      : calendar.displayName;
+    const isSelected = selected.has(calendar.key) || selected.has(calendar.displayName);
+    return `<option value="${escapeHtml(calendar.key)}" ${isSelected ? 'selected' : ''}>${escapeHtml(label)}</option>`;
+  }).join('');
 }
 
 async function loadFolders() {
