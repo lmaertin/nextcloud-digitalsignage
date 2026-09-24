@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\DigitalSignage\Tests\Unit\Controller;
 
 use OCA\DigitalSignage\Controller\ApiController;
+use OCA\DigitalSignage\Tests\Unit\Util\StringableParameter;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCP\Calendar\ICalendar;
@@ -120,5 +121,67 @@ class ApiControllerTest extends TestCase {
         $this->assertSame('2026-09-06T09:00:00+02:00', $events[0]['objects'][0]['DTSTART'][0]['date']);
         $this->assertSame('2026-09-13T09:00:00+02:00', $events[1]['objects'][0]['DTSTART'][0]['date']);
         $this->assertSame('2026-09-20T09:00:00+02:00', $events[2]['objects'][0]['DTSTART'][0]['date']);
+    }
+
+    /**
+     * Regression test for https://github.com/lmaertin/nextcloud-digitalsignage/issues/20:
+     * recurring all-day events must keep their calendar date stable for every expanded
+     * occurrence, even when the underlying DateTimeInterface instances are not in UTC.
+     */
+    public function testGetCalendarReturnsAllDayRecurringOccurrencesWithoutTimezoneShift(): void {
+        $calendar = $this->createMock(ICalendar::class);
+        $calendar->method('getDisplayName')->willReturn('Team Calendar');
+        $calendar->method('getKey')->willReturn('team-calendar');
+
+        // Simulates three expanded occurrences of a weekly recurring all-day event.
+        // VALUE is a Sabre\VObject\Parameter-like object here, as returned by the real
+        // ICalendar::search() implementation, not a plain string.
+        $occurrences = [];
+        foreach (['2026-09-07', '2026-09-14', '2026-09-21'] as $day) {
+            $start = new \DateTimeImmutable($day, new \DateTimeZone('America/New_York'));
+            $end = new \DateTimeImmutable($day, new \DateTimeZone('America/New_York'));
+            $occurrences[] = [
+                'objects' => [[
+                    'SUMMARY' => ['Team Off-Site'],
+                    'DTSTART' => [$start, ['VALUE' => new StringableParameter('DATE')]],
+                    'DTEND' => [$end, ['VALUE' => new StringableParameter('DATE')]],
+                ]],
+            ];
+        }
+
+        $calendar->method('search')->willReturn($occurrences);
+
+        $calendarManager = $this->createMock(ICalendarManager::class);
+        $calendarManager->method('getCalendarsForPrincipal')
+            ->with('principals/users/testUser')
+            ->willReturn([$calendar]);
+
+        $request = $this->createMock(IRequest::class);
+        $config = $this->createMock(IConfig::class);
+        $config->method('getAppValue')
+            ->willReturnMap([
+                ['digitalsignage', 'calendar_name', '', 'Team Calendar'],
+            ]);
+
+        $rootFolder = $this->createMock(IRootFolder::class);
+        $userSession = $this->createMock(IUserSession::class);
+
+        $controller = new ApiController(
+            'digitalsignage',
+            $request,
+            $config,
+            $rootFolder,
+            $calendarManager,
+            $userSession,
+            'testUser'
+        );
+
+        $response = $controller->getCalendar();
+        $events = $response->getData()['calendar'];
+
+        $this->assertCount(3, $events);
+        $this->assertSame('2026-09-07', $events[0]['objects'][0]['DTSTART'][0]['date']);
+        $this->assertSame('2026-09-14', $events[1]['objects'][0]['DTSTART'][0]['date']);
+        $this->assertSame('2026-09-21', $events[2]['objects'][0]['DTSTART'][0]['date']);
     }
 }

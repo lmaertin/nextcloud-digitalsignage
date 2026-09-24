@@ -26,7 +26,8 @@ class CalendarEventNormalizer {
                 $eventData['objects'][0]['DTEND'] = [
                     $startDateTime->add($duration),
                     [
-                        'VALUE' => ($event['DTSTART'][1]['VALUE'] ?? null) === 'DATE'
+                        // Sabre exposes VALUE as a Parameter object, not a plain string; cast before comparing.
+                        'VALUE' => (string)($event['DTSTART'][1]['VALUE'] ?? '') === 'DATE'
                             ? 'DATE'
                             : 'DATE-TIME',
                     ],
@@ -40,7 +41,7 @@ class CalendarEventNormalizer {
                 continue;
             }
 
-            $isDateOnly = ($eventData['objects'][0][$property][1]['VALUE'] ?? null) === 'DATE';
+            $isDateOnly = (string)($eventData['objects'][0][$property][1]['VALUE'] ?? '') === 'DATE';
             $eventData['objects'][0][$property][0] = [
                 'date' => $dateTime->format($isDateOnly ? 'Y-m-d' : DATE_ATOM),
             ];
