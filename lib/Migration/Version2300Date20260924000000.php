@@ -23,65 +23,52 @@ class Version2300Date20260924000000 extends SimpleMigrationStep {
     }
 
     public function postSchemaChange(IOutput $output, \Closure $schemaClosure, array $options): void {
-        $presets = $this->presetMapper->findAll();
-        $calendarsByUser = [];
-        $migratedCount = 0;
+        $lookups = [];
+        $migrated = 0;
 
-        foreach ($presets as $preset) {
-            $calendarNames = json_decode($preset->getCalendarNames() ?: '[]', true);
-            if (!is_array($calendarNames) || $calendarNames === []) {
+        foreach ($this->presetMapper->findAll() as $preset) {
+            $values = json_decode($preset->getCalendarNames() ?: '[]', true);
+            if (!is_array($values) || $values === []) {
                 continue;
             }
 
             $userId = $preset->getUserId();
-            if (!array_key_exists($userId, $calendarsByUser)) {
+            if (!isset($lookups[$userId])) {
                 try {
-                    $calendarsByUser[$userId] = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $userId);
+                    $calendars = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $userId);
                 } catch (\Exception $e) {
-                    $calendarsByUser[$userId] = [];
-                }
-            }
-            $calendars = $calendarsByUser[$userId];
-
-            $changed = false;
-            $migratedNames = [];
-            foreach ($calendarNames as $storedValue) {
-                if (!is_string($storedValue)) {
-                    $migratedNames[] = $storedValue;
-                    continue;
+                    $calendars = [];
                 }
 
-                $migratedNames[] = $this->resolveCalendarKey($storedValue, $calendars, $changed);
+                $keys = $names = [];
+                foreach ($calendars as $calendar) {
+                    $key = $calendar->getKey();
+                    $keys[$key] = true;
+                    $name = $calendar->getDisplayName();
+                    $names[$name] = array_key_exists($name, $names) ? null : $key;
+                }
+                $lookups[$userId] = [$keys, $names];
             }
 
-            if ($changed) {
-                $preset->setCalendarNames(json_encode($migratedNames));
+            [$keys, $names] = $lookups[$userId];
+            $updated = array_map(static function ($value) use ($keys, $names) {
+                if (!is_string($value) || isset($keys[$value])) {
+                    return $value;
+                }
+
+                // Null marks a duplicate display name; never guess which calendar it meant.
+                return $names[$value] ?? $value;
+            }, $values);
+
+            if ($updated !== $values) {
+                $preset->setCalendarNames(json_encode($updated));
                 $this->presetMapper->update($preset);
-                $migratedCount++;
+                $migrated++;
             }
         }
 
-        if ($migratedCount > 0) {
-            $output->info(sprintf('Migrated calendar selection to unique keys for %d preset(s).', $migratedCount));
+        if ($migrated > 0) {
+            $output->info(sprintf('Migrated calendar selections in %d preset(s).', $migrated));
         }
-    }
-
-    private function resolveCalendarKey(string $storedValue, array $calendars, bool &$changed): string {
-        foreach ($calendars as $calendar) {
-            if ($calendar->getKey() === $storedValue) {
-                // Already a unique key, nothing to migrate.
-                return $storedValue;
-            }
-        }
-
-        foreach ($calendars as $calendar) {
-            if ($calendar->getDisplayName() === $storedValue) {
-                $changed = true;
-                return $calendar->getKey();
-            }
-        }
-
-        // No matching calendar found (e.g. it was deleted); keep the stored value as-is.
-        return $storedValue;
     }
 }
