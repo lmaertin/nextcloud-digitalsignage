@@ -25,6 +25,7 @@ Display calendar events with optional descriptions, weather information and medi
 - **Per-Display Settings** – Configure the display name, timezone and weather location independently for each display
 - **Remote Control** – Change presets through the control API without UI access
 - **Instant Display Messages** – Send short-lived plain-text overlays to individual displays through their control tokens
+- **Notification Sound** – Play a short configurable sound when a new instant message appears
 - **Public Access** – Dedicated view tokens for displays without login requirement
 - **Multi-Language** – Available in English, German (formal/informal), French, Dutch, Spanish, Italian
 

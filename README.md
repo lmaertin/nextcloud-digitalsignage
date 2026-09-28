@@ -28,6 +28,7 @@ Current release: **0.8.12**
 - **Display and control tokens**: Separate public view token and control token per display
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
 - **Instant display messages**: Show short-lived overlay messages per display via API without interrupting slideshow, weather or calendar widgets
+- **Notification sound**: Play a short configurable sound when a new instant message appears
 - **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
 - **Per-display settings**: Configure the display name, timezone, weather location and active preset independently
 
@@ -80,6 +81,9 @@ Instant messages are delivered to one display at a time. The control token is us
    - **Text Color**: Color for event and information text
    - **Gradient Start/End**: Header gradient colors for title bar
    - Colors can be reset to defaults with one click
+
+   **Instant Message Styling:**
+   - **Notification sound**: Choose Disabled, Chime, Bell or Double beep for new instant messages; browsers may require an initial interaction with the display before audio can play
 
    **Content Sources:**
    - **Text Sizes**: Configure display, clock, weather and calendar typography per text class

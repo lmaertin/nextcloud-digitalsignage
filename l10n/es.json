@@ -187,7 +187,13 @@
         "Opens in new tab.": "Se abre en una pestaña nueva.",
         "Tokens": "Tokens",
         "Loading...": "Cargando...",
-        "Loading calendars...": "Cargando calendarios..."
+        "Loading calendars...": "Cargando calendarios...",
+        "Notification sound for instant messages": "Sonido de notificación para mensajes instantáneos",
+        "Disabled": "Desactivado",
+        "Chime": "Señal sonora",
+        "Bell": "Campana",
+        "Double beep": "Doble pitido",
+        "Choose the sound played when a new message appears. The browser may require one interaction with the display first.": "Elige el sonido que se reproducirá cuando aparezca un mensaje nuevo. Es posible que el navegador requiera primero una interacción con la pantalla."
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }

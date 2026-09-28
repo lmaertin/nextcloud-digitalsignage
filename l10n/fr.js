@@ -186,6 +186,12 @@ OC.L10N.register(
     "Opens in new tab." : "Ouvre dans un nouvel onglet.",
     "Tokens" : "Jetons",
     "Loading..." : "Chargement...",
-    "Loading calendars..." : "Chargement des calendriers..."
+    "Loading calendars..." : "Chargement des calendriers...",
+    "Notification sound for instant messages" : "Son de notification pour les messages instantanés",
+    "Disabled" : "Désactivé",
+    "Chime" : "Signal sonore",
+    "Bell" : "Cloche",
+    "Double beep" : "Double bip",
+    "Choose the sound played when a new message appears. The browser may require one interaction with the display first." : "Choisissez le son joué lorsqu'un nouveau message apparaît. Le navigateur peut nécessiter une première interaction avec l'écran."
 },
 "nplurals=2; plural=(n != 1);");

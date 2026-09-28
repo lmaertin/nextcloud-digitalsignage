@@ -54,6 +54,89 @@ let config = null;
 let configRevision = null;
 let latestInstantMessageId = null;
 let instantMessageHideTimer = null;
+let notificationAudioContext = null;
+let notificationAudioUnlocked = false;
+
+function getNotificationAudioContext() {
+  if (notificationAudioContext) {
+    return notificationAudioContext;
+  }
+
+  const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextConstructor) {
+    return null;
+  }
+
+  notificationAudioContext = new AudioContextConstructor();
+  return notificationAudioContext;
+}
+
+async function unlockNotificationSound() {
+  const audioContext = getNotificationAudioContext();
+  if (!audioContext) {
+    return;
+  }
+
+  try {
+    if (audioContext.state === 'suspended') {
+      await audioContext.resume();
+    }
+    notificationAudioUnlocked = audioContext.state === 'running';
+  } catch (error) {
+    console.warn('Notification sound could not be enabled:', error);
+  }
+}
+
+function setupNotificationSound() {
+  document.addEventListener('pointerdown', unlockNotificationSound, {once: true, passive: true});
+  document.addEventListener('keydown', unlockNotificationSound, {once: true});
+}
+
+function playInstantMessageSound() {
+  const sound = config?.messageSound;
+  if (!sound || sound === 'none' || !notificationAudioUnlocked) {
+    return;
+  }
+
+  const audioContext = getNotificationAudioContext();
+  if (!audioContext || audioContext.state !== 'running') {
+    return;
+  }
+
+  const soundPresets = {
+    cinema: [
+      {frequency: 659.25, offset: 0, duration: 0.18},
+      {frequency: 783.99, offset: 0.12, duration: 0.24}
+    ],
+    bell: [
+      {frequency: 880, offset: 0, duration: 0.55},
+      {frequency: 1318.51, offset: 0.02, duration: 0.42}
+    ],
+    double: [
+      {frequency: 880, offset: 0, duration: 0.14},
+      {frequency: 880, offset: 0.2, duration: 0.14}
+    ]
+  };
+  const notes = soundPresets[sound] || soundPresets.cinema;
+  const startTime = audioContext.currentTime;
+
+  notes.forEach((note) => {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    const noteStart = startTime + note.offset;
+    const noteEnd = noteStart + note.duration;
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(note.frequency, noteStart);
+    gainNode.gain.setValueAtTime(0.0001, noteStart);
+    gainNode.gain.exponentialRampToValueAtTime(0.12, noteStart + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    oscillator.start(noteStart);
+    oscillator.stop(noteEnd);
+  });
+}
 
 function applyRuntimeConfig() {
   if (!config) {
@@ -416,6 +499,7 @@ async function pollInstantMessages() {
     const safeDuration = Number.isFinite(duration) ? duration : 15;
 
     latestInstantMessageId = nextMessage.id;
+    playInstantMessageSound();
     showInstantMessage(nextMessage.message, safeDuration);
   } catch (error) {
     console.warn('Instant message polling error:', error);
@@ -906,6 +990,7 @@ function initDateTime() {
 async function init() {
   try {
     console.log('Initializing Digital Signage...');
+    setupNotificationSound();
     await loadConfig();
     console.log('Config loaded:', config);
 

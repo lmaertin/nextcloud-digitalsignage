@@ -896,6 +896,7 @@ async function saveSettings() {
       message_font_size: document.getElementById('message_font_size').value,
       message_width_percent: document.getElementById('message_width_percent').value,
       message_position: document.getElementById('message_position').value,
+      message_sound: document.getElementById('message_sound').value,
       ...getTextSizeSettings()
     };
 

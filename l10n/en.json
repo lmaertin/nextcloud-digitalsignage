@@ -188,7 +188,13 @@
         "Opens in new tab.": "Opens in new tab.",
         "Tokens": "Tokens",
         "Loading...": "Loading...",
-        "Loading calendars...": "Loading calendars..."
+        "Loading calendars...": "Loading calendars...",
+        "Notification sound for instant messages": "Notification sound for instant messages",
+        "Disabled": "Disabled",
+        "Chime": "Chime",
+        "Bell": "Bell",
+        "Double beep": "Double beep",
+        "Choose the sound played when a new message appears. The browser may require one interaction with the display first.": "Choose the sound played when a new message appears. The browser may require one interaction with the display first."
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }

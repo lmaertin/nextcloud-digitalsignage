@@ -254,6 +254,7 @@ class PublicApiController extends Controller {
                 '--instant-message-font-size' => $effectiveConfig['messageFontSize'] . 'rem',
                 '--instant-message-width' => $effectiveConfig['messageWidthPercent'] . '%',
             ],
+            'messageSound' => $effectiveConfig['messageSound'],
             'i18n' => [
                 'fullscreenPromptTitle' => $this->getTranslation('fullscreenPromptTitle', $userId),
                 'fullscreenPromptYes' => $this->getTranslation('fullscreenPromptYes', $userId),

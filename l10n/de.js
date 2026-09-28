@@ -188,6 +188,12 @@ OC.L10N.register(
     "Error deleting token" : "Fehler beim Löschen des Tokens",
     "Tokens" : "Tokens",
     "Loading..." : "Laden...",
-    "Loading calendars..." : "Kalender werden geladen..."
+    "Loading calendars..." : "Kalender werden geladen...",
+    "Notification sound for instant messages" : "Benachrichtigungston für Sofortnachrichten",
+    "Disabled" : "Deaktiviert",
+    "Chime" : "Signalton",
+    "Bell" : "Glocke",
+    "Double beep" : "Doppelter Signalton",
+    "Choose the sound played when a new message appears. The browser may require one interaction with the display first." : "Wähle den Ton, der beim Eintreffen einer neuen Nachricht abgespielt wird. Der Browser benötigt möglicherweise zuerst eine Interaktion mit dem Display."
 },
 "nplurals=2; plural=(n != 1);");

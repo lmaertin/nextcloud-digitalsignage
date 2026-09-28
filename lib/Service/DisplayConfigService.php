@@ -98,6 +98,7 @@ class DisplayConfigService {
             'messageFontSize' => $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0'),
             'messageWidthPercent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
             'messagePosition' => $this->normalizeMessagePosition($this->config->getAppValue('digitalsignage', 'message_position', 'top')),
+            'messageSound' => $this->resolveMessageSound(),
             'activePresetId' => $display->getActivePresetId(),
             'activePresetName' => null,
             'revision' => $display->getRevision() ?: 1,
@@ -146,6 +147,17 @@ class DisplayConfigService {
 
     private function normalizeMessagePosition(string $position): string {
         return in_array($position, ['top', 'middle', 'bottom'], true) ? $position : 'top';
+    }
+
+    private function resolveMessageSound(): string {
+        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', '');
+        if ($sound !== '') {
+            return in_array($sound, ['none', 'cinema', 'bell', 'double'], true) ? $sound : 'cinema';
+        }
+
+        return $this->config->getAppValue('digitalsignage', 'message_sound_enabled', '1') === '1'
+            ? 'cinema'
+            : 'none';
     }
 
     public static function hexToRgba(string $hex, int $opacityPercent): string {

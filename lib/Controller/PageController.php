@@ -84,6 +84,7 @@ class PageController extends Controller {
             'message_font_size' => $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0'),
             'message_width_percent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
             'message_position' => $this->config->getAppValue('digitalsignage', 'message_position', 'top'),
+            'message_sound' => $this->getMessageSound(),
         ];
 
         return new TemplateResponse(
@@ -91,5 +92,16 @@ class PageController extends Controller {
             'index',
             $params
         );
+    }
+
+    private function getMessageSound(): string {
+        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', '');
+        if ($sound !== '') {
+            return $sound;
+        }
+
+        return $this->config->getAppValue('digitalsignage', 'message_sound_enabled', '1') === '1'
+            ? 'cinema'
+            : 'none';
     }
 }

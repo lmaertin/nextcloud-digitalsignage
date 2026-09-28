@@ -188,6 +188,12 @@ OC.L10N.register(
     "Opens in new tab." : "Opent in een nieuw tabblad.",
     "Tokens" : "Tokens",
     "Loading..." : "Laden...",
-    "Loading calendars..." : "Kalenders worden geladen..."
+    "Loading calendars..." : "Kalenders worden geladen...",
+    "Notification sound for instant messages" : "Meldingsgeluid voor directe berichten",
+    "Disabled" : "Uitgeschakeld",
+    "Chime" : "Signaaltoon",
+    "Bell" : "Bel",
+    "Double beep" : "Dubbele piep",
+    "Choose the sound played when a new message appears. The browser may require one interaction with the display first." : "Kies het geluid dat wordt afgespeeld wanneer een nieuw bericht verschijnt. De browser vereist mogelijk eerst een interactie met het scherm."
 },
 "nplurals=2; plural=(n != 1);");

@@ -166,6 +166,22 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
               </button>
             </div>
           </div>
+
+          <div class="ds-form-group ds-form-group-full">
+            <label for="message_sound" class="ds-label"><?php p($l->t('Notification sound for instant messages')); ?></label>
+            <select id="message_sound" name="message_sound" class="ds-input">
+              <option value="none" <?php if (($_['message_sound'] ?? 'cinema') === 'none') p('selected'); ?>><?php p($l->t('Disabled')); ?></option>
+              <option value="cinema" <?php if (($_['message_sound'] ?? 'cinema') === 'cinema') p('selected'); ?>><?php p($l->t('Chime')); ?></option>
+              <option value="bell" <?php if (($_['message_sound'] ?? 'cinema') === 'bell') p('selected'); ?>><?php p($l->t('Bell')); ?></option>
+              <option value="double" <?php if (($_['message_sound'] ?? 'cinema') === 'double') p('selected'); ?>><?php p($l->t('Double beep')); ?></option>
+            </select>
+            <span class="ds-hint"><?php p($l->t('Choose the sound played when a new message appears. The browser may require one interaction with the display first.')); ?></span>
+          </div>
+        </div>
+
+        <div class="ds-save-bar">
+          <button class="button primary" id="save-settings-btn"><?php p($l->t('Save')); ?></button>
+          <span id="settings-msg" class="ds-message"></span>
         </div>
 
         <div class="ds-subsection ds-preset-section">
@@ -335,11 +351,6 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
           </div>
         </div>
 
-        <!-- Save bar at the end -->
-        <div class="ds-save-bar">
-          <button class="button primary" id="save-settings-btn"><?php p($l->t('Save')); ?></button>
-          <span id="settings-msg" class="ds-message"></span>
-        </div>
       </div>
     </div>
   </div>
