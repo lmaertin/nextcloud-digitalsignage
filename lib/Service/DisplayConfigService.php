@@ -150,14 +150,12 @@ class DisplayConfigService {
     }
 
     private function resolveMessageSound(): string {
-        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', '');
+        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', 'none');
         if ($sound !== '') {
-            return in_array($sound, ['none', 'cinema', 'bell', 'double'], true) ? $sound : 'cinema';
+            return in_array($sound, ['none', 'chime', 'bell', 'double'], true) ? $sound : 'none';
         }
 
-        return $this->config->getAppValue('digitalsignage', 'message_sound_enabled', '1') === '1'
-            ? 'cinema'
-            : 'none';
+        return 'none';
     }
 
     public static function hexToRgba(string $hex, int $opacityPercent): string {

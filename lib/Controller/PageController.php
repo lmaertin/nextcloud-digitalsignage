@@ -95,13 +95,11 @@ class PageController extends Controller {
     }
 
     private function getMessageSound(): string {
-        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', '');
+        $sound = $this->config->getAppValue('digitalsignage', 'message_sound', 'none');
         if ($sound !== '') {
             return $sound;
         }
 
-        return $this->config->getAppValue('digitalsignage', 'message_sound_enabled', '1') === '1'
-            ? 'cinema'
-            : 'none';
+        return 'none';
     }
 }

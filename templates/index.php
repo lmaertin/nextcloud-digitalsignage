@@ -10,12 +10,20 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
 <div id="app-content">
   <div id="app-content-wrapper" class="ds-page-shell">
     <div class="ds-stack">
+      <nav class="ds-section-nav" aria-label="<?php p($l->t('Settings sections')); ?>">
+        <a href="#general-settings"><?php p($l->t('General')); ?></a>
+        <a href="#stylesheet-settings"><?php p($l->t('Stylesheet')); ?></a>
+        <a href="#instant-messages"><?php p($l->t('Instant messages')); ?></a>
+        <a href="#presets"><?php p($l->t('Media / Slideshow presets')); ?></a>
+        <a href="#displays"><?php p($l->t('Displays')); ?></a>
+      </nav>
+
       <div class="section ds-section">
         <h3 class="ds-section-title"><?php p($l->t('Digital Signage')); ?></h3>
         <p class="ds-section-subtitle"><?php p($l->t('Configure your digital display')); ?></p>
 
         <!-- General Settings -->
-        <div class="ds-subsection">
+        <div class="ds-subsection" id="general-settings">
           <h4 class="ds-subsection-title"><?php p($l->t('General')); ?></h4>
           <div class="ds-form-grid">
             <div class="ds-form-group">
@@ -33,7 +41,12 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
           </div>
         </div>
 
-        <div class="ds-subsection">
+        <div class="ds-save-actions">
+          <button type="button" class="button primary save-settings-btn"><?php p($l->t('Save')); ?></button>
+          <span class="ds-message"></span>
+        </div>
+
+        <div class="ds-subsection" id="stylesheet-settings">
           <h4 class="ds-subsection-title"><?php p($l->t('Stylesheet')); ?></h4>
 
           <div class="ds-settings-group">
@@ -120,7 +133,12 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
 
         </div>
 
-        <div class="ds-subsection">
+        <div class="ds-save-actions">
+          <button type="button" class="button primary save-settings-btn"><?php p($l->t('Save')); ?></button>
+          <span class="ds-message"></span>
+        </div>
+
+        <div class="ds-subsection" id="instant-messages">
           <h4 class="ds-subsection-title"><?php p($l->t('Instant messages')); ?></h4>
 
           <div class="ds-settings-group">
@@ -165,31 +183,30 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
             <div class="ds-message-preview-screen" id="message-style-preview-screen">
               <div class="ds-message-preview-bubble" id="message-style-preview-bubble"><?php p($l->t('Live preview: the meeting room is reserved until 16:00.')); ?></div>
             </div>
+            <div class="ds-form-group ds-form-group-full">
+              <label for="message_sound" class="ds-label"><?php p($l->t('Notification sound')); ?></label>
+              <select id="message_sound" name="message_sound" class="ds-input">
+                <option value="none" <?php if (($_['message_sound'] ?? 'none') === 'none') p('selected'); ?>><?php p($l->t('Disabled')); ?></option>
+                <option value="chime" <?php if (($_['message_sound'] ?? 'none') === 'chime') p('selected'); ?>><?php p($l->t('Chime')); ?></option>
+                <option value="double" <?php if (($_['message_sound'] ?? 'none') === 'double') p('selected'); ?>><?php p($l->t('Double beep')); ?></option>
+                <option value="bell" <?php if (($_['message_sound'] ?? 'none') === 'bell') p('selected'); ?>><?php p($l->t('Bell')); ?></option>
+              </select>
+              <span class="ds-hint"><?php p($l->t('Choose the sound played when a new message appears. The browser may require one interaction with the display first.')); ?></span>
+            </div>
             <div class="ds-subsection-actions ds-subsection-actions-end">
               <button type="button" id="reset-message-style-btn" class="button ds-button-compact">
                 <?php p($l->t('Reset to defaults')); ?>
               </button>
             </div>
           </div>
-
-          <div class="ds-form-group ds-form-group-full">
-            <label for="message_sound" class="ds-label"><?php p($l->t('Notification sound for instant messages')); ?></label>
-            <select id="message_sound" name="message_sound" class="ds-input">
-              <option value="none" <?php if (($_['message_sound'] ?? 'cinema') === 'none') p('selected'); ?>><?php p($l->t('Disabled')); ?></option>
-              <option value="cinema" <?php if (($_['message_sound'] ?? 'cinema') === 'cinema') p('selected'); ?>><?php p($l->t('Chime')); ?></option>
-              <option value="bell" <?php if (($_['message_sound'] ?? 'cinema') === 'bell') p('selected'); ?>><?php p($l->t('Bell')); ?></option>
-              <option value="double" <?php if (($_['message_sound'] ?? 'cinema') === 'double') p('selected'); ?>><?php p($l->t('Double beep')); ?></option>
-            </select>
-            <span class="ds-hint"><?php p($l->t('Choose the sound played when a new message appears. The browser may require one interaction with the display first.')); ?></span>
-          </div>
         </div>
 
         <div class="ds-save-actions">
-          <button class="button primary" id="save-settings-btn"><?php p($l->t('Save')); ?></button>
-          <span id="settings-msg" class="ds-message"></span>
+          <button type="button" class="button primary save-settings-btn"><?php p($l->t('Save')); ?></button>
+          <span class="ds-message"></span>
         </div>
 
-        <div class="ds-subsection ds-preset-section">
+        <div class="ds-subsection ds-preset-section" id="presets">
           <h4 class="ds-subsection-title"><?php p($l->t('Media / Slideshow presets')); ?></h4>
           <span class="ds-hint ds-section-hint"><?php p($l->t('Configure media, calendar, display and widget behavior for each preset.')); ?></span>
           <div class="ds-preset-list-heading"><?php p($l->t('Existing presets')); ?></div>
@@ -310,7 +327,9 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
 
       </div>
 
-      <div class="section ds-section ds-displays-section">
+      </div>
+
+      <div class="section ds-section ds-displays-section" id="displays">
         <h4 class="ds-subsection-title"><?php p($l->t('Displays')); ?></h4>
         <p class="ds-section-subtitle"><?php p($l->t('Create and manage public screens with their own name, location, timezone, weather settings and active preset.')); ?></p>
 

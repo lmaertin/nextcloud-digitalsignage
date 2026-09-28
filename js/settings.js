@@ -127,7 +127,7 @@ function resetPresetForm() {
   populatePresetCalendars([]);
   setPresetExcludeTags([]);
   document.getElementById('save-preset-btn').textContent = translate('Save preset');
-  document.getElementById('cancel-preset-edit-btn').style.display = 'none';
+  document.getElementById('cancel-preset-edit-btn').style.display = 'inline-flex';
 }
 
 function showPresetEditor(preset = null) {
@@ -874,8 +874,12 @@ async function loadEventTitles() {
   }
 }
 
-async function saveSettings() {
-  const msgSpan = document.getElementById('settings-msg');
+async function saveSettings(event) {
+  const saveButton = event.currentTarget;
+  const msgSpan = saveButton.closest('.ds-save-actions')?.querySelector('.ds-message');
+  if (!msgSpan) {
+    return;
+  }
 
   try {
     const contentSplitRatioInput = document.getElementById('content_split_ratio');
@@ -1111,6 +1115,11 @@ function resetMessageStyleToDefaults() {
     positionInput.value = 'top';
   }
 
+  const soundInput = document.getElementById('message_sound');
+  if (soundInput) {
+    soundInput.value = 'none';
+  }
+
   updateMessageStylePreview();
 }
 
@@ -1189,7 +1198,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
   document.getElementById('new-preset-btn')?.addEventListener('click', () => showPresetEditor());
-  document.getElementById('save-settings-btn')?.addEventListener('click', saveSettings);
+  document.querySelectorAll('.save-settings-btn').forEach((button) => {
+    button.addEventListener('click', saveSettings);
+  });
   document.getElementById('reset-layout-btn')?.addEventListener('click', resetLayoutToDefaults);
   document.getElementById('reset-colors-btn')?.addEventListener('click', resetColorsToDefaults);
   document.getElementById('reset-message-style-btn')?.addEventListener('click', resetMessageStyleToDefaults);

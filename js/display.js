@@ -104,20 +104,20 @@ function playInstantMessageSound() {
   }
 
   const soundPresets = {
-    cinema: [
+    chime: [
       {frequency: 659.25, offset: 0, duration: 0.18},
       {frequency: 783.99, offset: 0.12, duration: 0.24}
-    ],
-    bell: [
-      {frequency: 880, offset: 0, duration: 0.55},
-      {frequency: 1318.51, offset: 0.02, duration: 0.42}
     ],
     double: [
       {frequency: 880, offset: 0, duration: 0.14},
       {frequency: 880, offset: 0.2, duration: 0.14}
+    ],
+    bell: [
+      {frequency: 880, offset: 0, duration: 0.55},
+      {frequency: 1318.51, offset: 0.02, duration: 0.42}
     ]
   };
-  const notes = soundPresets[sound] || soundPresets.cinema;
+  const notes = soundPresets[sound] || soundPresets.chime;
   const startTime = audioContext.currentTime;
 
   notes.forEach((note) => {

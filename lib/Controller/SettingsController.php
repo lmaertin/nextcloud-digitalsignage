@@ -53,7 +53,7 @@ class SettingsController extends Controller {
         string $message_font_size = '1.0',
         string $message_width_percent = '88',
         string $message_position = 'top',
-        string $message_sound = 'cinema'
+        string $message_sound = 'none'
     ): JSONResponse {
         $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
         $imageRefreshValue = (int)$image_refresh_interval_minutes;
@@ -62,9 +62,9 @@ class SettingsController extends Controller {
         $normalizedMessageWidthPercent = (string)max(20, min(100, (int)$message_width_percent ?: 88));
         $normalizedMessageBgOpacity = (string)max(0, min(100, (int)$message_bg_opacity));
         $normalizedMessagePosition = in_array($message_position, ['top', 'middle', 'bottom'], true) ? $message_position : 'top';
-        $normalizedMessageSound = in_array($message_sound, ['none', 'cinema', 'bell', 'double'], true)
+        $normalizedMessageSound = in_array($message_sound, ['none', 'chime', 'bell', 'double'], true)
             ? $message_sound
-            : 'cinema';
+            : 'none';
 
         $this->config->setAppValue('digitalsignage', 'auto_fullscreen_prompt', $auto_fullscreen_prompt);
         $this->config->setAppValue('digitalsignage', 'content_split_ratio', $normalizedContentSplitRatio);
@@ -124,7 +124,7 @@ class SettingsController extends Controller {
         $message_font_size = $this->config->getAppValue('digitalsignage', 'message_font_size', '1.0');
         $message_width_percent = $this->config->getAppValue('digitalsignage', 'message_width_percent', '88');
         $message_position = $this->config->getAppValue('digitalsignage', 'message_position', 'top');
-        $message_sound = $this->config->getAppValue('digitalsignage', 'message_sound', 'cinema');
+        $message_sound = $this->config->getAppValue('digitalsignage', 'message_sound', 'none');
 
         return new JSONResponse([
             'auto_fullscreen_prompt' => $auto_fullscreen_prompt,

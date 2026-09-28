@@ -20,15 +20,12 @@
   align-items: stretch;
   width: 100%;
   min-width: 0;
-  background: var(--color-main-background);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-large);
-  padding: 28px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px var(--color-box-shadow);
+  padding: 20px 0;
+  margin-bottom: 20px;
 }
 
 .ds-displays-section {
+  width: 100%;
   padding: 0;
   background: transparent;
   border: none;
@@ -36,9 +33,17 @@
 }
 
 .ds-stack {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+  column-gap: 48px;
+  align-items: start;
+  width: 100%;
+  min-width: 0;
   gap: 20px;
+}
+
+.ds-stack > .ds-section {
+  grid-column: 2;
 }
 
 .ds-section-title {
@@ -53,6 +58,42 @@
   font-size: 0.95em;
   margin: 0 0 20px 0;
   font-style: italic;
+}
+
+.ds-section-nav {
+  grid-column: 1;
+  grid-row: 1;
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  overflow: visible;
+}
+
+.ds-section-nav a {
+  display: block;
+  padding: 9px 12px;
+  color: var(--color-text-maxcontrast);
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  white-space: normal;
+}
+
+.ds-section-nav a:hover,
+.ds-section-nav a:focus-visible {
+  color: var(--color-main-text);
+  background: var(--color-background-hover);
+}
+
+.ds-subsection,
+.ds-displays-section {
+  scroll-margin-top: 24px;
 }
 
 .ds-section-hint {
@@ -615,8 +656,36 @@
     padding: 16px;
   }
 
+  .ds-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
   .ds-section {
+    display: flex !important;
+    flex-direction: column !important;
     padding: 16px;
+  }
+
+  .ds-displays-section {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .ds-section-nav {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
+    margin: 0 0 32px;
+    overflow: visible;
+  }
+
+  .ds-section-nav a {
+    min-width: 0;
+    text-align: center;
+    white-space: normal;
   }
 
   .ds-form-grid,
