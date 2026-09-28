@@ -190,6 +190,7 @@ OC.L10N.register(
     "Loading..." : "Laden...",
     "Loading calendars..." : "Kalender werden geladen...",
     "Notification sound for instant messages" : "Benachrichtigungston für Sofortnachrichten",
+    "Instant messages" : "Sofortnachrichten",
     "Disabled" : "Deaktiviert",
     "Chime" : "Signalton",
     "Bell" : "Glocke",

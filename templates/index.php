@@ -118,6 +118,11 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
             </div>
           </div>
 
+        </div>
+
+        <div class="ds-subsection">
+          <h4 class="ds-subsection-title"><?php p($l->t('Instant messages')); ?></h4>
+
           <div class="ds-settings-group">
             <h5 class="ds-settings-group-title"><?php p($l->t('Instant message styling')); ?></h5>
             <p class="ds-settings-group-subtitle"><?php p($l->t('Configure how the overlay for instant messages (sent via the control API) is displayed on all screens.')); ?></p>
@@ -179,7 +184,7 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
           </div>
         </div>
 
-        <div class="ds-save-bar">
+        <div class="ds-save-actions">
           <button class="button primary" id="save-settings-btn"><?php p($l->t('Save')); ?></button>
           <span id="settings-msg" class="ds-message"></span>
         </div>

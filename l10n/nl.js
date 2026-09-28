@@ -190,6 +190,7 @@ OC.L10N.register(
     "Loading..." : "Laden...",
     "Loading calendars..." : "Kalenders worden geladen...",
     "Notification sound for instant messages" : "Meldingsgeluid voor directe berichten",
+    "Instant messages" : "Directe berichten",
     "Disabled" : "Uitgeschakeld",
     "Chime" : "Signaaltoon",
     "Bell" : "Bel",

@@ -188,6 +188,7 @@ OC.L10N.register(
     "Loading..." : "Chargement...",
     "Loading calendars..." : "Chargement des calendriers...",
     "Notification sound for instant messages" : "Son de notification pour les messages instantanés",
+    "Instant messages" : "Messages instantanés",
     "Disabled" : "Désactivé",
     "Chime" : "Signal sonore",
     "Bell" : "Cloche",

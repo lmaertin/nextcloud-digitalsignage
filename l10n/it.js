@@ -190,6 +190,7 @@ OC.L10N.register(
     "Loading..." : "Caricamento...",
     "Loading calendars..." : "Caricamento calendari...",
     "Notification sound for instant messages" : "Suono di notifica per i messaggi istantanei",
+    "Instant messages" : "Messaggi istantanei",
     "Disabled" : "Disattivato",
     "Chime" : "Segnale acustico",
     "Bell" : "Campana",
