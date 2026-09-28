@@ -2,6 +2,8 @@
 
 A Nextcloud app for displaying digital info monitors with calendar events and media slideshows.
 
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/lmaertin)
+
 Short App Store summary: Public information screens for Nextcloud with calendars, event descriptions, weather, media slideshows (images & videos), presets and remote switching.
 
 Current release: **0.8.12**
