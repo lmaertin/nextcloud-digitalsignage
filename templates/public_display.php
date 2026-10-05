@@ -9,6 +9,8 @@
     $nonce = $_['cspNonce'];
     $assetVersion = static fn (string $relativePath): string => (string)@filemtime(__DIR__ . '/../' . $relativePath) ?: '0';
   ?>
+  <link rel="icon" href="<?php p($urlGen->imagePath('core', 'favicon.ico')); ?>">
+  <link rel="apple-touch-icon" href="<?php p($urlGen->imagePath('core', 'favicon-touch.png')); ?>">
   <link rel="stylesheet" href="<?php p($urlGen->linkTo('digitalsignage', 'css/display.css')); ?>?v=<?php p($assetVersion('css/display.css')); ?>">
   <style>
     :root {
