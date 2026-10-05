@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Error - Digital Signage</title>
+  <link rel="icon" href="<?php p(\OCP\Server::get(\OCP\IURLGenerator::class)->imagePath('core', 'favicon.ico')); ?>">
   <style>
     body {
       display: flex;
