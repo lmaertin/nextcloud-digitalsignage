@@ -197,6 +197,13 @@ OC.L10N.register(
     "Chime" : "Chime",
     "Bell" : "Bell",
     "Double beep" : "Double beep",
-    "Choose the sound played when a new message appears. The browser may require one interaction with the display first." : "Choose the sound played when a new message appears. The browser may require one interaction with the display first."
+    "Choose the sound played when a new message appears. The browser may require one interaction with the display first." : "Choose the sound played when a new message appears. The browser may require one interaction with the display first.",
+    "Error loading tokens" : "Error loading tokens",
+    "Please enter a name for the token" : "Please enter a name for the token",
+    "Press Enter to search. Location data provided by" : "Press Enter to search. Location data provided by",
+    "Custom CSS" : "Custom CSS",
+    "Additional CSS applied to all displays after the built-in styles." : "Additional CSS applied to all displays after the built-in styles.",
+    "Edge-to-edge slideshow" : "Edge-to-edge slideshow",
+    "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden" : "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden"
 },
 "nplurals=2; plural=(n != 1);");

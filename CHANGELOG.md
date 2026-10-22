@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Custom CSS setting under Stylesheet, applied to all displays after the built-in styles.
 - Per-preset "Edge-to-edge slideshow" option that fills the screen with media without margins, borders or rounded corners. It brings back the media-only full-screen mode, which the backend still supported but the settings form no longer showed.
+- Norwegian Bokmål translation.
 
 ## [0.9.0] - 2026-09-28
 
