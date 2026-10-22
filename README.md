@@ -29,7 +29,7 @@ Current release: **0.9.0**
 - **Remote preset switching**: Activate presets through the control API without opening the settings UI
 - **Instant display messages**: Show short-lived overlay messages per display via API without interrupting slideshow, weather or calendar widgets
 - **Notification sound**: Play a short configurable sound when a new instant message appears
-- **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish and Italian translations
+- **Multi-language support**: English, German (informal/formal), French, Dutch, Spanish, Italian and Norwegian Bokmål translations
 - **Per-display settings**: Configure the display name, timezone, weather location and active preset independently
 
 See [CHANGELOG.md](CHANGELOG.md) for all release notes.

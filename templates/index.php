@@ -131,6 +131,14 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
             </div>
           </div>
 
+          <div class="ds-settings-group">
+            <h5 class="ds-settings-group-title"><?php p($l->t('Custom CSS')); ?></h5>
+            <p class="ds-settings-group-subtitle"><?php p($l->t('Additional CSS applied to all displays after the built-in styles.')); ?></p>
+            <div class="ds-form-group ds-form-group-full">
+              <textarea id="custom_css" name="custom_css" rows="8" spellcheck="false" class="ds-input ds-code-input" placeholder=".slideshow-box { border-radius: 0; }"><?php p($_['custom_css'] ?? ''); ?></textarea>
+            </div>
+          </div>
+
         </div>
 
         <div class="ds-save-actions">
@@ -317,6 +325,13 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
                 <label for="preset-show-calendar" class="ds-label"><?php p($l->t('Show calendar')); ?></label>
               </div>
               <span class="ds-hint"><?php p($l->t('Enable at least one widget for this preset')); ?></span>
+            </div>
+            <div class="ds-form-group ds-form-group-full">
+              <div class="ds-checkbox-row">
+                <input type="checkbox" id="preset-fullscreen-slideshow" value="1" />
+                <label for="preset-fullscreen-slideshow" class="ds-label"><?php p($l->t('Edge-to-edge slideshow')); ?></label>
+              </div>
+              <span class="ds-hint"><?php p($l->t('Fill the screen with media, without margins or rounded corners; weather and calendar are hidden')); ?></span>
             </div>
             <div class="ds-editor-actions">
               <button class="button primary" id="save-preset-btn"><?php p($l->t('Save preset')); ?></button>

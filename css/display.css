@@ -885,6 +885,11 @@ body[data-widget-combination='slideshow'] .slideshow {
   z-index: 1;
 }
 
+.fullscreen-slideshow-mode .slideshow.fit-contain::before,
+.fullscreen-slideshow-mode .slideshow.fit-contain::after {
+  border-radius: 0;
+}
+
 .fullscreen-slideshow-mode.has-display-header .slideshow {
   top: 45px;
   height: calc(100vh - 45px);
