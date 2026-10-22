@@ -101,6 +101,7 @@ function getPresetFormData() {
     imageOrderMode: document.getElementById('preset-image-order-mode').value,
     recursive_media: document.getElementById('preset-recursive-media').checked ? '1' : '0',
     slide_interval: parseInt(document.getElementById('preset-slide-interval').value, 10) || 10,
+    fullscreen_slideshow: document.getElementById('preset-fullscreen-slideshow').checked ? '1' : '0',
     header_title_source: document.getElementById('preset-header-title-source').value,
     show_slideshow: document.getElementById('preset-show-slideshow').checked ? '1' : '0',
     show_weather: document.getElementById('preset-show-weather').checked ? '1' : '0',
@@ -124,6 +125,8 @@ function resetPresetForm() {
   document.getElementById('preset-show-weather').checked = true;
   document.getElementById('preset-show-calendar').checked = true;
   document.getElementById('preset-show-event-description').checked = false;
+  document.getElementById('preset-fullscreen-slideshow').checked = false;
+  syncPresetFullscreenSlideshow();
   populatePresetCalendars([]);
   setPresetExcludeTags([]);
   document.getElementById('save-preset-btn').textContent = translate('Save preset');
@@ -180,10 +183,25 @@ function fillPresetForm(preset) {
   document.getElementById('preset-show-weather').checked = preset.showWeather !== false;
   document.getElementById('preset-show-calendar').checked = preset.showCalendar !== false;
   document.getElementById('preset-show-event-description').checked = preset.showEventDescription === true;
+  document.getElementById('preset-fullscreen-slideshow').checked = preset.fullscreenSlideshow === true;
+  syncPresetFullscreenSlideshow();
   populatePresetCalendars(preset.calendarNames || []);
   setPresetExcludeTags(preset.calendarExclude || []);
   document.getElementById('save-preset-btn').textContent = translate('Update preset');
   document.getElementById('cancel-preset-edit-btn').style.display = 'inline-flex';
+}
+
+// Edge-to-edge mode only shows the slideshow, so lock the widget toggles to match.
+function syncPresetFullscreenSlideshow() {
+  const enabled = document.getElementById('preset-fullscreen-slideshow').checked;
+  ['preset-show-slideshow', 'preset-show-weather', 'preset-show-calendar'].forEach((id) => {
+    document.getElementById(id).disabled = enabled;
+  });
+  if (enabled) {
+    document.getElementById('preset-show-slideshow').checked = true;
+    document.getElementById('preset-show-weather').checked = false;
+    document.getElementById('preset-show-calendar').checked = false;
+  }
 }
 
 function renderPresetSummary(preset) {
@@ -206,7 +224,9 @@ function renderPresetSummary(preset) {
   if (preset.showCalendar !== false) {
     widgets.push(translate('Calendar'));
   }
-  const widgetSummary = `${translate('Widgets')}: ${widgets.join(', ')}`;
+  const widgetSummary = preset.fullscreenSlideshow === true
+    ? translate('Edge-to-edge slideshow')
+    : `${translate('Widgets')}: ${widgets.join(', ')}`;
 
   return `${escapeHtml(preset.imageFolder)} | ${escapeHtml(mode)} | ${escapeHtml(orderMode)} | ${escapeHtml(displayName)} | ${escapeHtml(widgetSummary)} | ${preset.slideInterval}s`;
 }
@@ -901,6 +921,7 @@ async function saveSettings(event) {
       message_width_percent: document.getElementById('message_width_percent').value,
       message_position: document.getElementById('message_position').value,
       message_sound: document.getElementById('message_sound').value,
+      custom_css: document.getElementById('custom_css').value,
       ...getTextSizeSettings()
     };
 
@@ -1207,6 +1228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('reset-text-sizes-btn')?.addEventListener('click', resetTextSizesToDefaults);
   document.getElementById('save-preset-btn')?.addEventListener('click', savePreset);
   document.getElementById('cancel-preset-edit-btn')?.addEventListener('click', hidePresetEditor);
+  document.getElementById('preset-fullscreen-slideshow')?.addEventListener('change', syncPresetFullscreenSlideshow);
 
   const calendarSelect = document.getElementById('preset-calendar-names');
   if (calendarSelect) {

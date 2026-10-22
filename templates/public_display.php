@@ -29,6 +29,13 @@
       --content-split-ratio: <?php p($_['content_split_ratio'] ?? '50'); ?>%;
     }
   </style>
+<?php if (trim($_['custom_css'] ?? '') !== ''): ?>
+  <style id="custom-css">
+<?php // `<` is never needed outside CSS strings; escaping it keeps `</style>` from closing the tag. ?>
+<?php print_unescaped(str_replace('<', '\3c ', $_['custom_css'])); ?>
+
+  </style>
+<?php endif; ?>
 </head>
 <body data-is-public="<?php p(isset($_['token']) ? 'true' : 'false'); ?>"
       data-public-token="<?php p($_['token'] ?? ''); ?>"
