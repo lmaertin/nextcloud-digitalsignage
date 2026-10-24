@@ -44,7 +44,7 @@ Instant messages are delivered to one display at a time. The control token is us
 
 ### Requirements
 
-- Nextcloud 24–34
+- Nextcloud 24–35
 - PHP 7.4 or higher
 
 ### Installing in Nextcloud
