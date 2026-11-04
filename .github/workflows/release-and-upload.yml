@@ -9,10 +9,10 @@ permissions:
 
 jobs:
   build-sign-release-upload:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get version from tag
         id: version
@@ -39,7 +39,7 @@ jobs:
           openssl dgst -sha512 -sign certificates/digitalsignage.key -out digitalsignage-${{ steps.version.outputs.version }}.tar.gz.sig digitalsignage-${{ steps.version.outputs.version }}.tar.gz
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             digitalsignage-${{ steps.version.outputs.version }}.tar.gz
