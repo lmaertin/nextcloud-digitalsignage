@@ -71,6 +71,7 @@
         "Width of the slideshow column. The remaining width is used for the calendar/weather column.": "Breedte van de diavoorstellingskolom. De resterende breedte wordt gebruikt voor de kalender-/weerkolom.",
         "Stylesheet": "Stylesheet",
         "Custom CSS": "Aangepaste CSS",
+        "Additional CSS applied to all displays after the built-in styles.": "Extra CSS die na de ingebouwde stijlen op alle schermen wordt toegepast.",
         "Layout": "Lay-out",
         "Adjust column proportions for the display layout.": "Pas de kolomverhoudingen voor de schermlay-out aan.",
         "Colors": "Kleuren",

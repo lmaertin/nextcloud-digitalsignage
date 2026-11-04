@@ -72,6 +72,7 @@ OC.L10N.register(
     "Width of the slideshow column. The remaining width is used for the calendar/weather column." : "La larghezza della colonna della presentazione. La larghezza rimanente viene usata per la colonna calendario/meteo.",
     "Stylesheet" : "Foglio di stile",
     "Custom CSS" : "CSS personalizzato",
+    "Additional CSS applied to all displays after the built-in styles." : "CSS aggiuntivo applicato a tutti gli schermi dopo gli stili integrati.",
     "Layout" : "Layout",
     "Adjust column proportions for the display layout." : "Regola le proporzioni delle colonne per il layout dello schermo.",
     "Colors" : "Colori",

@@ -71,6 +71,7 @@
         "Width of the slideshow column. The remaining width is used for the calendar/weather column.": "Largeur de la colonne du diaporama. La largeur restante est utilisée pour la colonne calendrier/météo.",
         "Stylesheet": "Feuille de style",
         "Custom CSS": "CSS personnalisé",
+        "Additional CSS applied to all displays after the built-in styles.": "CSS supplémentaire appliqué à tous les écrans après les styles intégrés.",
         "Layout": "Mise en page",
         "Adjust column proportions for the display layout.": "Ajustez les proportions des colonnes pour la mise en page de l'affichage.",
         "Colors": "Couleurs",

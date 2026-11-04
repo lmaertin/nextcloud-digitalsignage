@@ -72,6 +72,7 @@ OC.L10N.register(
     "Check console for details" : "Prüfe die Konsole für Details",
     "Stylesheet" : "Layout",
     "Custom CSS" : "Benutzerdefiniertes CSS",
+    "Additional CSS applied to all displays after the built-in styles." : "Zusätzliches CSS, das auf alle Displays nach den integrierten Styles angewendet wird.",
     "Layout" : "Spaltenverhältnis",
     "Adjust column proportions for the display layout." : "Spaltenverhältnis des Display-Layouts festlegen.",
     "Colors" : "Farben",
