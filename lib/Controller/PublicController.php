@@ -160,6 +160,7 @@ class PublicController extends PublicShareController {
                     'show_slideshow' => $effectiveConfig['showSlideshow'],
                     'show_weather' => $effectiveConfig['showWeather'],
                     'show_calendar' => $effectiveConfig['showCalendar'],
+                    'custom_css' => $this->config->getAppValue('digitalsignage', 'custom_css', ''),
                     'fullscreen_title_enter' => $l10n->t('Fullscreen'),
                     'fullscreen_title_exit' => $l10n->t('Exit fullscreen'),
                     'url_generator' => $this->urlGenerator,

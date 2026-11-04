@@ -85,6 +85,7 @@ class PageController extends Controller {
             'message_width_percent' => $this->config->getAppValue('digitalsignage', 'message_width_percent', '88'),
             'message_position' => $this->config->getAppValue('digitalsignage', 'message_position', 'top'),
             'message_sound' => $this->getMessageSound(),
+            'custom_css' => $this->config->getAppValue('digitalsignage', 'custom_css', ''),
         ];
 
         return new TemplateResponse(

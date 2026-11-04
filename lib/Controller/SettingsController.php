@@ -53,7 +53,8 @@ class SettingsController extends Controller {
         string $message_font_size = '1.0',
         string $message_width_percent = '88',
         string $message_position = 'top',
-        string $message_sound = 'none'
+        string $message_sound = 'none',
+        string $custom_css = ''
     ): JSONResponse {
         $normalizedContentSplitRatio = (string)max(50, min(85, (int)$content_split_ratio ?: 50));
         $imageRefreshValue = (int)$image_refresh_interval_minutes;
@@ -97,6 +98,7 @@ class SettingsController extends Controller {
         $this->config->setAppValue('digitalsignage', 'message_width_percent', $normalizedMessageWidthPercent);
         $this->config->setAppValue('digitalsignage', 'message_position', $normalizedMessagePosition);
         $this->config->setAppValue('digitalsignage', 'message_sound', $normalizedMessageSound);
+        $this->config->setAppValue('digitalsignage', 'custom_css', $custom_css);
         return new JSONResponse(['status' => 'success']);
     }
 
@@ -125,6 +127,7 @@ class SettingsController extends Controller {
         $message_width_percent = $this->config->getAppValue('digitalsignage', 'message_width_percent', '88');
         $message_position = $this->config->getAppValue('digitalsignage', 'message_position', 'top');
         $message_sound = $this->config->getAppValue('digitalsignage', 'message_sound', 'none');
+        $custom_css = $this->config->getAppValue('digitalsignage', 'custom_css', '');
 
         return new JSONResponse([
             'auto_fullscreen_prompt' => $auto_fullscreen_prompt,
@@ -148,6 +151,7 @@ class SettingsController extends Controller {
             'message_width_percent' => $message_width_percent,
             'message_position' => $message_position,
             'message_sound' => $message_sound,
+            'custom_css' => $custom_css,
         ]);
     }
 }

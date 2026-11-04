@@ -334,6 +334,13 @@
   grid-column: 1 / -1;
 }
 
+.ds-code-input {
+  min-height: 160px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  resize: vertical;
+}
+
 .ds-label {
   font-weight: 500;
   color: var(--color-main-text);
