@@ -19,6 +19,11 @@
         "Display behavior": "Visning",
         "Select the calendars shown when this preset is active.": "Velg kalenderne som vises når dette oppsettet er aktivt.",
         "Events containing these terms will be hidden for this preset": "Hendelser som inneholder disse ordene, skjules i dette oppsettet",
+        "Match mode": "Sammenligningsmodus",
+        "Only show matching events": "Vis bare passende hendelser",
+        "Hide matching events": "Skjul passende hendelser",
+        "Green rules show only matching events. Red rules always hide events, even if a green rule matches.": "Grønne regler viser bare passende hendelser. Røde regler skjuler alltid hendelser, selv om en grønn regel passer.",
+        "Effect on current events:": "Effekt på gjeldende hendelser:",
         "Clone": "Klon",
         "Error cloning preset": "Feil ved kloning av oppsett",
         "Error cloning display": "Feil ved kloning av skjerm",
@@ -203,7 +208,13 @@
         "Custom CSS": "Egendefinert CSS",
         "Additional CSS applied to all displays after the built-in styles.": "Ekstra CSS som brukes på alle skjermer etter de innebygde stilene.",
         "Edge-to-edge slideshow": "Lysbildefremvisning kant til kant",
-        "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden": "Fyll skjermen med media, uten marger eller avrundede hjørner; vær og kalender skjules"
+        "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden": "Fyll skjermen med media, uten marger eller avrundede hjørner; vær og kalender skjules",
+        "Rule type": "Regeltype",
+        "Hide": "Skjul",
+        "Show only": "Vis bare",
+        "is exactly": "er nøyaktig",
+        "starts/ends with": "begynner/slutter med",
+        "contains": "inneholder"
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }

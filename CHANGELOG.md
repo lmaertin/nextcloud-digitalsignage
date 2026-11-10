@@ -7,6 +7,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.3] - 2026-11-10
+
+### Added
+
+- Rule-based event filtering for "Hide events" (#29): Each rule has a type (*Hide* or *Show only*) and a match mode (*is exactly*, *starts/ends with*, *contains*). A `*` in the term also enables pattern matching (e.g. `Vacation*` matches titles starting with "Vacation"). Hide rules always win over "show only" rules.
+- Live preview below the "Hide events" rules showing the effect on current calendar events.
+
+### Fixed
+
+- Event exclusion terms match substrings of event titles again, as described in the settings UI and expected from earlier versions (#29). Previously, only an exact title match hid an event.
+- Event title autocomplete in the preset settings returned no suggestions because the calendar search was missing the `VEVENT` type filter that the event feed already used.
+
 ## [0.9.2] - 2026-11-04
 
 ### Added

@@ -60,6 +60,48 @@ const API_URLS = {
 const CSRF_TOKEN = dataNode?.getAttribute('data-csrf-token');
 
 let excludeTags = [];
+let eventTitlesCache = [];
+
+// Normalize a calendar exclude entry to a rule object. Legacy plain strings
+// are treated as case-insensitive substring rules that hide matching events.
+function normalizeExcludeRule(entry) {
+  if (typeof entry === 'string') {
+    return { term: entry, match: 'contains', inverse: false };
+  }
+  if (entry && typeof entry === 'object') {
+    return {
+      term: typeof entry.term === 'string' ? entry.term : '',
+      match: ['contains', 'exact', 'wildcard'].includes(entry.match) ? entry.match : 'contains',
+      inverse: entry.inverse === true
+    };
+  }
+  return null;
+}
+
+function excludeRuleMatches(title, rule) {
+  const term = rule.term.toLowerCase().trim();
+  if (term === '') {
+    return false;
+  }
+  if (rule.match === 'exact') {
+    return title === term;
+  }
+  // A * in the term switches to wildcard matching regardless of the mode
+  if (rule.match === 'wildcard' || term.includes('*')) {
+    const pattern = term.split('*').map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*');
+    return new RegExp(`^${pattern}$`).test(title);
+  }
+  return title.includes(term);
+}
+
+function isEventExcluded(title, rules) {
+  const hideRules = rules.filter(rule => !rule.inverse);
+  const showRules = rules.filter(rule => rule.inverse);
+  if (hideRules.some(rule => excludeRuleMatches(title, rule))) {
+    return true;
+  }
+  return showRules.length > 0 && !showRules.some(rule => excludeRuleMatches(title, rule));
+}
 let presets = [];
 let availableCalendars = [];
 const locationSearchResults = new Map();
@@ -876,19 +918,21 @@ async function loadEventTitles() {
     }
 
     const titles = await response.json();
+    eventTitlesCache = Array.isArray(titles) ? titles : [];
     const datalist = document.getElementById('event-titles-list');
     if (!datalist) {
       return;
     }
 
     datalist.innerHTML = '';
-    titles.forEach((title) => {
-      if (!excludeTags.includes(title)) {
+    eventTitlesCache.forEach((title) => {
+      if (!excludeTags.some((rule) => rule.term === title)) {
         const option = document.createElement('option');
         option.value = title;
         datalist.appendChild(option);
       }
     });
+    renderExcludePreview();
   } catch (error) {
     console.error('Error loading event titles:', error);
   }
@@ -951,6 +995,7 @@ async function saveSettings(event) {
 function initExcludeTags() {
   const hiddenInput = document.getElementById('preset-calendar-exclude');
   const input = document.getElementById('preset-calendar-exclude-input');
+  const matchSelect = document.getElementById('preset-calendar-exclude-match');
   const addButton = document.getElementById('add-exclude-btn');
 
   if (!hiddenInput || !input || !addButton) {
@@ -958,7 +1003,9 @@ function initExcludeTags() {
   }
 
   try {
-    excludeTags = JSON.parse(hiddenInput.value || '[]');
+    excludeTags = (JSON.parse(hiddenInput.value || '[]') || [])
+      .map(normalizeExcludeRule)
+      .filter((rule) => rule && rule.term.trim() !== '');
   } catch (error) {
     console.error('Error parsing exclude tags:', error);
     excludeTags = [];
@@ -966,10 +1013,14 @@ function initExcludeTags() {
 
   renderExcludeTags();
 
+  const directionSelect = document.getElementById('preset-calendar-exclude-direction');
+
   const addTag = () => {
     const value = input.value.trim();
-    if (value && !excludeTags.includes(value)) {
-      excludeTags.push(value);
+    const match = matchSelect ? matchSelect.value : 'contains';
+    const inverse = directionSelect ? directionSelect.value === 'show' : false;
+    if (value && !excludeTags.some((rule) => rule.term === value && rule.match === match && rule.inverse === inverse)) {
+      excludeTags.push({ term: value, match, inverse });
       input.value = '';
       renderExcludeTags();
       updateHiddenInput();
@@ -987,7 +1038,9 @@ function initExcludeTags() {
 }
 
 function setPresetExcludeTags(tags) {
-  excludeTags = Array.isArray(tags) ? tags : [];
+  excludeTags = (Array.isArray(tags) ? tags : [])
+    .map(normalizeExcludeRule)
+    .filter((rule) => rule && rule.term.trim() !== '');
   const hiddenInput = document.getElementById('preset-calendar-exclude');
   if (hiddenInput) {
     hiddenInput.value = JSON.stringify(excludeTags);
@@ -1001,17 +1054,40 @@ function renderExcludeTags() {
     return;
   }
 
+  const inverseHint = document.getElementById('exclude-inverse-hint');
+  if (inverseHint) {
+    inverseHint.hidden = !excludeTags.some((rule) => rule.inverse);
+  }
+
   if (excludeTags.length === 0) {
     container.innerHTML = `<span style="color: #999; font-style: italic;">${translate('No exclude terms yet')}</span>`;
+    renderExcludePreview();
     return;
   }
 
-  container.innerHTML = excludeTags.map((tag, index) => `
-    <span class="exclude-tag">
-      <span>${escapeHtml(tag)}</span>
+  const matchLabels = {
+    contains: '',
+    exact: '≡',
+    wildcard: '*'
+  };
+  const matchTitles = {
+    contains: translate('contains'),
+    exact: translate('is exactly'),
+    wildcard: translate('starts/ends with')
+  };
+
+  container.innerHTML = excludeTags.map((rule, index) => {
+    const effectiveMatch = rule.match === 'contains' && rule.term.includes('*') ? 'wildcard' : rule.match;
+    return `
+    <span class="exclude-tag ${rule.inverse ? 'exclude-tag-inverse' : ''}"
+      title="${rule.inverse ? translate('Only show matching events') : translate('Hide matching events')}">
+      <span>${rule.inverse ? '✓' : '🚫'}</span>
+      <span>${escapeHtml(rule.term)}</span>
+      ${matchLabels[effectiveMatch] ? `<span class="exclude-tag-match" title="${matchTitles[effectiveMatch]}">${matchLabels[effectiveMatch]}</span>` : ''}
       <span class="exclude-tag-remove" data-index="${index}">x</span>
     </span>
-  `).join('');
+  `;
+  }).join('');
 
   container.querySelectorAll('.exclude-tag-remove').forEach((button) => {
     button.addEventListener('click', () => {
@@ -1022,6 +1098,28 @@ function renderExcludeTags() {
       loadEventTitles();
     });
   });
+
+  renderExcludePreview();
+}
+
+function renderExcludePreview() {
+  const preview = document.getElementById('exclude-preview');
+  const list = document.getElementById('exclude-preview-list');
+  if (!preview || !list) {
+    return;
+  }
+
+  if (excludeTags.length === 0 || eventTitlesCache.length === 0) {
+    preview.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+
+  preview.hidden = false;
+  list.innerHTML = eventTitlesCache.map((title) => {
+    const excluded = isEventExcluded(title.toLowerCase(), excludeTags);
+    return `<li class="${excluded ? 'exclude-preview-hidden' : 'exclude-preview-visible'}">${excluded ? '✗' : '✓'} ${escapeHtml(title)}</li>`;
+  }).join('');
 }
 
 function updateHiddenInput() {

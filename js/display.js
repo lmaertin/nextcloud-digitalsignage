@@ -32,6 +32,54 @@ function getAllDayEndDate(startDate, endDate) {
   return endDate;
 }
 
+// Normalize a calendar exclude entry to a rule object. Legacy plain strings
+// are treated as case-insensitive substring rules that hide matching events.
+function normalizeExcludeRule(entry) {
+  if (typeof entry === 'string') {
+    return { term: entry, match: 'contains', inverse: false };
+  }
+  if (entry && typeof entry === 'object') {
+    return {
+      term: typeof entry.term === 'string' ? entry.term : '',
+      match: ['contains', 'exact', 'wildcard'].includes(entry.match) ? entry.match : 'contains',
+      inverse: entry.inverse === true
+    };
+  }
+  return null;
+}
+
+function excludeRuleMatches(title, rule) {
+  const term = rule.term.toLowerCase().trim();
+  if (term === '') {
+    return false;
+  }
+  if (rule.match === 'exact') {
+    return title === term;
+  }
+  // A * in the term switches to wildcard matching regardless of the mode
+  if (rule.match === 'wildcard' || term.includes('*')) {
+    const pattern = term.split('*').map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*');
+    return new RegExp(`^${pattern}$`).test(title);
+  }
+  return title.includes(term);
+}
+
+// Hide rules always win over "only show" rules. Without any inverse rule,
+// everything not hidden is shown; with at least one inverse rule, only
+// events matching an inverse rule are shown.
+function isEventExcluded(title, calendarExclude) {
+  if (!Array.isArray(calendarExclude)) {
+    return false;
+  }
+  const rules = calendarExclude.map(normalizeExcludeRule).filter(rule => rule && rule.term.trim() !== '');
+  const hideRules = rules.filter(rule => !rule.inverse);
+  const showRules = rules.filter(rule => rule.inverse);
+  if (hideRules.some(rule => excludeRuleMatches(title, rule))) {
+    return true;
+  }
+  return showRules.length > 0 && !showRules.some(rule => excludeRuleMatches(title, rule));
+}
+
 function isCurrentOrFutureEvent(event, now) {
   if (!(event.startDate instanceof Date) || Number.isNaN(event.startDate.getTime())) {
     return false;
@@ -859,10 +907,8 @@ async function loadICS() {
     const upcoming = events.filter(e => {
       const eventTitle = e.summary.toLowerCase();
 
-      // Check if event should be excluded (exact match)
-      const shouldExclude = config.calendarExclude && config.calendarExclude.some(excludeText =>
-        eventTitle === excludeText.toLowerCase()
-      );
+      // Check if event should be excluded based on the configured rules
+      const shouldExclude = isEventExcluded(eventTitle, config.calendarExclude);
 
       const isCurrentOrFuture = isCurrentOrFutureEvent(e, now);
       console.log('Event:', e.summary, 'End date:', e.endDate, 'Is current or future:', isCurrentOrFuture, 'Excluded:', shouldExclude);

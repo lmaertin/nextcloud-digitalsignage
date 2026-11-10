@@ -293,6 +293,15 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
             <div class="ds-form-group ds-preset-calendar-field">
               <label for="preset-calendar-exclude-input" class="ds-label"><?php p($l->t('Hide events')); ?></label>
               <div class="ds-tag-input-group">
+                <select id="preset-calendar-exclude-direction" class="ds-input ds-exclude-match-select" title="<?php p($l->t('Rule type')); ?>">
+                  <option value="hide"><?php p($l->t('Hide')); ?></option>
+                  <option value="show"><?php p($l->t('Show only')); ?></option>
+                </select>
+                <select id="preset-calendar-exclude-match" class="ds-input ds-exclude-match-select" title="<?php p($l->t('Match mode')); ?>">
+                  <option value="exact"><?php p($l->t('is exactly')); ?></option>
+                  <option value="wildcard"><?php p($l->t('starts/ends with')); ?></option>
+                  <option value="contains" selected><?php p($l->t('contains')); ?></option>
+                </select>
                 <input type="text" id="preset-calendar-exclude-input" list="event-titles-list" placeholder="<?php p($l->t('Enter term and press Enter')); ?>" class="ds-input" />
                 <datalist id="event-titles-list"></datalist>
                 <button type="button" id="add-exclude-btn" class="button"><?php p($l->t('+ Add')); ?></button>
@@ -300,6 +309,11 @@ $assetVersion = static fn (string $relativePath): string => (string)@filemtime(_
               <div id="preset-calendar-exclude-tags" class="ds-tag-container"></div>
               <input type="hidden" id="preset-calendar-exclude" value="[]" />
               <span class="ds-hint"><?php p($l->t('Events containing these terms will be hidden for this preset')); ?></span>
+              <span class="ds-hint" id="exclude-inverse-hint" hidden><?php p($l->t('Green rules show only matching events. Red rules always hide events, even if a green rule matches.')); ?></span>
+              <div id="exclude-preview" class="ds-exclude-preview" hidden>
+                <span class="ds-hint"><?php p($l->t('Effect on current events:')); ?></span>
+                <ul id="exclude-preview-list"></ul>
+              </div>
             </div>
 
             <div class="ds-form-group">

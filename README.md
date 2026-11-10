@@ -22,7 +22,7 @@ Current release: **0.9.0**
 - **Video playback**: Native HTML5 video support with muted autoplay and auto-advance to next item after video ends
 - **Fullscreen mode**: One-click fullscreen toggle with optional auto-prompt on page load
 - **Flexible layout and appearance**: Configure slideshow width, colors and per-text-class font sizes
-- **Smart event filtering**: Autocomplete-enabled event exclusion based on actual calendar titles
+- **Smart event filtering**: Rule-based event exclusion with match modes (exact, starts/ends with, contains), optional "show only" inversion, autocomplete from actual calendar titles and a live preview of the effect on current events
 - **Weather information**: Real-time weather data and icons for a location configured per display
 - **Location search**: Search locations through OpenStreetMap; coordinates and the matching IANA timezone are filled automatically
 - **Display and control tokens**: Separate public view token and control token per display
@@ -107,8 +107,10 @@ Instant messages are delivered to one display at a time. The control token is us
    - **Event descriptions**: Choose whether calendar event descriptions are shown for this preset; descriptions are limited to three visible lines
    - **Header title**: Choose whether the display name, the preset name or no title is shown in the display header
    - **Calendar Sources**: Select the calendars shown while this preset is active
-   - **Hide Events**: Exclude specific events by title for this preset using autocomplete suggestions
-   - Add multiple exclusion terms as tags
+   - **Hide Events**: Rule-based event filtering per preset with autocomplete suggestions from actual calendar titles
+     - **Rule type**: *Hide* removes matching events; *Show only* keeps only matching events (hide rules always win)
+     - **Match mode**: *is exactly* (full title), *starts/ends with* (anchor pattern like `Ferien*` or `*fest`), or *contains* (substring anywhere; a `*` in the term also enables pattern matching)
+     - A live preview shows the effect of the configured rules on current calendar events
 
    **Display tokens:**
    - **Create new display** creates a dedicated screen entry with its own public view token and control token
