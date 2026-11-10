@@ -47,7 +47,7 @@ class PresetService {
         $preset->setShowCalendar('1');
         $preset->setShowEventDescription($this->config->getAppValue('digitalsignage', 'show_event_description', '0'));
         $preset->setCalendarNames($this->normalizeCalendarNames($this->config->getAppValue('digitalsignage', 'calendar_names', '[]')));
-        $preset->setCalendarExclude($this->normalizeCalendarNames($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]')));
+        $preset->setCalendarExclude($this->normalizeCalendarExclude($this->config->getAppValue('digitalsignage', 'calendar_exclude', '[]')));
         $preset->setSlideInterval((int)$this->config->getAppValue('digitalsignage', 'slide_interval', '10'));
         $preset->setCreatedAt($now);
         $preset->setUpdatedAt($now);
@@ -96,5 +96,34 @@ class PresetService {
 
         $names = array_values(array_unique(array_filter($names, 'is_string')));
         return json_encode($names, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Normalize calendar exclude entries. Accepts legacy plain strings
+     * (substring rules hiding matching events) and rule objects with
+     * term, match mode (contains|exact|wildcard) and inverse flag.
+     */
+    public function normalizeCalendarExclude(string $calendarExclude): string {
+        $entries = json_decode($calendarExclude, true);
+        if (!is_array($entries)) {
+            return '[]';
+        }
+
+        $rules = [];
+        foreach ($entries as $entry) {
+            if (is_string($entry)) {
+                $entry = ['term' => $entry, 'match' => 'contains', 'inverse' => false];
+            }
+            if (!is_array($entry) || !isset($entry['term']) || !is_string($entry['term']) || trim($entry['term']) === '') {
+                continue;
+            }
+            $rules[] = [
+                'term' => $entry['term'],
+                'match' => in_array($entry['match'] ?? 'contains', ['contains', 'exact', 'wildcard'], true) ? $entry['match'] ?? 'contains' : 'contains',
+                'inverse' => ($entry['inverse'] ?? false) === true,
+            ];
+        }
+
+        return json_encode($rules, JSON_THROW_ON_ERROR);
     }
 }

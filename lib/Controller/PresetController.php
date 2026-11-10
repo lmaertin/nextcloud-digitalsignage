@@ -104,7 +104,7 @@ class PresetController extends Controller {
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
             $preset->setCalendarNames($this->presetService->normalizeCalendarNames($calendar_names));
-            $preset->setCalendarExclude($this->presetService->normalizeCalendarNames($calendar_exclude));
+            $preset->setCalendarExclude($this->presetService->normalizeCalendarExclude($calendar_exclude));
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setCreatedAt($now);
             $preset->setUpdatedAt($now);
@@ -165,7 +165,7 @@ class PresetController extends Controller {
             $preset->setShowCalendar($show_calendar === '1' ? '1' : '0');
             $preset->setShowEventDescription($show_event_description === '1' ? '1' : '0');
             $preset->setCalendarNames($this->presetService->normalizeCalendarNames($calendar_names));
-            $preset->setCalendarExclude($this->presetService->normalizeCalendarNames($calendar_exclude));
+            $preset->setCalendarExclude($this->presetService->normalizeCalendarExclude($calendar_exclude));
             $preset->setSlideInterval(max(5, min(300, $slide_interval)));
             $preset->setUpdatedAt(time());
 

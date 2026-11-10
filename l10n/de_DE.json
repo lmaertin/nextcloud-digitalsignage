@@ -19,6 +19,11 @@
         "Display behavior": "Anzeigeverhalten",
         "Select the calendars shown when this preset is active.": "Wählen Sie die Kalender aus, die bei aktivem Preset angezeigt werden.",
         "Events containing these terms will be hidden for this preset": "Ereignisse mit diesen Begriffen werden für dieses Preset ausgeblendet.",
+        "Match mode": "Vergleichsmodus",
+        "Only show matching events": "Nur passende Termine anzeigen",
+        "Hide matching events": "Passende Termine ausblenden",
+        "Green rules show only matching events. Red rules always hide events, even if a green rule matches.": "Grüne Regeln zeigen nur passende Termine an. Rote Regeln blenden Termine immer aus, auch wenn eine grüne Regel passt.",
+        "Effect on current events:": "Auswirkung auf aktuelle Termine:",
         "Clone": "Klonen",
         "Error cloning preset": "Fehler beim Klonen des Presets",
         "Error cloning display": "Fehler beim Klonen des Displays",
@@ -94,7 +99,6 @@
         "Presets": "Presets",
         "Media / Slideshow presets": "Slideshow-Presets",
         "Configure media, calendar, display and widget behavior for each preset.": "Konfigurieren Sie Medien, Kalender, Anzeigeverhalten und Widgets pro Preset.",
-        "Preset name": "Preset-Name",
         "Slideshow preset name": "Name des Slideshow-Presets",
         "Media / Slideshow preset name": "Name des Slideshow-Presets",
         "Playback order": "Wiedergabereihenfolge",
@@ -200,7 +204,13 @@
         "Chime": "Signalton",
         "Bell": "Glocke",
         "Double beep": "Doppelter Signalton",
-        "Choose the sound played when a new message appears. The browser may require one interaction with the display first.": "Wählen Sie den Ton, der beim Eintreffen einer neuen Nachricht abgespielt wird. Der Browser benötigt möglicherweise zuerst eine Interaktion mit dem Display."
+        "Choose the sound played when a new message appears. The browser may require one interaction with the display first.": "Wählen Sie den Ton, der beim Eintreffen einer neuen Nachricht abgespielt wird. Der Browser benötigt möglicherweise zuerst eine Interaktion mit dem Display.",
+        "Rule type": "Regeltyp",
+        "Hide": "Ausblenden",
+        "Show only": "Nur anzeigen",
+        "is exactly": "ist genau",
+        "starts/ends with": "beginnt/endet mit",
+        "contains": "enthält"
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }

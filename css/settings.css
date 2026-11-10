@@ -843,6 +843,55 @@
   background: rgba(255, 255, 255, 0.45);
 }
 
+.exclude-tag-inverse {
+  background: var(--color-element-success, #46ba61);
+}
+
+.exclude-tag-inverse:hover {
+  background: var(--color-element-success, #46ba61);
+  filter: brightness(0.9);
+}
+
+.exclude-tag-match {
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.ds-exclude-match-select {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+.ds-exclude-preview {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--border-radius);
+  background: var(--color-background-hover);
+}
+
+.ds-exclude-preview ul {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.ds-exclude-preview li {
+  padding: 2px 0;
+  font-size: 0.9em;
+}
+
+.exclude-preview-visible {
+  color: var(--color-text-success, var(--color-success-text, #46ba61));
+}
+
+.exclude-preview-hidden {
+  color: var(--color-text-error, var(--color-error-text, #e9322d));
+  text-decoration: line-through;
+}
+
 @media (max-width: 768px) {
   .ds-subsection-actions {
     flex-direction: column;

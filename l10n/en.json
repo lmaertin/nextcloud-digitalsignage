@@ -19,6 +19,11 @@
         "Display behavior": "Display behavior",
         "Select the calendars shown when this preset is active.": "Select the calendars shown when this preset is active.",
         "Events containing these terms will be hidden for this preset": "Events containing these terms will be hidden for this preset",
+        "Match mode": "Match mode",
+        "Only show matching events": "Only show matching events",
+        "Hide matching events": "Hide matching events",
+        "Green rules show only matching events. Red rules always hide events, even if a green rule matches.": "Green rules show only matching events. Red rules always hide events, even if a green rule matches.",
+        "Effect on current events:": "Effect on current events:",
         "Clone": "Clone",
         "Error cloning preset": "Error cloning preset",
         "Error cloning display": "Error cloning display",
@@ -203,7 +208,13 @@
         "Custom CSS": "Custom CSS",
         "Additional CSS applied to all displays after the built-in styles.": "Additional CSS applied to all displays after the built-in styles.",
         "Edge-to-edge slideshow": "Edge-to-edge slideshow",
-        "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden": "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden"
+        "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden": "Fill the screen with media, without margins or rounded corners; weather and calendar are hidden",
+        "Rule type": "Rule type",
+        "Hide": "Hide",
+        "Show only": "Show only",
+        "is exactly": "is exactly",
+        "starts/ends with": "starts/ends with",
+        "contains": "contains"
     },
     "pluralForm": "nplurals=2; plural=(n != 1);"
 }
