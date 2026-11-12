@@ -464,6 +464,7 @@ async function updateDisplaySettings(displayId, button) {
   const container = button.closest('[data-display-id]');
   const data = {
     name: container.querySelector('[data-display-name]').value.trim(),
+    slug: container.querySelector('[data-display-slug]').value.trim().toLowerCase(),
     time_zone: container.querySelector('[data-display-timezone]').value.trim(),
     weather_latitude: container.querySelector('[data-display-latitude]').value.trim() || null,
     weather_longitude: container.querySelector('[data-display-longitude]').value.trim() || null,
@@ -485,6 +486,10 @@ async function updateDisplaySettings(displayId, button) {
     container.querySelector('[data-display-list-actions]').hidden = false;
     document.getElementById('new-display-btn').hidden = false;
     container.querySelector('[data-display-name-label]')?.replaceChildren(document.createTextNode(data.name));
+    if (data.slug !== container.querySelector('[data-display-slug]').getAttribute('data-initial-slug')) {
+      await loadTokens();
+      return;
+    }
     setTimeout(() => { button.textContent = translate('Update display'); }, 2000);
   } catch (error) {
     console.error('Error saving display settings:', error);
@@ -630,6 +635,14 @@ async function loadTokens() {
                 <button class="icon-button" type="button" data-copy-url="${escapeHtml(token.url)}" aria-label="${translate('Copy URL')}" title="${translate('Copy URL')}">⧉</button>
               </div>
             </div>
+            ${token.shortUrl ? `
+            <div class="token-row">
+              <span class="token-row-label">${translate('Short URL')}</span>
+              <div class="token-value-copy">
+                <a class="token-url" href="${escapeHtml(token.shortUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(token.shortUrl)}</a>
+                <button class="icon-button" type="button" data-copy-url="${escapeHtml(token.shortUrl)}" aria-label="${translate('Copy URL')}" title="${translate('Copy URL')}">⧉</button>
+              </div>
+            </div>` : ''}
             <div class="token-row">
               <span class="token-row-label">${translate('Control token')}</span>
               <div class="token-value-copy">
@@ -641,6 +654,13 @@ async function loadTokens() {
             <div class="token-name-edit">
               <label class="token-row-label" for="display-name-${token.id}">${translate('Display name')}</label>
               <input class="ds-input token-display-name" id="display-name-${token.id}" data-display-name value="${escapeHtml(token.name)}" />
+            </div>
+            <div class="token-row">
+              <label class="token-row-label" for="display-slug-${token.id}">${translate('Short URL')}</label>
+              <div>
+                <input class="ds-input" id="display-slug-${token.id}" data-display-slug data-initial-slug="${escapeHtml(token.slug || '')}" value="${escapeHtml(token.slug || '')}" maxlength="64" pattern="[a-z0-9]+(-[a-z0-9]+)*" autocapitalize="none" spellcheck="false" placeholder="${translate('e.g. lobby')}" />
+                <small>${translate('Easier to type on a TV remote. Lowercase letters, digits and hyphens. Anyone who guesses it can view the display.')}</small>
+              </div>
             </div>
             <div class="token-row token-location-search-row">
               <label class="token-row-label" for="display-location-${token.id}">${translate('Search location')}</label>
