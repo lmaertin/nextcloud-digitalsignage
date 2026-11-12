@@ -138,6 +138,34 @@ Instant messages are delivered to one display at a time. The control token is us
 
 ![Token Management](img/screenshot-tokens.png)
 
+### Short URLs
+
+A full view URL is too long to type on a TV remote. Give a display a **Short URL** in its edit form, for example `lobby`, and open:
+
+```
+https://cloud.example.com/apps/digitalsignage/s/lobby
+```
+
+It redirects to the display's full view URL. Short URLs are unique across the instance and may contain lowercase letters, digits and hyphens. Uppercase letters typed on the TV are accepted.
+
+Nextcloud only lets its own core apps register URLs outside `/apps/<app>/`, so a root URL such as `/signage/lobby` needs a redirect in the web server:
+
+```apache
+# Apache (.htaccess or vhost)
+RewriteRule ^/?signage/([A-Za-z0-9-]+)/?$ /apps/digitalsignage/s/$1 [R=302,L]
+```
+
+```nginx
+# nginx (server block)
+location ~ ^/signage/([A-Za-z0-9-]+)/?$ {
+    return 302 /apps/digitalsignage/s/$1;
+}
+```
+
+Without pretty URLs, redirect to `/index.php/apps/digitalsignage/s/$1` instead. Nextcloud's `.htaccess` is regenerated on updates, so put the Apache rule in the vhost config or re-add it after upgrades.
+
+A short URL is easy to guess. Anyone who guesses it can view the display, the same as with the full view URL. Leave the field empty on displays that show sensitive content. Failed lookups are throttled by Nextcloud's brute force protection.
+
 ### Display View
 
 The public display URL opens a full-screen view without login. This can be opened on a Raspberry Pi, Android tablet, or other device in kiosk mode.
@@ -389,6 +417,7 @@ See [IRCONTROL.md](IRCONTROL.md) for instructions how to setup a profile switche
 - View tokens are intended for display devices
 - Control tokens are intended for automation and remote preset switching
 - Displays can be revoked by deleting them in the UI
+- Optional short URLs are guessable by design; unknown short URLs are throttled by brute force protection
 
 ### API Security
 

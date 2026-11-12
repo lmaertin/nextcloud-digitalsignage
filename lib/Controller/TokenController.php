@@ -8,6 +8,7 @@ use OCA\DigitalSignage\Db\PresetMapper;
 use OCA\DigitalSignage\Db\Token;
 use OCA\DigitalSignage\Db\TokenMapper;
 use OCA\DigitalSignage\Service\PresetService;
+use OCA\DigitalSignage\Util\Slug;
 use OCP\IURLGenerator;
 
 class TokenController extends Controller {
@@ -36,6 +37,11 @@ class TokenController extends Controller {
 
     private function generateApiToken(): string {
         return bin2hex(random_bytes(32));
+    }
+
+    private function shortUrl(Token $display): ?string {
+        $slug = $display->getSlug();
+        return $slug ? $this->urlGenerator->linkToRouteAbsolute('digitalsignage.shortUrl.resolve', ['slug' => $slug]) : null;
     }
 
     private function ensureDisplayState(Token $display): Token {
@@ -130,7 +136,8 @@ class TokenController extends Controller {
         string $time_zone = '',
         ?float $weather_latitude = null,
         ?float $weather_longitude = null,
-        ?int $active_preset_id = null
+        ?int $active_preset_id = null,
+        ?string $slug = null
     ): JSONResponse {
         try {
             $display = $this->tokenMapper->find($id);
@@ -156,6 +163,21 @@ class TokenController extends Controller {
 
             if ($active_preset_id !== null && $this->presetMapper->findForUser($active_preset_id, (string)$this->userId) === null) {
                 return new JSONResponse(['error' => 'Preset not found'], 404);
+            }
+
+            // null keeps the current slug, an empty string removes it
+            if ($slug !== null) {
+                $normalizedSlug = Slug::normalize($slug);
+                if ($normalizedSlug === false) {
+                    return new JSONResponse(['error' => 'Short URL may only contain lowercase letters, digits and hyphens'], 400);
+                }
+                if ($normalizedSlug !== null) {
+                    $owner = $this->tokenMapper->findBySlug($normalizedSlug);
+                    if ($owner !== null && $owner->getId() !== $display->getId()) {
+                        return new JSONResponse(['error' => 'Short URL is already in use'], 409);
+                    }
+                }
+                $display->setSlug($normalizedSlug);
             }
 
             $display->setTimeZone($normalizedTimeZone !== '' ? $normalizedTimeZone : null);
@@ -233,6 +255,8 @@ class TokenController extends Controller {
                     'activePresetId' => $token->getActivePresetId(),
                     'activePresetName' => $presetName,
                     'url' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.public.display', ['token' => $token->getToken()]),
+                    'slug' => $token->getSlug(),
+                    'shortUrl' => $this->shortUrl($token),
                     'controlUrl' => $this->urlGenerator->linkToRouteAbsolute('digitalsignage.control.activatePreset', ['controlToken' => (string)$token->getControlToken()]),
                     'timeZone' => $token->getTimeZone(),
                     'weatherLatitude' => $token->getWeatherLatitude(),
