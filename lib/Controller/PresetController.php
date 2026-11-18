@@ -11,6 +11,7 @@ use OCA\DigitalSignage\Service\PresetService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 
 class PresetController extends Controller {
     private PresetMapper $presetMapper;
@@ -36,6 +37,7 @@ class PresetController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function list(): JSONResponse {
         try {
             $this->presetService->ensureDefaultPreset((string)$this->userId);
@@ -59,6 +61,7 @@ class PresetController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function create(
         string $name,
         string $image_folder,
@@ -120,6 +123,7 @@ class PresetController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function update(
         int $id,
         string $name,
@@ -180,6 +184,7 @@ class PresetController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function clone(int $id): JSONResponse {
         try {
             $source = $this->presetMapper->findForUser($id, (string)$this->userId);
@@ -216,6 +221,7 @@ class PresetController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function delete(int $id): JSONResponse {
         try {
             $preset = $this->presetMapper->findForUser($id, (string)$this->userId);

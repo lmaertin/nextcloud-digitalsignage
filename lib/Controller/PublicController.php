@@ -15,6 +15,8 @@ use OCA\DigitalSignage\Service\DisplayConfigService;
 use OCP\IConfig;
 use OCP\L10N\IFactory;
 use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class PublicController extends PublicShareController {
     private $tokenMapper;
@@ -86,6 +88,8 @@ class PublicController extends PublicShareController {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function showAuthenticate(): TemplateResponse {
         return new TemplateResponse('digitalsignage', 'public_display', [
             'url_generator' => $this->urlGenerator,
@@ -96,6 +100,8 @@ class PublicController extends PublicShareController {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function display(string $token): TemplateResponse {
         try {
             // Verify token exists

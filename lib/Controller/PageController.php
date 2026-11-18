@@ -8,6 +8,8 @@ use OCP\IRequest;
 use OCP\IConfig;
 use OCP\L10N\IFactory;
 use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class PageController extends Controller {
     private $config;
@@ -49,6 +51,8 @@ class PageController extends Controller {
      * @NoAdminRequired
      * @NoCSRFRequired
      */
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
     public function index(): TemplateResponse {
         $userLanguage = $this->userId !== null
             ? $this->config->getUserValue($this->userId, 'core', 'lang', 'en')
