@@ -13,6 +13,9 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
+use OCP\AppFramework\Http\Attribute\BruteForceProtection;
 
 /**
  * Resolves a display's short URL slug to its full public token URL.
@@ -32,6 +35,9 @@ class ShortUrlController extends Controller {
      * @NoCSRFRequired
      * @BruteForceProtection(action=digitalsignage_short_url)
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
+    #[BruteForceProtection(action: 'digitalsignage_short_url')]
     public function resolve(string $slug): Response {
         $normalized = Slug::normalize($slug);
         $display = is_string($normalized) ? $this->tokenMapper->findBySlug($normalized) : null;
