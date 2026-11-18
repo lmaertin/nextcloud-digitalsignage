@@ -24,6 +24,21 @@ class TokenMapper extends QBMapper {
         }
     }
 
+    public function findBySlug(string $slug): ?Token {
+        $qb = $this->db->getQueryBuilder();
+        $qb->select('*')
+           ->from($this->getTableName())
+           ->where($qb->expr()->eq('slug', $qb->createNamedParameter($slug)));
+
+        try {
+            return $this->findEntity($qb);
+        } catch (\OCP\AppFramework\Db\DoesNotExistException $e) {
+            return null;
+        } catch (\OCP\AppFramework\Db\MultipleObjectsReturnedException $e) {
+            return null;
+        }
+    }
+
     public function findByControlToken(string $controlToken): ?Token {
         $qb = $this->db->getQueryBuilder();
         $qb->select('*')

@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.4] - Unreleased
+
+### Added
+
+- Short URLs for displays, e.g. `/apps/digitalsignage/s/lobby`, so a display can be opened by typing a short address on a TV remote. Set it in the display's edit form. The README shows how to serve it as `/signage/lobby` with a web server redirect, since Nextcloud doesn't allow apps to register root URLs.
+
 ## [0.9.3] - 2026-11-10
 
 ### Added

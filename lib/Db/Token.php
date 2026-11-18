@@ -26,6 +26,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setWeatherLatitude(?float $latitude)
  * @method float|null getWeatherLongitude()
  * @method void setWeatherLongitude(?float $longitude)
+ * @method string|null getSlug()
+ * @method void setSlug(?string $slug)
  */
 class Token extends Entity {
     protected $token;
@@ -39,6 +41,7 @@ class Token extends Entity {
     protected $timeZone;
     protected $weatherLatitude;
     protected $weatherLongitude;
+    protected $slug;
 
     public function __construct() {
         $this->addType('token', 'string');
@@ -52,5 +55,6 @@ class Token extends Entity {
         $this->addType('timeZone', 'string');
         $this->addType('weatherLatitude', 'float');
         $this->addType('weatherLongitude', 'float');
+        $this->addType('slug', 'string');
     }
 }

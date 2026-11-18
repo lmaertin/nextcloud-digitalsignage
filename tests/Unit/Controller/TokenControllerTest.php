@@ -73,4 +73,66 @@ class TokenControllerTest extends TestCase {
 
         $this->assertInstanceOf(JSONResponse::class, $response);
     }
+
+    private function ownedDisplay(int $id, ?string $slug = null): Token {
+        $display = new Token();
+        $display->setId($id);
+        $display->setUserId('testUser');
+        $display->setName('Lobby');
+        $display->setToken('view-token');
+        $display->setRevision(1);
+        $display->setSlug($slug);
+        return $display;
+    }
+
+    public function testUpdateSetsNormalizedSlug(): void {
+        $display = $this->ownedDisplay(1);
+        $this->mapper->method('find')->willReturn($display);
+        $this->mapper->method('findBySlug')->with('lobby')->willReturn(null);
+        $this->mapper->expects($this->once())->method('update')->willReturnArgument(0);
+
+        $response = $this->controller->update(1, null, '', null, null, null, ' Lobby ');
+
+        $this->assertSame(200, $response->getStatus());
+        $this->assertSame('lobby', $display->getSlug());
+    }
+
+    public function testUpdateRejectsSlugUsedByAnotherDisplay(): void {
+        $this->mapper->method('find')->willReturn($this->ownedDisplay(1));
+        $this->mapper->method('findBySlug')->willReturn($this->ownedDisplay(2, 'lobby'));
+        $this->mapper->expects($this->never())->method('update');
+
+        $response = $this->controller->update(1, null, '', null, null, null, 'lobby');
+
+        $this->assertSame(409, $response->getStatus());
+    }
+
+    public function testUpdateRejectsInvalidSlug(): void {
+        $this->mapper->method('find')->willReturn($this->ownedDisplay(1));
+        $this->mapper->expects($this->never())->method('update');
+
+        $response = $this->controller->update(1, null, '', null, null, null, 'lobby tv');
+
+        $this->assertSame(400, $response->getStatus());
+    }
+
+    public function testUpdateWithEmptySlugRemovesIt(): void {
+        $display = $this->ownedDisplay(1, 'lobby');
+        $this->mapper->method('find')->willReturn($display);
+        $this->mapper->method('update')->willReturnArgument(0);
+
+        $this->controller->update(1, null, '', null, null, null, '');
+
+        $this->assertNull($display->getSlug());
+    }
+
+    public function testUpdateWithoutSlugKeepsIt(): void {
+        $display = $this->ownedDisplay(1, 'lobby');
+        $this->mapper->method('find')->willReturn($display);
+        $this->mapper->method('update')->willReturnArgument(0);
+
+        $this->controller->update(1, 'New name');
+
+        $this->assertSame('lobby', $display->getSlug());
+    }
 }

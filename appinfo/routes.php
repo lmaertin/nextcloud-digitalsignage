@@ -6,6 +6,8 @@ return [
 
         // Public display page (no auth required)
         ['name' => 'public#display', 'url' => '/public/{token}', 'verb' => 'GET'],
+        // Short URL for typing on a TV remote; redirects to the token URL
+        ['name' => 'shortUrl#resolve', 'url' => '/s/{slug}', 'verb' => 'GET'],
 
         // API routes
         ['name' => 'api#getConfig', 'url' => '/api/config', 'verb' => 'GET'],
