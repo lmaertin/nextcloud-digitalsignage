@@ -19,6 +19,8 @@ use OCA\DigitalSignage\Service\InstantMessageService;
 use OCA\DigitalSignage\Util\CalendarEventNormalizer;
 use OCP\L10N\IFactory;
 use OCP\IURLGenerator;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class PublicApiController extends Controller {
     private $config;
@@ -84,6 +86,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getWeather(string $token): JSONResponse {
         $display = $this->validateToken($token);
         if (!$display) {
@@ -174,6 +178,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getWeatherIcon(string $token): StreamResponse {
         if (!$this->validateToken($token)) {
             http_response_code(403);
@@ -215,6 +221,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getConfig(string $token): JSONResponse {
         $display = $this->validateToken($token);
         if (!$display) {
@@ -277,6 +285,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getMessages(string $token): JSONResponse {
         $display = $this->validateToken($token);
         if (!$display) {
@@ -312,6 +322,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getCalendar(string $token): JSONResponse {
         $display = $this->validateToken($token);
         if (!$display) {
@@ -374,6 +386,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getImages(string $token): JSONResponse {
         $display = $this->validateToken($token);
         if (!$display) {
@@ -458,6 +472,8 @@ class PublicApiController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function getImage(string $token): StreamResponse {
         $display = $this->validateToken($token);
         if (!$display) {

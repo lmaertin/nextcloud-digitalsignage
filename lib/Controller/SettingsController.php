@@ -6,6 +6,8 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use OCP\IConfig;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class SettingsController extends Controller {
     private $config;
@@ -25,6 +27,8 @@ class SettingsController extends Controller {
      * @NoAdminRequired
      * @NoCSRFRequired
      */
+    #[NoAdminRequired]
+    #[NoCSRFRequired]
     public function saveUser(
         string $auto_fullscreen_prompt = '0',
         string $content_split_ratio = '50',
@@ -105,6 +109,7 @@ class SettingsController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getUser(): JSONResponse {
         $auto_fullscreen_prompt = $this->config->getAppValue('digitalsignage', 'auto_fullscreen_prompt', '0');
         $content_split_ratio = $this->config->getAppValue('digitalsignage', 'content_split_ratio', '50');

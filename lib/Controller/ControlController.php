@@ -10,6 +10,8 @@ use OCA\DigitalSignage\Service\InstantMessageService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
+use OCP\AppFramework\Http\Attribute\PublicPage;
+use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class ControlController extends Controller {
     private TokenMapper $tokenMapper;
@@ -33,6 +35,8 @@ class ControlController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function activatePreset(string $controlToken): JSONResponse {
         $display = $this->tokenMapper->findByControlToken($controlToken);
         if ($display === null) {
@@ -72,6 +76,8 @@ class ControlController extends Controller {
      * @PublicPage
      * @NoCSRFRequired
      */
+    #[PublicPage]
+    #[NoCSRFRequired]
     public function sendMessage(string $controlToken): JSONResponse {
         $display = $this->tokenMapper->findByControlToken($controlToken);
         if ($display === null) {

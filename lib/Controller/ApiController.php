@@ -12,6 +12,7 @@ use OCP\IConfig;
 use OCP\Files\IRootFolder;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCP\IUserSession;
+use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 
 class ApiController extends Controller {
     private $config;
@@ -74,6 +75,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getConfig(): JSONResponse {
         $response = new JSONResponse([
             'locale' => $this->resolveLocale(),
@@ -96,6 +98,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getCalendarsList(): JSONResponse {
         try {
             $calendars = $this->calendarManager->getCalendarsForPrincipal('principals/users/' . $this->userId);
@@ -129,6 +132,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getFoldersList(): JSONResponse {
         try {
             $userFolder = $this->rootFolder->getUserFolder($this->userId);
@@ -162,6 +166,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getCalendar(): JSONResponse {
         try {
             $calendarName = $this->config->getAppValue('digitalsignage', 'calendar_name', '');
@@ -214,6 +219,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getEventTitles(): JSONResponse {
         try {
             $calendarNamesJson = $this->request->getParam('calendar_names', '[]');
@@ -275,6 +281,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getImages(): JSONResponse {
         try {
             $imageFolder = $this->config->getAppValue('digitalsignage', 'image_folder', '/Fotos/Info-Monitor');
@@ -322,6 +329,7 @@ class ApiController extends Controller {
     /**
      * @NoAdminRequired
      */
+    #[NoAdminRequired]
     public function getImage(): StreamResponse {
         try {
             $fileId = $this->request->getParam('id');
